@@ -1,168 +1,156 @@
 {
-    "_version": "1.60.0",
-    "sap.app": {
-        "id": "tmui5",
-        "type": "application",
-        "i18n": "i18n/i18n.properties",
-        "applicationVersion": {
-            "version": "0.0.1"
-        },
-        "title": "{{appTitle}}",
-        "description": "{{appDescription}}",
-        "resources": "resources.json",
-        "sourceTemplate": {
-            "id": "@sap-ux/fiori-freestyle-writer:basic",
-            "version": "0.21.10"
-        }
+  "_version": "1.60.0",
+  "sap.app": {
+    "id": "tmui5",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
     },
-    "sap.ui": {
-        "technology": "UI5",
-        "icons": {
-            "icon": "",
-            "favIcon": "",
-            "phone": "",
-            "phone@2": "",
-            "tablet": "",
-            "tablet@2": ""
-        },
-        "deviceTypes": {
-            "desktop": true,
-            "tablet": true,
-            "phone": true
-        }
-    },
-    "sap.ui5": {
-        "flexEnabled": true,
-        "dependencies": {
-            "minUI5Version": "1.127.1",
-            "libs": {
-                "sap.m": {},
-                "sap.ui.core": {}
-            }
-        },
-        "contentDensities": {
-            "compact": true,
-            "cozy": true
-        },
-        "models": {
-            "i18n": {
-                "type": "sap.ui.model.resource.ResourceModel",
-                "settings": {
-                    "bundleName": "tmui5.i18n.i18n"
-                }
-            }
-        },
-        "resources": {
-            "css": [
-                {
-                    "uri": "css/style.css"
-                }
-            ]
-        },
-        "routing": {
-            "config": {
-                "routerClass": "sap.m.routing.Router",
-                "viewType": "XML",
-                "async": true,
-                "viewPath": "tmui5.view",
-                "controlAggregation": "pages",
-                "controlId": "app",
-                "clearControlAggregation": false
-            },
-            "routes": [
-                {
-                    "name": "RouteMainView",
-                    "pattern": ":?query:",
-                    "target": [
-                        "TargetMainView"
-                    ]
-                },
-                {
-                    "name": "RouteTicketOverview",
-                    "pattern": "ticketoverview",
-                    "target": [
-                        "TargetTicketOverview"
-                    ]
-                },
-                {
-                    "name": "RouteEditTicket",
-                    "pattern": "editticket",
-                    "target": [
-                        "TargetEditTicket"
-                    ]
-                },
-                {
-                    "name": "RouteCreateTicket",
-                    "pattern": "createticket",
-                    "target": [
-                        "TargetCreateTicket"
-                    ]
-                },
-                {
-                    "name": "RouteDeleteTeamMember",
-                    "pattern": "deleteteammember",
-                    "target": [
-                        "TargetDeleteTeamMember"
-                    ]
-                },
-                {
-                    "name": "RouteDeleteCustomer",
-                    "pattern": "deletecustomer",
-                    "target": [
-                        "TargetDeleteCustomer"
-                    ]
-                }
-            ],
-            "targets": {
-                "TargetMainView": {
-                    "viewType": "XML",
-                    "transition": "slide",
-                    "clearControlAggregation": false,
-                    "viewId": "MainView",
-                    "viewName": "MainView"
-                },
-                "TargetTicketOverview": {
-                    "viewType": "XML",
-                    "transition": "Slide",
-                    "clearControlAggregation": false,
-                    "viewId": "TicketOverview",
-                    "viewName": "TicketOverview"
-                },
-                "TargetEditTicket": {
-                    "viewType": "XML",
-                    "transition": "Slide",
-                    "clearControlAggregation": false,
-                    "viewId": "EditTicket",
-                    "viewName": "EditTicket"
-                },
-                "TargetCreateTicket": {
-                    "viewType": "XML",
-                    "transition": "Slide",
-                    "clearControlAggregation": false,
-                    "viewId": "CreateTicket",
-                    "viewName": "CreateTicket"
-                },
-                "TargetDeleteTeamMember": {
-                    "viewType": "XML",
-                    "transition": "Slide",
-                    "clearControlAggregation": false,
-                    "viewId": "DeleteTeamMember",
-                    "viewName": "DeleteTeamMember"
-                },
-                "TargetDeleteCustomer": {
-                    "viewType": "XML",
-                    "transition": "Slide",
-                    "clearControlAggregation": false,
-                    "viewId": "DeleteCustomer",
-                    "viewName": "DeleteCustomer"
-                }
-            }
-        },
-        "rootView": {
-            "viewName": "tmui5.view.App",
-            "type": "XML",
-            "async": true,
-            "id": "App"
-        }
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap-ux/fiori-freestyle-writer:basic",
+      "version": "0.21.10"
     }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": false,
+    "dependencies": {
+      "minUI5Version": "1.127.1",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "tmui5.i18n.i18n"
+        }
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "async": true,
+        "viewPath": "tmui5.view",
+        "controlAggregation": "pages",
+        "controlId": "app",
+        "clearControlAggregation": false
+      },
+      "routes": [
+        {
+          "name": "RouteMainView",
+          "pattern": ":?query:",
+          "target": ["TargetMainView"]
+        },
+        {
+          "name": "RouteTicketOverview",
+          "pattern": "ticketoverview",
+          "target": ["TargetTicketOverview"]
+        },
+        {
+          "name": "RouteEditTicket",
+          "pattern": "editticket",
+          "target": ["TargetEditTicket"]
+        },
+        {
+          "name": "RouteCreateTicket",
+          "pattern": "createticket",
+          "target": ["TargetCreateTicket"]
+        },
+        {
+          "name": "RouteDeleteTeamMember",
+          "pattern": "deleteteammember",
+          "target": ["TargetDeleteTeamMember"]
+        },
+        {
+          "name": "RouteDeleteCustomer",
+          "pattern": "deletecustomer",
+          "target": ["TargetDeleteCustomer"]
+        }
+      ],
+      "targets": {
+        "TargetMainView": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "MainView",
+          "viewName": "MainView"
+        },
+        "TargetTicketOverview": {
+          "viewType": "XML",
+          "transition": "Slide",
+          "clearControlAggregation": false,
+          "viewId": "TicketOverview",
+          "viewName": "TicketOverview"
+        },
+        "TargetEditTicket": {
+          "viewType": "XML",
+          "transition": "Slide",
+          "clearControlAggregation": false,
+          "viewId": "EditTicket",
+          "viewName": "EditTicket"
+        },
+        "TargetCreateTicket": {
+          "viewType": "XML",
+          "transition": "Slide",
+          "clearControlAggregation": false,
+          "viewId": "CreateTicket",
+          "viewName": "CreateTicket"
+        },
+        "TargetDeleteTeamMember": {
+          "viewType": "XML",
+          "transition": "Slide",
+          "clearControlAggregation": false,
+          "viewId": "DeleteTeamMember",
+          "viewName": "DeleteTeamMember"
+        },
+        "TargetDeleteCustomer": {
+          "viewType": "XML",
+          "transition": "Slide",
+          "clearControlAggregation": false,
+          "viewId": "DeleteCustomer",
+          "viewName": "DeleteCustomer"
+        }
+      }
+    },
+    "rootView": {
+      "viewName": "tmui5.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "App"
+    }
+  }
 }
