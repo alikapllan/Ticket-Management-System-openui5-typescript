@@ -1,0 +1,8 @@
+<mvc:View controllerName="tmui5.controller.TicketOverview"
+    xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+	displayBlock="true">
+	<Page id="page" title="{i18n>ticketoverview}">
+        <content />
+    </Page>
+</mvc:View>

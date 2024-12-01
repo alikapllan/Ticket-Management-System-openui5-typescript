@@ -76,6 +76,41 @@
                     "target": [
                         "TargetMainView"
                     ]
+                },
+                {
+                    "name": "RouteTicketOverview",
+                    "pattern": "ticketoverview",
+                    "target": [
+                        "TargetTicketOverview"
+                    ]
+                },
+                {
+                    "name": "RouteEditTicket",
+                    "pattern": "editticket",
+                    "target": [
+                        "TargetEditTicket"
+                    ]
+                },
+                {
+                    "name": "RouteCreateTicket",
+                    "pattern": "createticket",
+                    "target": [
+                        "TargetCreateTicket"
+                    ]
+                },
+                {
+                    "name": "RouteDeleteTeamMember",
+                    "pattern": "deleteteammember",
+                    "target": [
+                        "TargetDeleteTeamMember"
+                    ]
+                },
+                {
+                    "name": "RouteDeleteCustomer",
+                    "pattern": "deletecustomer",
+                    "target": [
+                        "TargetDeleteCustomer"
+                    ]
                 }
             ],
             "targets": {
@@ -85,6 +120,41 @@
                     "clearControlAggregation": false,
                     "viewId": "MainView",
                     "viewName": "MainView"
+                },
+                "TargetTicketOverview": {
+                    "viewType": "XML",
+                    "transition": "Slide",
+                    "clearControlAggregation": false,
+                    "viewId": "TicketOverview",
+                    "viewName": "TicketOverview"
+                },
+                "TargetEditTicket": {
+                    "viewType": "XML",
+                    "transition": "Slide",
+                    "clearControlAggregation": false,
+                    "viewId": "EditTicket",
+                    "viewName": "EditTicket"
+                },
+                "TargetCreateTicket": {
+                    "viewType": "XML",
+                    "transition": "Slide",
+                    "clearControlAggregation": false,
+                    "viewId": "CreateTicket",
+                    "viewName": "CreateTicket"
+                },
+                "TargetDeleteTeamMember": {
+                    "viewType": "XML",
+                    "transition": "Slide",
+                    "clearControlAggregation": false,
+                    "viewId": "DeleteTeamMember",
+                    "viewName": "DeleteTeamMember"
+                },
+                "TargetDeleteCustomer": {
+                    "viewType": "XML",
+                    "transition": "Slide",
+                    "clearControlAggregation": false,
+                    "viewId": "DeleteCustomer",
+                    "viewName": "DeleteCustomer"
                 }
             }
         },
