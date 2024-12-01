@@ -1,1 +1,1 @@
-# com.TicketManagementUI5.TicketManagementUI5
+# Ticket Management System - openUI5
