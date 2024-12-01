@@ -1,0 +1,13 @@
+{
+  "generator-ui5-project": {
+    "namespaceUI5": "com.TicketManagementUI5",
+    "projectName": "TicketManagementUI5",
+    "uimoduleName": "tmui5",
+    "enableFPM": false,
+    "platform": "Static webserver",
+    "ui5Libs": "Content delivery network (OpenUI5)",
+    "newDir": true,
+    "initRepo": true,
+    "projectId": "com.TicketManagementUI5.TicketManagementUI5"
+  }
+}

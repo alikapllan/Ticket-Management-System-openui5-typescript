@@ -1,0 +1,17 @@
+{
+    "name": "com.TicketManagementUI5.TicketManagementUI5",
+    "scripts": {
+        "build": "mbt build --mtar com.TicketManagementUI5.TicketManagementUI5.mtar",
+        "build:workspaces": "npm run build --workspaces --if-present",
+        "deploy": "cf deploy mta_archives/com.TicketManagementUI5.TicketManagementUI5.mtar --retries 0",
+        "lint": "npm run lint --workspaces --if-present",
+        "ui5lint": "npm run ui5lint --workspaces --if-present",
+        "start:tmui5": "npm start --workspace tmui5"
+    },
+    "dependencies": {
+        "mbt": "^1"
+    },
+    "workspaces": [
+        "tmui5"
+    ]
+}
