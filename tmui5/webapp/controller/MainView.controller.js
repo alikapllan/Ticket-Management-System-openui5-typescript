@@ -52,13 +52,9 @@ sap.ui.define(
         // find parent dialog from that button
         const oDialog = oSource.getParent();
 
-        if (oDialog && oDialog.isA("sap.m.Dialog")) {
-          oDialog.close();
+        oDialog.close();
 
-          oDialog.destroy(); // to avoid duplicate IDs when loading same dialog
-        } else {
-          MessageToast.show(this.oBundle.getText("failedFragmentClose"));
-        }
+        oDialog.destroy(); // to avoid duplicate IDs when loading same dialog
       },
     });
   }

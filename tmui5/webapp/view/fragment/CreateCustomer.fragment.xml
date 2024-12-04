@@ -7,8 +7,7 @@
         title="{i18n>createCustomerTitle}"
         icon="sap-icon://sap-ui5"
         state="Information"
-        draggable="true"
-        resizable="true">
+        draggable="true">
         <content>
             <layoutF:SimpleForm
                 id="formIdCreateCustomer"
