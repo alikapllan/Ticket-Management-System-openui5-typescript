@@ -1,0 +1,56 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layoutF="sap.ui.layout.form">
+    <Dialog
+        id="createTeamMemberDialog"
+        title="{i18n>createTeamMemberTitle}"
+        icon="sap-icon://sap-ui5"
+        state="Information"
+        draggable="true"
+        resizable="true">
+        <content>
+            <layoutF:SimpleForm
+                id="formIdCreateTeamMember"
+                layout="ResponsiveGridLayout"
+                editable="true">
+                <!-- name -->
+                <Label text="Name:" required="true" />
+                <Input placeholder="Name" />
+
+                <!-- surname -->
+                <Label text="Surname:" required="true" />
+                <Input placeholder="Surname" />
+
+                <!-- role -->
+                <Label text="Role:" required="true" />
+                <ComboBox placeholder="Developer or Consultant">
+                    <core:Item key="developer" text="Developer" />
+                    <core:Item key="consultant" text="Consultant" />
+                </ComboBox>
+
+                <!-- email -->
+                <Label text="Email:" required="true" />
+                <Input type="Email" placeholder="Email Address" />
+
+                <!-- phone -->
+                <Label text="Phone:" required="true" />
+                <Input type="Tel" placeholder="Phone Number" />
+            </layoutF:SimpleForm>
+        </content>
+
+        <beginButton>
+            <Button
+                text="{i18n>dialogCreateButtonText}"
+                press=".onCreateCustomer"
+                type="Emphasized" />
+        </beginButton>
+
+        <endButton>
+            <Button
+                text="{i18n>dialogCloseButtonText}"
+                press=".onCloseDialog"
+                type="Negative" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

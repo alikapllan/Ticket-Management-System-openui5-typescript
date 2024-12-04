@@ -6,11 +6,9 @@
         <customHeader>
             <Toolbar>
                 <ToolbarSpacer />
-                <HBox alignItems="Center" justifyContent="Center">
-                    <!-- Icon color : dodgerblue https://www.w3.org/TR/css-color-3/#css-system -->
-                    <core:Icon src="sap-icon://sap-ui5" color="#1e90ff"></core:Icon>
-                    <Title text="{i18n>title}" class="sapUiTinyMarginBegin"></Title>
-                </HBox>
+                <!-- Icon color : dodgerblue https://www.w3.org/TR/css-color-3/#css-system -->
+                <core:Icon src="sap-icon://sap-ui5" color="#1e90ff"></core:Icon>
+                <Title text="{i18n>title}" class="sapUiTinyMarginBegin"></Title>
                 <ToolbarSpacer />
             </Toolbar>
         </customHeader>
@@ -22,7 +20,7 @@
                     <GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout"
                         header="{tiles>title}"
                         subheader="{tiles>subtitle}"
-                        press=".onPress (${tiles>route})">
+                        press=".onPress(${tiles>route}, ${tiles>fragment})">
                         <TileContent>
                             <!-- Replacement of the Button to the bottom left-->
                             <VBox class="sapUiLargeMarginTop">

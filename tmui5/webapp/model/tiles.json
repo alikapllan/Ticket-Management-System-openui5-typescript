@@ -3,36 +3,42 @@
     "title": "Tickets",
     "subtitle": "Tickets Overview",
     "icon": "",
-    "route": "RouteTicketOverview"
+    "route": "RouteTicketOverview",
+    "fragment": ""
   },
   {
     "title": "Create Ticket",
     "subtitle": "Incident or CR",
     "icon": "sap-icon://request",
-    "route": "RouteCreateTicket"
+    "route": "RouteCreateTicket",
+    "fragment": ""
   },
   {
     "title": "Create Team Member",
     "subtitle": "",
     "icon": "sap-icon://add-employee",
-    "route": "Countdown"
+    "route": "",
+    "fragment": "tmui5.view.fragment.CreateTeamMember"
   },
   {
     "title": "Delete Team Member",
     "subtitle": "",
     "icon": "sap-icon://employee-rejections",
-    "route": "RouteDeleteTeamMember"
+    "route": "RouteDeleteTeamMember",
+    "fragment": ""
   },
   {
     "title": "Create Customer",
     "subtitle": "",
     "icon": "sap-icon://add-employee",
-    "route": "Countdown"
+    "route": "",
+    "fragment": "tmui5.view.fragment.CreateCustomer"
   },
   {
     "title": "Delete Customer",
     "subtitle": "",
     "icon": "sap-icon://employee-rejections",
-    "route": "RouteDeleteCustomer"
+    "route": "RouteDeleteCustomer",
+    "fragment": ""
   }
 ]
