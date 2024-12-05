@@ -17,13 +17,13 @@
         </customHeader>
 
         <content>
-            <Panel headerText="Team Members XX" class="sapUiResponsiveMargin" width="auto">
+            <Panel headerText="Team Members(XX)" class="sapUiResponsiveMargin" width="auto">
                 <Table id="teamMembersTable" mode="MultiSelect">
                     <!-- Toolbar for Delete Button -->
                     <headerToolbar>
                         <Toolbar>
                             <ToolbarSpacer />
-                            <Button text="{i18n>deleteButtonText}" type="Reject"
+                            <Button text="{i18n>deleteTeamMemberButtonText}" type="Reject"
                                 press=".onDeleteSelectedTeamMember" />
                         </Toolbar>
                     </headerToolbar>
