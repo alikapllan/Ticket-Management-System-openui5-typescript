@@ -1,8 +1,88 @@
-<mvc:View controllerName="tmui5.controller.CreateTicket"
+<mvc:View xmlns:core="sap.ui.core"
+    controllerName="tmui5.controller.CreateTicket"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
+    xmlns:layoutF="sap.ui.layout.form"
+    xmlns:unified="sap.ui.unified"
     displayBlock="true">
-    <Page id="pageCreateTicket" title="{i18n>createticket}">
-        <content />
+    <Page id="pageCreateTicket">
+        <customHeader>
+            <Bar>
+                <contentLeft>
+                    <Button icon="sap-icon://nav-back" press=".onNavBack"></Button>
+                </contentLeft>
+                <contentMiddle>
+                    <core:Icon src="sap-icon://sap-ui5" color="#1e90ff"></core:Icon>
+                    <Title text="{i18n>createTicket}" class="sapUiTinyMarginBegin"></Title>
+                </contentMiddle>
+            </Bar>
+        </customHeader>
+
+        <content>
+            <!-- SimpleForm for Form Layout -->
+            <layoutF:SimpleForm
+                id="createTicketForm"
+                layout="ResponsiveGridLayout"
+                editable="true"
+                labelSpanXL="3"
+                labelSpanL="3"
+                labelSpanM="3"
+                emptySpanXL="3"
+                emptySpanL="3"
+                emptySpanM="3">
+
+                <layoutF:content>
+                    <!-- Ticket Number -->
+                    <Label text="{i18n>ticketNumber}" />
+                    <Input id="ticketNumberInput" editable="false" />
+
+                    <!-- Ticket Type -->
+                    <Label text="{i18n>ticketType}" />
+                    <Select>
+                        <core:Item key="bug" text="Bug" />
+                        <core:Item key="change" text="Change Request" />
+                    </Select>
+
+                    <!-- Assigned To -->
+                    <Label text="{i18n>assignedTo}" />
+                    <Input placeholder="{i18n>assignToPlaceholder}" showValueHelp="true"
+                        valueHelpRequest=".onValueHelpRequest" />
+
+                    <!-- Email -->
+                    <Label text="{i18n>email}" />
+                    <Input id="emailInput" editable="false" />
+
+                    <!-- Customer -->
+                    <Label text="{i18n>customer}" />
+                    <Select>
+                        <core:Item key="customer1" text="Customer 1" />
+                        <core:Item key="customer2" text="Customer 2" />
+                    </Select>
+
+                    <!-- Description -->
+                    <Label text="{i18n>description}" />
+                    <TextArea rows="5" maxLength="200"
+                        placeholder="{i18n>descriptionPlaceholder}"
+                        showExceededText="true" />
+
+                    <!-- Upload File -->
+                    <Label text="{i18n>uploadFile}" />
+                    <VBox>
+                        <unified:FileUploader id="fileUploader" />
+                        <Text text="{i18n>dropFilesHere}" />
+                    </VBox>
+                </layoutF:content>
+
+                <!-- Create and Cancel Buttons -->
+                <HBox justifyContent="End" class="sapUiLargeMarginTop">
+                    <HBox class="sapUiLargeMarginTop">
+                        <Button text="{i18n>create}" type="Emphasized" press=".onCreateTicket" />
+                        <Button text="{i18n>cancel}" type="Reject" class="sapUiTinyMarginBeginEnd"
+                            press=".onCancelTicket" />
+                    </HBox>
+                </HBox>
+            </layoutF:SimpleForm>
+        </content>
+
     </Page>
 </mvc:View>
