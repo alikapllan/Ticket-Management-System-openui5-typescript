@@ -1,8 +1,67 @@
 <mvc:View controllerName="tmui5.controller.DeleteTeamMember"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
+    xmlns:core="sap.ui.core"
     displayBlock="true">
-    <Page id="pageDeleteTeamMember" title="{i18n>deleteteammember}">
-        <content />
+    <Page id="pageDeleteTeamMember">
+        <customHeader>
+            <Bar>
+                <contentLeft>
+                    <Button icon="sap-icon://nav-back" press=".onNavBack"></Button>
+                </contentLeft>
+                <contentMiddle>
+                    <core:Icon src="sap-icon://sap-ui5" color="#1e90ff"></core:Icon>
+                    <Title text="{i18n>deleteTeamMember}" class="sapUiTinyMarginBegin"></Title>
+                </contentMiddle>
+            </Bar>
+        </customHeader>
+
+        <content>
+            <Panel headerText="Team Members XX" class="sapUiResponsiveMargin" width="auto">
+                <Table id="teamMembersTable" mode="MultiSelect">
+                    <!-- Toolbar for Delete Button -->
+                    <headerToolbar>
+                        <Toolbar>
+                            <ToolbarSpacer />
+                            <Button text="{i18n>deleteButtonText}" type="Reject"
+                                press=".onDeleteSelectedTeamMember" />
+                        </Toolbar>
+                    </headerToolbar>
+
+                    <!-- Table Columns -->
+                    <columns>
+                        <Column>
+                            <Text text="ID" />
+                        </Column>
+                        <Column>
+                            <Text text="Name" />
+                        </Column>
+                        <Column>
+                            <Text text="Role" />
+                        </Column>
+                        <Column>
+                            <Text text="Email" />
+                        </Column>
+                        <Column>
+                            <Text text="Phone" />
+                        </Column>
+                    </columns>
+
+                    <!-- Table Items -->
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{teamMemberModel>id}" />
+                                <Text text="{teamMemberModel>name}" />
+                                <Text text="{teamMemberModel>role}" />
+                                <Text text="{teamMemberModel>email}" />
+                                <Text text="{teamMemberModel>phone}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </Panel>
+        </content>
+
     </Page>
 </mvc:View>
