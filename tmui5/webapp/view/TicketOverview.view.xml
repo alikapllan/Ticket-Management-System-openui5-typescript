@@ -24,13 +24,13 @@
             <HBox class="sapUiMediumMarginBegin">
                 <VBox class="sapUiSmallMarginEnd">
                     <Label text="Ticket Number:" />
-                    <MultiInput id="multiTicketInput"
+                    <MultiInput id="multiTicketIdInput"
                         showValueHelp="true"
                         suggestionItems="{
                             path: '/TicketsCollection',
                             sorter: { path: 'Id' }
                         }"
-                        valueHelpRequest=".onTicketNumberValueHelp">
+                        valueHelpRequest=".onTicketIdValueHelp">
                         <core:Item key="{TicketId}" text="{Name}" />
                     </MultiInput>
                 </VBox>

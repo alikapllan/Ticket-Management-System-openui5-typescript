@@ -16,7 +16,7 @@ sap.ui.define(
     return Controller.extend("tmui5.controller.TicketOverview", {
       onInit: function () {},
 
-      onTicketNumberValueHelp: function (oEvent) {
+      onTicketIdValueHelp: function (oEvent) {
         let sInputValue = oEvent.getSource().getValue(),
           oView = this.getView();
 
@@ -42,6 +42,33 @@ sap.ui.define(
           // open value help dialog filtered by the input value
           oValueHelpDialog.open(sInputValue);
         });
+      },
+
+      _onTicketIdValueHelpSearch: function (evt) {
+        /*
+			let sValue = evt.getParameter("value");
+			let oFilter = new Filter(
+				"Name",
+				FilterOperator.Contains,
+				sValue
+			);
+			evt.getSource().getBinding("items").filter([oFilter]); 
+        */
+      },
+
+      _onTicketIdValueHelpClose: function (evt) {
+        /*
+			let aSelectedItems = evt.getParameter("selectedItems"),
+				oMultiInput = this.byId("multiTicketIdInput");
+
+			if (aSelectedItems && aSelectedItems.length > 0) {
+				aSelectedItems.forEach(function (oItem) {
+					oMultiInput.addToken(new Token({
+						text: oItem.getTitle()
+					}));
+				});
+			}
+        */
       },
 
       onNavBack: function () {

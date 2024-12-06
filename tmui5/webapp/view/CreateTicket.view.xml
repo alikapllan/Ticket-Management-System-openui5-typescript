@@ -45,8 +45,9 @@
 
                     <!-- Assigned To -->
                     <Label text="{i18n>assignedTo}" />
-                    <Input placeholder="{i18n>assignToPlaceholder}" showValueHelp="true"
-                        valueHelpRequest=".onValueHelpRequest" />
+                    <Input id="assignedToInput" placeholder="{i18n>assignToPlaceholder}"
+                        showValueHelp="true"
+                        valueHelpRequest=".onValueHelpRequestAssignedTo" />
 
                     <!-- Email -->
                     <Label text="{i18n>email}" />
@@ -58,6 +59,9 @@
                         <core:Item key="customer1" text="Customer 1" />
                         <core:Item key="customer2" text="Customer 2" />
                     </Select>
+
+                    <Label text="{i18n>ticketTitle}" />
+                    <Input id="titleInput" />
 
                     <!-- Description -->
                     <Label text="{i18n>description}" />
