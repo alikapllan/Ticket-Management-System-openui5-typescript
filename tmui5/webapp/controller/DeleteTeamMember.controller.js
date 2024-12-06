@@ -1,12 +1,12 @@
 sap.ui.define(
-  ["sap/ui/core/mvc/Controller", "sap/ui/core/routing/History"],
+  ["tmui5/controller/BaseController", "sap/ui/core/routing/History"],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-  function (Controller, History) {
+  function (BaseController, History) {
     "use strict";
 
-    return Controller.extend("tmui5.controller.DeleteTeamMember", {
+    return BaseController.extend("tmui5.controller.DeleteTeamMember", {
       onInit: function () {},
 
       onDeleteSelectedTeamMember: function () {},
@@ -18,8 +18,7 @@ sap.ui.define(
         if (sPreviousHash !== undefined) {
           window.history.go(-1);
         } else {
-          const oRouter = this.getOwnerComponent().getRouter();
-          oRouter.navTo("RouteMainView", {}, true);
+          this.navTo("RouteMainView");
         }
       },
     });

@@ -1,30 +1,29 @@
 sap.ui.define(
   [
-    "sap/ui/core/mvc/Controller",
+    "tmui5/controller/BaseController",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-  function (Controller, JSONModel, MessageToast) {
+  function (BaseController, JSONModel, MessageToast) {
     "use strict";
 
-    return Controller.extend("tmui5.controller.MainView", {
+    return BaseController.extend("tmui5.controller.MainView", {
       onInit: function () {
+        // Call the BaseController's onInit to initialize to be able to use 'oBundle'
+        BaseController.prototype.onInit.apply(this, arguments);
+        // onInit lifecycle method in the child controller overrides the onInit of the parent (BaseController)
+
         // json binding for generic tiles
         const oTilesModel = new JSONModel("../model/tiles.json");
         this.getView().setModel(oTilesModel, "tiles");
-
-        // Load the i18n resource bundle for retrieving localized texts
-        this.oBundle = this.getOwnerComponent()
-          .getModel("i18n")
-          .getResourceBundle();
       },
 
       onPress: function (sRoute, sFragment) {
         if (sRoute) {
-          this.getOwnerComponent().getRouter().navTo(sRoute);
+          this.navTo(sRoute);
         } else if (sFragment) {
           // fragment
           this.onOpenDialog(sFragment);

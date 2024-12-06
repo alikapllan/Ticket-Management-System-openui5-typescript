@@ -2,7 +2,6 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
-    xmlns:mdc="sap.ui.mdc"
     displayBlock="true">
     <Page id="pageTicketOverview">
         <customHeader>

@@ -1,6 +1,6 @@
 sap.ui.define(
   [
-    "sap/ui/core/mvc/Controller",
+    "tmui5/controller/BaseController",
     "sap/ui/core/routing/History",
     "sap/ui/core/Fragment",
     "sap/ui/model/Filter",
@@ -9,10 +9,10 @@ sap.ui.define(
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-  function (Controller, History, Fragment, Filter, FilterOperator) {
+  function (BaseController, History, Fragment, Filter, FilterOperator) {
     "use strict";
 
-    return Controller.extend("tmui5.controller.CreateTicket", {
+    return BaseController.extend("tmui5.controller.CreateTicket", {
       onInit: function () {
         const oTicketNumberInput = this.byId("ticketNumberInput");
         oTicketNumberInput.setValue("Dynamic Ticket Number will be here");
@@ -72,8 +72,7 @@ sap.ui.define(
         if (sPreviousHash !== undefined) {
           window.history.go(-1);
         } else {
-          const oRouter = this.getOwnerComponent().getRouter();
-          oRouter.navTo("RouteMainView", {}, true);
+          this.navTo("RouteMainView");
         }
       },
     });

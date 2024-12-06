@@ -1,14 +1,7 @@
-sap.ui.define(
-    [
-        "sap/ui/core/mvc/Controller"
-    ],
-    function(BaseController) {
-      "use strict";
-  
-      return BaseController.extend("tmui5.controller.App", {
-        onInit: function() {
-        }
-      });
-    }
-  );
-  
+sap.ui.define(["tmui5/controller/BaseController"], function (BaseController) {
+  "use strict";
+
+  return BaseController.extend("tmui5.controller.App", {
+    onInit: function () {},
+  });
+});

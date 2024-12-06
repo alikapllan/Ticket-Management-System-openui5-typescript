@@ -1,6 +1,6 @@
 sap.ui.define(
   [
-    "sap/ui/core/mvc/Controller",
+    "tmui5/controller/BaseController",
     "sap/ui/core/routing/History",
     "sap/ui/core/Fragment",
     "sap/ui/model/Filter",
@@ -10,11 +10,15 @@ sap.ui.define(
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-  function (Controller, History, Fragment, Filter, FilterOperator, Token) {
+  function (BaseController, History, Fragment, Filter, FilterOperator, Token) {
     "use strict";
 
-    return Controller.extend("tmui5.controller.TicketOverview", {
+    return BaseController.extend("tmui5.controller.TicketOverview", {
       onInit: function () {},
+
+      onEditTicket: function () {
+        this.navTo("RouteEditTicket");
+      },
 
       onTicketIdValueHelp: function (oEvent) {
         let sInputValue = oEvent.getSource().getValue(),
@@ -78,8 +82,7 @@ sap.ui.define(
         if (sPreviousHash !== undefined) {
           window.history.go(-1);
         } else {
-          const oRouter = this.getOwnerComponent().getRouter();
-          oRouter.navTo("RouteMainView", {}, true);
+          this.navTo("RouteMainView");
         }
       },
     });
