@@ -1,8 +1,98 @@
 <mvc:View controllerName="tmui5.controller.TicketOverview"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:mdc="sap.ui.mdc"
     displayBlock="true">
-    <Page id="pageTicketOverview" title="{i18n>ticketoverview}">
-        <content />
+    <Page id="pageTicketOverview">
+        <customHeader>
+            <Bar>
+                <contentLeft>
+                    <Button icon="sap-icon://nav-back" press=".onNavBack"></Button>
+                </contentLeft>
+                <contentMiddle>
+                    <core:Icon src="sap-icon://sap-ui5" color="#1e90ff"></core:Icon>
+                    <Title text="{i18n>ticketOverview}" class="sapUiTinyMarginBegin"></Title>
+                </contentMiddle>
+            </Bar>
+        </customHeader>
+
+        <!-- Filters -->
+
+        <Toolbar class="sapUiSmallMarginBottom" height="5rem">
+
+            <HBox class="sapUiMediumMarginBegin">
+                <VBox class="sapUiSmallMarginEnd">
+                    <Label text="Ticket Number:" />
+                    <MultiInput id="multiTicketInput"
+                        showValueHelp="true"
+                        suggestionItems="{
+                            path: '/TicketsCollection',
+                            sorter: { path: 'Id' }
+                        }"
+                        valueHelpRequest=".onTicketNumberValueHelp">
+                        <core:Item key="{TicketId}" text="{Name}" />
+                    </MultiInput>
+                </VBox>
+
+                <VBox class="sapUiSmallMarginEnd">
+                    <Label text="Ticket Status:" />
+                    <Select id="selectTicketStatus" items="{statusesModel>/}"
+                        selectedKey="{statusesModel>selectedStatus}">
+                        <core:Item key="{statusesModel>key}" text="{statusesModel>text}" />
+                    </Select>
+                </VBox>
+
+                <VBox class="sapUiSmallMarginEnd">
+                    <Label text="Created On:" />
+                    <DatePicker id="idTicketCreatedOnDatePicker" value="{filtersModel>createdOn}" />
+                </VBox>
+            </HBox>
+
+            <ToolbarSpacer />
+            <Button class="sapUiMediumMarginEnd" text="Go" type="Emphasized" press=".onGo" />
+        </Toolbar>
+
+
+        <content>
+            <Panel headerText="Tickets(XX)" class="sapUiResponsiveMargin" width="auto">
+                <Table id="ticketsTable" mode="MultiSelect">
+                    <headerToolbar>
+                        <Toolbar>
+                            <ToolbarSpacer />
+                            <Button text="Create" type="Emphasized" press=".onCreateTicket" />
+                            <Button text="Edit" type="Attention" press=".onEditTicket" />
+                            <Button text="Delete" type="Reject" press=".onDeleteSelectedTickets" />
+                        </Toolbar>
+                    </headerToolbar>
+
+                    <columns>
+                        <Column>
+                            <Text text="Ticket No" />
+                        </Column>
+                        <Column>
+                            <Text text="Ticket Status" />
+                        </Column>
+                        <Column>
+                            <Text text="Created On" />
+                        </Column>
+                        <Column>
+                            <Text text="Assigned To" />
+                        </Column>
+                    </columns>
+
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{tickets>TicketNumber}" />
+                                <Text text="{tickets>TicketStatus}" />
+                                <Text text="{tickets>CreatedOn}" />
+                                <Text text="{tickets>AssignedTo}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </Panel>
+        </content>
     </Page>
 </mvc:View>
