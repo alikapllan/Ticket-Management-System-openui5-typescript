@@ -5,9 +5,9 @@
         id="AssignedToValueHelpDialog"
         title="Team Members"
         items="{/TeamMemberCollection}"
-        search=".onValueHelpSearch"
-        confirm=".onValueHelpClose"
-        cancel=".onValueHelpClose">
+        search=".onValueHelpSearchAssignedTo"
+        confirm=".onValueHelpCloseAssignedTo"
+        cancel=".onValueHelpCloseAssignedTo">
         <StandardListItem
             iconDensityAware="false"
             iconInset="false"

@@ -20,7 +20,7 @@ sap.ui.define(
         const oEmailInput = this.byId("emailInput");
         oEmailInput.setValue("Email will be taken from 'assigned to'");
       },
-
+      // Value Help 'Assigned To' - START
       onValueHelpRequestAssignedTo: function (oEvent) {
         var sInputValue = oEvent.getSource().getValue(),
           oView = this.getView();
@@ -44,7 +44,7 @@ sap.ui.define(
         });
       },
 
-      onValueHelpSearch: function (oEvent) {
+      onValueHelpSearchAssignedTo: function (oEvent) {
         /*
         var sValue = oEvent.getParameter("value");
         var oFilter = new Filter("Name", FilterOperator.Contains, sValue);
@@ -53,7 +53,7 @@ sap.ui.define(
         */
       },
 
-      onValueHelpClose: function (oEvent) {
+      onValueHelpCloseAssignedTo: function (oEvent) {
         /*
         var oSelectedItem = oEvent.getParameter("selectedItem");
         oEvent.getSource().getBinding("assignedTo").filter([]);
@@ -64,6 +64,36 @@ sap.ui.define(
 
         this.byId("assignedToInput").setValue(oSelectedItem.getTitle()); */
       },
+      // Value Help 'Assigned To' - END
+
+      // Value Help 'Customer' - START
+      onValueHelpRequestCustomer: function (oEvent) {
+        var sInputValue = oEvent.getSource().getValue(),
+          oView = this.getView();
+
+        if (!this._pValueHelpDialog) {
+          this._pValueHelpDialog = Fragment.load({
+            id: oView.getId(),
+            name: "tmui5.view.valueHelpFragments.CustomerValueHelp",
+            controller: this,
+          }).then(function (oDialog) {
+            oView.addDependent(oDialog);
+            return oDialog;
+          });
+        }
+        this._pValueHelpDialog.then(function (oDialog) {
+          // Create a filter for the binding
+          // oDialog.getBinding("items").filter([new Filter("Name", FilterOperator.Contains, sInputValue)]);
+
+          // Open ValueHelpDialog filtered by the input's value
+          oDialog.open(sInputValue);
+        });
+      },
+
+      onValueHelpSearchCustomer: function (oEvent) {},
+
+      onValueHelpCloseCustomer: function (oEvent) {},
+      // Value Help 'Customer' - END
 
       onNavBack: function () {
         const oHistory = History.getInstance();

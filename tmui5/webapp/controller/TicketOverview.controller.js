@@ -75,6 +75,10 @@ sap.ui.define(
         */
       },
 
+      onCreateTicket: function () {
+        this.navTo("RouteCreateTicket");
+      },
+
       onNavBack: function () {
         const oHistory = History.getInstance();
         const sPreviousHash = oHistory.getPreviousHash();

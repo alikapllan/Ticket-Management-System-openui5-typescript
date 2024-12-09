@@ -14,15 +14,15 @@
                 layout="ResponsiveGridLayout"
                 editable="true">
                 <!-- name -->
-                <Label text="Name:" required="true" />
+                <Label text="Name" required="true" />
                 <Input placeholder="Name" />
 
                 <!-- email -->
-                <Label text="Email:" required="true" />
+                <Label text="Email" required="true" />
                 <Input type="Email" placeholder="Email Address" />
 
                 <!-- phone -->
-                <Label text="Phone:" required="true" />
+                <Label text="Phone" required="true" />
                 <Input type="Tel" placeholder="Phone Number" />
             </layoutF:SimpleForm>
         </content>

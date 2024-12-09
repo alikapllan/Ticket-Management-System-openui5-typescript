@@ -14,7 +14,7 @@
                 layout="ResponsiveGridLayout"
                 editable="true">
                 <!-- name -->
-                <Label text="Name:" required="true" />
+                <Label text="Name" required="true" />
                 <Input placeholder="Name" />
 
                 <!-- surname -->
@@ -22,18 +22,18 @@
                 <Input placeholder="Surname" />
 
                 <!-- role -->
-                <Label text="Role:" required="true" />
+                <Label text="Role" required="true" />
                 <ComboBox placeholder="Developer or Consultant">
                     <core:Item key="developer" text="Developer" />
                     <core:Item key="consultant" text="Consultant" />
                 </ComboBox>
 
                 <!-- email -->
-                <Label text="Email:" required="true" />
+                <Label text="Email" required="true" />
                 <Input type="Email" placeholder="Email Address" />
 
                 <!-- phone -->
-                <Label text="Phone:" required="true" />
+                <Label text="Phone" required="true" />
                 <Input type="Tel" placeholder="Phone Number" />
             </layoutF:SimpleForm>
         </content>
