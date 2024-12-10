@@ -22,11 +22,11 @@ sap.ui.define(
       },
       // Value Help 'Assigned To' - START
       onValueHelpRequestAssignedTo: function (oEvent) {
-        var sInputValue = oEvent.getSource().getValue(),
+        let sInputValue = oEvent.getSource().getValue(),
           oView = this.getView();
 
-        if (!this._pValueHelpDialog) {
-          this._pValueHelpDialog = Fragment.load({
+        if (!this._pAssignedToValueHelpDialog) {
+          this._pAssignedToValueHelpDialog = Fragment.load({
             id: oView.getId(),
             name: "tmui5.view.valueHelpFragments.AssignedToValueHelp",
             controller: this,
@@ -35,7 +35,7 @@ sap.ui.define(
             return oDialog;
           });
         }
-        this._pValueHelpDialog.then(function (oDialog) {
+        this._pAssignedToValueHelpDialog.then(function (oDialog) {
           // Create a filter for the binding
           // oDialog.getBinding("items").filter([new Filter("Name", FilterOperator.Contains, sInputValue)]);
 
@@ -63,6 +63,9 @@ sap.ui.define(
         }
 
         this.byId("assignedToInput").setValue(oSelectedItem.getTitle()); */
+        const oDialog = oEvent.getSource(); // get Dialog
+        oDialog.destroy();
+        this._pAssignedToValueHelpDialog = null; // allow recreation on next request
       },
       // Value Help 'Assigned To' - END
 
@@ -71,8 +74,8 @@ sap.ui.define(
         var sInputValue = oEvent.getSource().getValue(),
           oView = this.getView();
 
-        if (!this._pValueHelpDialog) {
-          this._pValueHelpDialog = Fragment.load({
+        if (!this._pCustomerValueHelpDialog) {
+          this._pCustomerValueHelpDialog = Fragment.load({
             id: oView.getId(),
             name: "tmui5.view.valueHelpFragments.CustomerValueHelp",
             controller: this,
@@ -81,7 +84,7 @@ sap.ui.define(
             return oDialog;
           });
         }
-        this._pValueHelpDialog.then(function (oDialog) {
+        this._pCustomerValueHelpDialog.then(function (oDialog) {
           // Create a filter for the binding
           // oDialog.getBinding("items").filter([new Filter("Name", FilterOperator.Contains, sInputValue)]);
 
@@ -92,7 +95,11 @@ sap.ui.define(
 
       onValueHelpSearchCustomer: function (oEvent) {},
 
-      onValueHelpCloseCustomer: function (oEvent) {},
+      onValueHelpCloseCustomer: function (oEvent) {
+        const oDialog = oEvent.getSource(); // get Dialog
+        oDialog.destroy();
+        this._pCustomerValueHelpDialog = null; // allow recreation on next request
+      },
       // Value Help 'Customer' - END
 
       onNavBack: function () {

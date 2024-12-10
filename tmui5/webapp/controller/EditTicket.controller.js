@@ -81,6 +81,10 @@ sap.ui.define(
         }
 
         this.byId("assignedToInput").setValue(oSelectedItem.getTitle()); */
+        const oSource = oEvent.getSource();
+        const oDialog = oSource.getParent();
+        oDialog.close();
+        oDialog.destroy();
       },
       // Value Help 'Assigned To' - END
 
