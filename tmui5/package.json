@@ -28,5 +28,13 @@
         "qunit": "fiori run --open test/unitTests.qunit.html",
         "opa5": "fiori run --open test/opaTests.qunit.html",
         "wdi5": "wdio run ./webapp/test/e2e/\\wdio.conf.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.7",
+        "express": "^4.21.2",
+        "pg": "^8.13.1"
     }
 }
