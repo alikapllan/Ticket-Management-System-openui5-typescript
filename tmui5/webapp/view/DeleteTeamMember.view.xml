@@ -17,8 +17,9 @@
         </customHeader>
 
         <content>
-            <Panel headerText="Team Members(XX)" class="sapUiResponsiveMargin" width="auto">
-                <Table id="teamMembersTable" mode="MultiSelect">
+            <Panel headerText="Team Members({= ${teamMemberModel>/}.length })"
+                class="sapUiResponsiveMargin" width="auto">
+                <Table id="teamMembersTable" mode="MultiSelect" items="{teamMemberModel>/}">
                     <!-- Toolbar for Delete Button -->
                     <headerToolbar>
                         <Toolbar>
@@ -51,8 +52,8 @@
                     <items>
                         <ColumnListItem>
                             <cells>
-                                <Text text="{teamMemberModel>id}" />
-                                <Text text="{teamMemberModel>name}" />
+                                <Text text="{teamMemberModel>teamMemberId}" />
+                                <Text text="{teamMemberModel>fullName}" />
                                 <Text text="{teamMemberModel>role}" />
                                 <Text text="{teamMemberModel>email}" />
                                 <Text text="{teamMemberModel>phone}" />

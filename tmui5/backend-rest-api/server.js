@@ -13,8 +13,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // middleware
-app.use(cors());
-app.use(express.json()); // Parse JSON bodies
+app.use(cors()); // allows the server to accept requests from different domains or ports like my frontend(http://localhost:8080)
+app.use(express.json()); // Parse JSON bodies -> parses incoming requests with JSON payloads and makes data avaliable via req.body
 
 // Routes
 app.use("/api/ticketTypes", ticketTypeRoute);
@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
   res.send("Welcome to the REST API for Ticket Management using Node.js!");
 });
 
-// Start the server
+// Start the server / PORT listening for incoming HTTP reqs, app is accessible on http://localhost:PORT
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

@@ -21,8 +21,12 @@ sap.ui.define(
         this.getView().setModel(oTilesModel, "tiles");
       },
 
-      onPress: function (sRoute, sFragment) {
+      onPress: async function (sRoute, sFragment) {
         if (sRoute) {
+          if (sRoute === "RouteDeleteTeamMember") {
+            // Refresh team members to ensure new additions of Team Members are visible
+            this.loadTeamMembers();
+          }
           this.navTo(sRoute);
         } else if (sFragment) {
           // fragment

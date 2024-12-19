@@ -6,7 +6,22 @@ const getAllTeamMembers = async (req, res) => {
 
   try {
     const result = await pool.query(
-      'SELECT * FROM "TeamMember" ORDER BY "teamMemberId" ASC'
+      `
+      SELECT 
+        tm."teamMemberId", 
+        CONCAT(tm."name", ' ', tm."surname") as "fullName",
+        tm."email", 
+        tm."phone", 
+        r."name" AS "role"
+      FROM 
+        "TeamMember" tm
+      INNER JOIN 
+        "Role" r 
+      ON 
+        tm."roleId" = r."roleId"
+      ORDER BY 
+        tm."teamMemberId" ASC
+      `
     );
     res.status(200).json(result.rows);
   } catch (error) {
