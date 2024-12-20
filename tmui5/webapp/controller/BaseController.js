@@ -29,7 +29,7 @@ sap.ui.define(
 
       /**
        * @public
-       * Fetches & loads the team members from the REST API.
+       * Fetches & loads team members through the REST API.
        */
       loadTeamMembers: async function () {
         try {
@@ -57,6 +57,31 @@ sap.ui.define(
           MessageBox.error(
             this.oBundle.getText("MBoxGETReqFailedOnTeamMember")
           );
+        }
+      },
+
+      /**
+       * @public
+       * Fetches & loads customers through the REST API.
+       */
+      loadCustomers: async function () {
+        try {
+          const response = await fetch("http://localhost:3000/api/customers", {
+            method: "GET",
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+
+          const customers = await response.json();
+
+          // Bind response to the "customerModel"
+          const oCustomerModel = new JSONModel(customers);
+          this.getOwnerComponent().setModel(oCustomerModel, "customerModel");
+        } catch (error) {
+          console.error(error);
+          MessageBox.error(this.oBundle.getText("MBoxGETReqFailedOnCustomer"));
         }
       },
     });

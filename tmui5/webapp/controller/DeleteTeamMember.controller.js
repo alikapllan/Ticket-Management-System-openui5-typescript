@@ -63,7 +63,7 @@ sap.ui.define(
                     this.oBundle.getText("MBoxSuccessOfDeletionTeamMember")
                   );
                 } catch (error) {
-                  console.log("Error at deleting team members --> ", error);
+                  console.log(error);
                   MessageBox.error(
                     this.oBundle.getText("MBoxErrorToDeleteTeamMember")
                   );

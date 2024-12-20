@@ -17,9 +17,10 @@
         </customHeader>
 
         <content>
-            <Panel headerText="Customers(XX)" class="sapUiResponsiveMargin" width="auto">
+            <Panel headerText="Customers({= ${customerModel>/}.length })"
+                class="sapUiResponsiveMargin" width="auto">
 
-                <Table id="teamMembersTable" mode="MultiSelect">
+                <Table id="teamCustomersTable" mode="MultiSelect" items="{customerModel>/}">
                     <!-- Toolbar for Delete Button -->
                     <headerToolbar>
                         <Toolbar>
@@ -49,8 +50,8 @@
                     <items>
                         <ColumnListItem>
                             <cells>
-                                <Text text="{customerModel>id}" />
-                                <Text text="{customerModel>companyName}" />
+                                <Text text="{customerModel>customerId}" />
+                                <Text text="{customerModel>name}" />
                                 <Text text="{customerModel>email}" />
                                 <Text text="{customerModel>phone}" />
                             </cells>

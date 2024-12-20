@@ -6,7 +6,15 @@ const getAllCustomers = async (req, res) => {
 
   try {
     const result = await pool.query(
-      'SELECT * FROM "Customer" ORDER BY "customerId" ASC'
+      `
+      SELECT 
+        "customerId", 
+        "name",
+        "email",
+        "phone"
+       FROM "Customer" 
+       ORDER BY "customerId" ASC
+      `
     );
     res.status(200).json(result.rows);
   } catch (error) {

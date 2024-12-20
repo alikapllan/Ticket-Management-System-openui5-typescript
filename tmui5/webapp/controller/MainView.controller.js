@@ -31,6 +31,11 @@ sap.ui.define(
             // Refresh team members to ensure new additions of Team Members are visible
             this.loadTeamMembers();
           }
+
+          if (sRoute === "RouteDeleteCustomer") {
+            this.loadCustomers();
+          }
+
           this.navTo(sRoute);
         } else if (sFragment) {
           // fragment
@@ -151,9 +156,6 @@ sap.ui.define(
               },
             }
           );
-
-          // Optionally, refresh team members
-          this.loadTeamMembers();
         } catch (error) {
           console.error(error);
           MessageBox.error(
