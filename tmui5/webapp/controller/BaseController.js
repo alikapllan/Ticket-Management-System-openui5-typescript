@@ -53,7 +53,7 @@ sap.ui.define(
             "teamMemberModel"
           );
         } catch (error) {
-          console.error("Error loading team members:", error);
+          console.error(error);
           MessageBox.error(
             this.oBundle.getText("MBoxGETReqFailedOnTeamMember")
           );

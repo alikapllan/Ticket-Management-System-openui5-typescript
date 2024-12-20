@@ -15,33 +15,32 @@
                 editable="true">
                 <!-- name -->
                 <Label text="Name" required="true" />
-                <Input placeholder="Name" />
+                <Input id="teamMemberNameInput" placeholder="Name" />
 
                 <!-- surname -->
                 <Label text="Surname:" required="true" />
-                <Input placeholder="Surname" />
+                <Input id="teamMemberSurnameInput" placeholder="Surname" />
 
                 <!-- role -->
                 <Label text="Role" required="true" />
-                <ComboBox placeholder="Developer or Consultant">
-                    <core:Item key="developer" text="Developer" />
-                    <core:Item key="consultant" text="Consultant" />
-                </ComboBox>
+                <Select id="teamMemberRoleInput" items="{roleModel>/}">
+                    <core:Item key="{roleModel>roleId}" text="{roleModel>name}" />
+                </Select>
 
                 <!-- email -->
                 <Label text="Email" required="true" />
-                <Input type="Email" placeholder="Email Address" />
+                <Input id="teamMemberEmailInput" type="Email" placeholder="Email Address" />
 
                 <!-- phone -->
                 <Label text="Phone" required="true" />
-                <Input type="Tel" placeholder="Phone Number" />
+                <Input id="teamMemberPhoneInput" type="Tel" placeholder="Phone Number" />
             </layoutF:SimpleForm>
         </content>
 
         <beginButton>
             <Button
                 text="{i18n>dialogCreateButtonText}"
-                press=".onCreateCustomer"
+                press=".onCreateTeamMember"
                 type="Emphasized" />
         </beginButton>
 
