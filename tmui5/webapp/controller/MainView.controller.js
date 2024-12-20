@@ -163,6 +163,70 @@ sap.ui.define(
           );
         }
       },
+
+      // fragment CreateCustomer
+      onCreateCustomer: function () {
+        this._createCustomerPOST();
+      },
+
+      _createCustomerPOST: async function () {
+        // Get input field values from fragment
+        const oView = this.getView();
+        const sName = oView.byId("customerNameInput").getValue();
+        const sEmail = oView.byId("customerEmailInput").getValue();
+        const sPhone = oView.byId("customerPhoneInput").getValue();
+
+        // Validate inputs
+        if (!sName || !sEmail || !sPhone) {
+          MessageBox.error(this.oBundle.getText("MBoxFillAllFields"));
+          return;
+        }
+
+        // Prepare Payload to pass to POST request
+        const oPayload = {
+          name: sName,
+          email: sEmail,
+          phone: sPhone,
+        };
+
+        // Send POST request to create Customer
+        try {
+          const response = await fetch("http://localhost:3000/api/customers", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json", // tells the server the body is JSON
+            },
+            body: JSON.stringify(oPayload),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+
+          MessageBox.success(
+            this.oBundle.getText("MBoxCustomerCreatedSuccessfully"),
+            {
+              onClose: function () {
+                // Destroy fragment
+                const oFragmentCreateCustomer = oView.byId(
+                  "createCustomerDialog"
+                );
+                // Attach event listener to handle cleanup after closing
+                oFragmentCreateCustomer.attachEventOnce(
+                  "afterClose",
+                  function () {
+                    oFragmentCreateCustomer.destroy(); // Destroy after close is complete
+                  }
+                );
+                oFragmentCreateCustomer.close();
+              },
+            }
+          );
+        } catch (error) {
+          console.error(error);
+          MessageBox.error(this.oBundle.getText("MBoxFailedToCreateCustomer"));
+        }
+      },
     });
   }
 );
