@@ -3,11 +3,12 @@ sap.ui.define(
     "tmui5/controller/BaseController",
     "sap/ui/core/routing/History",
     "sap/m/MessageBox",
+    "tmui5/services/teamMemberService",
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-  function (BaseController, History, MessageBox) {
+  function (BaseController, History, MessageBox, teamMemberService) {
     "use strict";
 
     return BaseController.extend("tmui5.controller.DeleteTeamMember", {
@@ -48,13 +49,7 @@ sap.ui.define(
                     const oTeamMember = oSelectedTeamMember.getObject(); // get bound data for each Team Member
                     const iTeamMemberId = oTeamMember.teamMemberId;
 
-                    // make DELETE Request for each selected Team Member to Rest API
-                    await fetch(
-                      `http://localhost:3000/api/teamMembers/${iTeamMemberId}`,
-                      {
-                        method: "DELETE",
-                      }
-                    );
+                    await teamMemberService.deleteTeamMembers(iTeamMemberId);
                   }
 
                   // refresh Team Members on Table after deletion

@@ -3,11 +3,12 @@ sap.ui.define(
     "tmui5/controller/BaseController",
     "sap/ui/core/routing/History",
     "sap/m/MessageBox",
+    "tmui5/services/customerService",
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-  function (BaseController, History, MessageBox) {
+  function (BaseController, History, MessageBox, customerService) {
     "use strict";
 
     return BaseController.extend("tmui5.controller.DeleteCustomer", {
@@ -48,12 +49,7 @@ sap.ui.define(
                     const iCustomerId = oCustomer.customerId;
 
                     // make DELETE Request for each selected Customer to Rest API
-                    await fetch(
-                      `http://localhost:3000/api/customers/${iCustomerId}`,
-                      {
-                        method: "DELETE",
-                      }
-                    );
+                    await customerService.deleteCustomers(iCustomerId);
                   }
 
                   // refresh Customers on Table after deletion

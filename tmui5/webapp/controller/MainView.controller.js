@@ -4,11 +4,20 @@ sap.ui.define(
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
     "sap/m/MessageBox",
+    "tmui5/services/customerService",
+    "tmui5/services/teamMemberService",
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-  function (BaseController, JSONModel, MessageToast, MessageBox) {
+  function (
+    BaseController,
+    JSONModel,
+    MessageToast,
+    MessageBox,
+    customerService,
+    teamMemberService
+  ) {
     "use strict";
 
     return BaseController.extend("tmui5.controller.MainView", {
@@ -20,9 +29,6 @@ sap.ui.define(
         // json binding for generic tiles
         const oTilesModel = new JSONModel("../model/tiles.json");
         this.getView().setModel(oTilesModel, "tiles");
-
-        // Load roles --> no need to put it inside onOpenDialog as Roles are rarely changed
-        this._loadRoles();
       },
 
       onPress: async function (sRoute, sFragment) {
@@ -74,27 +80,6 @@ sap.ui.define(
         this._createTeamMemberPOST();
       },
 
-      _loadRoles: async function () {
-        try {
-          const response = await fetch("http://localhost:3000/api/roles", {
-            method: "GET",
-          });
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-
-          const roles = await response.json();
-
-          // Bind the fetched role data to the "roleModel"
-          const oRoleModel = new JSONModel(roles);
-          this.getOwnerComponent().setModel(oRoleModel, "roleModel");
-        } catch (error) {
-          console.error(error);
-          MessageBox.error(this.oBundle.getText("MBoxGETReqFailedOnRole"));
-        }
-      },
-
       _createTeamMemberPOST: async function () {
         // Get input field values from the fragment
         const oView = this.getView();
@@ -121,20 +106,7 @@ sap.ui.define(
 
         // Send POST request
         try {
-          const response = await fetch(
-            "http://localhost:3000/api/teamMembers",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json", // tells the server the body is JSON
-              },
-              body: JSON.stringify(oPayload),
-            }
-          );
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
+          await teamMemberService.createTeamMembers(oPayload);
 
           // Success
           MessageBox.success(
@@ -191,17 +163,7 @@ sap.ui.define(
 
         // Send POST request to create Customer
         try {
-          const response = await fetch("http://localhost:3000/api/customers", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json", // tells the server the body is JSON
-            },
-            body: JSON.stringify(oPayload),
-          });
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
+          await customerService.createCustomers(oPayload);
 
           MessageBox.success(
             this.oBundle.getText("MBoxCustomerCreatedSuccessfully"),

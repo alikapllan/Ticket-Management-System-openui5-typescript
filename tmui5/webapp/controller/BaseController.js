@@ -3,8 +3,16 @@ sap.ui.define(
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
+    "tmui5/services/customerService",
+    "tmui5/services/teamMemberService",
   ],
-  function (Controller, JSONModel, MessageBox) {
+  function (
+    Controller,
+    JSONModel,
+    MessageBox,
+    customerService,
+    teamMemberService
+  ) {
     "use strict";
 
     return Controller.extend("tmui5.controller.BaseController", {
@@ -33,20 +41,7 @@ sap.ui.define(
        */
       loadTeamMembers: async function () {
         try {
-          const response = await fetch(
-            "http://localhost:3000/api/teamMembers",
-            {
-              method: "GET", // Fetch team members from the REST API - specifying type of Req. here
-            }
-          );
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-
-          const teamMembers = await response.json();
-
-          // Bind the fetched data to the "teamMemberModel"
+          const teamMembers = await teamMemberService.fetchTeamMembers();
           const oTeamMemberModel = new JSONModel(teamMembers);
           this.getOwnerComponent().setModel(
             oTeamMemberModel,
@@ -66,17 +61,7 @@ sap.ui.define(
        */
       loadCustomers: async function () {
         try {
-          const response = await fetch("http://localhost:3000/api/customers", {
-            method: "GET",
-          });
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-
-          const customers = await response.json();
-
-          // Bind response to the "customerModel"
+          const customers = await customerService.fetchCustomers();
           const oCustomerModel = new JSONModel(customers);
           this.getOwnerComponent().setModel(oCustomerModel, "customerModel");
         } catch (error) {

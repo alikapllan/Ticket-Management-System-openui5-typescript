@@ -38,9 +38,9 @@
 
                     <!-- Ticket Type -->
                     <Label text="{i18n>ticketType}" />
-                    <Select>
-                        <core:Item key="bug" text="Bug" />
-                        <core:Item key="change" text="Change Request" />
+                    <Select items="{ticketTypeModel>/}">
+                        <core:Item key="{ticketTypeModel>ticketTypeId}"
+                            text="{ticketTypeModel>name}" />
                     </Select>
 
                     <!-- Assigned To -->
