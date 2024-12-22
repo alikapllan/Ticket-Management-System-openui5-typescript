@@ -32,13 +32,10 @@
                 emptySpanM="3">
 
                 <layoutF:content>
-                    <!-- Ticket Number -->
-                    <Label text="{i18n>ticketNumber}" />
-                    <Input id="ticketNumberInput" editable="false" />
-
                     <!-- Ticket Type -->
                     <Label text="{i18n>ticketType}" />
-                    <Select items="{ticketTypeModel>/}">
+                    <Select id="ticketTypeInput" items="{ticketTypeModel>/}"
+                        selectedKey="{createTicketFormModel>/defaultTicketTypeId}">
                         <core:Item key="{ticketTypeModel>ticketTypeId}"
                             text="{ticketTypeModel>name}" />
                     </Select>
@@ -55,7 +52,7 @@
 
                     <!-- Customer -->
                     <Label text="{i18n>customer}" />
-                    <Input id="customerInputValueHelp" placeholder="{i18n>assignToPlaceholder}"
+                    <Input id="customerInputValueHelp" placeholder="{i18n>customerPlaceholder}"
                         showValueHelp="true"
                         valueHelpRequest=".onValueHelpRequestCustomer" />
 
@@ -64,7 +61,7 @@
 
                     <!-- Description -->
                     <Label text="{i18n>description}" />
-                    <TextArea rows="5" maxLength="200"
+                    <TextArea id="descriptionInput" rows="5" maxLength="200"
                         placeholder="{i18n>descriptionPlaceholder}"
                         showExceededText="true" />
 

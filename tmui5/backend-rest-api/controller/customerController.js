@@ -9,8 +9,8 @@ const getAllCustomers = async (req, res) => {
       `
       SELECT 
         "customerId", 
-        "name",
-        "email",
+        TRIM("name") AS "name",
+        TRIM("email") AS "email",
         "phone"
        FROM "Customer" 
        ORDER BY "customerId" ASC

@@ -4,14 +4,14 @@
     <SelectDialog
         id="customerValueHelpDialog"
         title="Customers"
-        items="{/CustomerCollection}"
+        items="{customerModel>/}"
         search=".onValueHelpSearchCustomer"
         confirm=".onValueHelpCloseCustomer"
         cancel=".onValueHelpCloseCustomer">
         <StandardListItem
             iconDensityAware="false"
             iconInset="false"
-            title="{Id}"
-            description="{Name}" />
+            title="{customerModel>name}"
+            description="{customerModel>email}" />
     </SelectDialog>
 </core:FragmentDefinition>

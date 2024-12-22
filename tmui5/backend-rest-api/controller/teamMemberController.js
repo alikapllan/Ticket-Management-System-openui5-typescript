@@ -9,8 +9,8 @@ const getAllTeamMembers = async (req, res) => {
       `
       SELECT 
         tm."teamMemberId", 
-        CONCAT(tm."name", ' ', tm."surname") as "fullName",
-        tm."email", 
+        CONCAT(TRIM(tm."name"), ' ', TRIM(tm."surname")) AS "fullName",
+        TRIM(tm."email") AS "email", 
         tm."phone", 
         r."name" AS "role"
       FROM 
