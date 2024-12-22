@@ -54,8 +54,9 @@
 
 
         <content>
-            <Panel headerText="Tickets(XX)" class="sapUiResponsiveMargin" width="auto">
-                <Table id="ticketsTable" mode="MultiSelect">
+            <Panel headerText="Tickets({= ${ticketModel>/}.length })" class="sapUiResponsiveMargin"
+                width="auto">
+                <Table id="ticketsTable" mode="MultiSelect" items="{ticketModel>/}">
                     <headerToolbar>
                         <Toolbar>
                             <ToolbarSpacer />
@@ -73,20 +74,20 @@
                             <Text text="Ticket Status" />
                         </Column>
                         <Column>
-                            <Text text="Created On" />
+                            <Text text="Assigned To" />
                         </Column>
                         <Column>
-                            <Text text="Assigned To" />
+                            <Text text="Created On" />
                         </Column>
                     </columns>
 
                     <items>
                         <ColumnListItem>
                             <cells>
-                                <Text text="{tickets>TicketNumber}" />
-                                <Text text="{tickets>TicketStatus}" />
-                                <Text text="{tickets>CreatedOn}" />
-                                <Text text="{tickets>AssignedTo}" />
+                                <Text text="{ticketModel>ticketId}" />
+                                <Text text="{ticketModel>statusName}" />
+                                <Text text="{ticketModel>teamMember}" />
+                                <Text text="{ticketModel>createdAt}" />
                             </cells>
                         </ColumnListItem>
                     </items>

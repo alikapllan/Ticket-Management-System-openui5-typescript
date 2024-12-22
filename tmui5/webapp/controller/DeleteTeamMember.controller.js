@@ -12,12 +12,12 @@ sap.ui.define(
     "use strict";
 
     return BaseController.extend("tmui5.controller.DeleteTeamMember", {
-      onInit: function () {
+      onInit: async function () {
         // Call the BaseController's onInit to initialize to be able to use 'oBundle'
         BaseController.prototype.onInit.apply(this, arguments);
 
         // load team members from db
-        this.loadTeamMembers();
+        await this.loadTeamMembers();
       },
 
       onDeleteSelectedTeamMember: async function () {

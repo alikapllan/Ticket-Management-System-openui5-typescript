@@ -12,11 +12,11 @@ sap.ui.define(
     "use strict";
 
     return BaseController.extend("tmui5.controller.DeleteCustomer", {
-      onInit: function () {
+      onInit: async function () {
         // Call the BaseController's onInit to initialize to be able to use 'oBundle'
         BaseController.prototype.onInit.apply(this, arguments);
 
-        this.loadCustomers();
+        await this.loadCustomers();
       },
 
       onDeleteSelectedCustomer: async function () {

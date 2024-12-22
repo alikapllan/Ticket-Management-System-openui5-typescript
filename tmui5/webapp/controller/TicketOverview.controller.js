@@ -2,22 +2,94 @@ sap.ui.define(
   [
     "tmui5/controller/BaseController",
     "sap/ui/core/routing/History",
+    "sap/ui/model/json/JSONModel",
     "sap/ui/core/Fragment",
+    "sap/m/MessageBox",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/Token",
+    "tmui5/services/ticketService",
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-  function (BaseController, History, Fragment, Filter, FilterOperator, Token) {
+  function (
+    BaseController,
+    History,
+    JSONModel,
+    Fragment,
+    MessageBox,
+    Filter,
+    FilterOperator,
+    Token,
+    ticketService
+  ) {
     "use strict";
 
     return BaseController.extend("tmui5.controller.TicketOverview", {
-      onInit: function () {},
+      onInit: async function () {
+        // Call the BaseController's onInit to initialize to be able to use 'oBundle'
+        BaseController.prototype.onInit.apply(this, arguments);
+
+        await this._loadTickets();
+      },
+
+      onCreateTicket: function () {
+        this.navTo("RouteCreateTicket");
+      },
 
       onEditTicket: function () {
         this.navTo("RouteEditTicket");
+      },
+
+      onDeleteSelectedTickets: function () {
+        const oTable = this.byId("ticketsTable");
+        const aSelectedTickets = oTable.getSelectedContexts(); // Get selected row/s
+
+        if (!aSelectedTickets.length) {
+          MessageBox.error(this.oBundle.getText("MBoxSelectAtLeastOneTicket"));
+          return;
+        }
+
+        // confirm delete operation of ticket/s
+        MessageBox.confirm(this.oBundle.getText("MBoxConfirmToDeleteTicket"), {
+          icon: MessageBox.Icon.QUESTION,
+          title: this.oBundle.getText("MBoxConfirmationTitleToDeleteTicket"),
+          actions: [MessageBox.Action.YES, MessageBox.Action.NO],
+          emphasizedAction: MessageBox.Action.YES,
+          onClose: async function (sAction) {
+            if (sAction === MessageBox.Action.YES) {
+              try {
+                // loop over selected rows
+                for (const oSelectedTicket of aSelectedTickets) {
+                  const oTicket = oSelectedTicket.getObject(); // get bound data for each Customer
+                  const iTicketId = oTicket.ticketId;
+
+                  // make DELETE Request for each selected Customer to Rest API
+                  await ticketService.deleteTickets(iTicketId);
+                }
+
+                // refresh Customers on Table after deletion
+                await this._loadTickets();
+
+                MessageBox.success(
+                  this.oBundle.getText("MBoxSuccessOfDeletionTicket")
+                );
+              } catch (error) {
+                console.log(error);
+                MessageBox.error(
+                  this.oBundle.getText("MBoxErrorToDeleteTicket")
+                );
+                return;
+              }
+            }
+            // MessageBox.Action.NO
+            else {
+              // unselect the checkboxes of selected items if clicked on click 'no'
+              oTable.removeSelections(true);
+            }
+          }.bind(this),
+        });
       },
 
       onTicketIdValueHelp: function (oEvent) {
@@ -75,8 +147,15 @@ sap.ui.define(
         */
       },
 
-      onCreateTicket: function () {
-        this.navTo("RouteCreateTicket");
+      _loadTickets: async function () {
+        try {
+          const tickets = await ticketService.fetchTickets();
+          const oTicketModel = new JSONModel(tickets);
+          this.getOwnerComponent().setModel(oTicketModel, "ticketModel");
+        } catch (error) {
+          console.error(error);
+          MessageBox.error(this.oBundle.getText("MBoxGETReqFailedOnTicket"));
+        }
       },
 
       onNavBack: function () {

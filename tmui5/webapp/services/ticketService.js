@@ -33,5 +33,21 @@ sap.ui.define([], function () {
 
       return response.json();
     },
+
+    deleteTickets: async function (iTicketId) {
+      const response = await fetch(
+        `http://localhost:3000/api/tickets/${iTicketId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Ticket Deletion Failed! HTTP ${response.status}: ${response.statusText}`
+        );
+      }
+      // no return response.json() , as no response for deletion in our case
+    },
   };
 });
