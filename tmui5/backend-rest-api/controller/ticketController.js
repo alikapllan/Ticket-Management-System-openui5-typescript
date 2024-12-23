@@ -16,14 +16,27 @@ const getAllTickets = async (req, res) => {
 // CREATE a ticket
 const createTicket = async (req, res) => {
   // ticketId is created serially via Postresql so no need to provide, createdAt via NOW() Method below
-  const { ticketTypeId, teamMemberId, customerId, title, description } =
-    req.body;
+  const {
+    ticketTypeId,
+    teamMemberId,
+    customerId,
+    ticketStatusId,
+    title,
+    description,
+  } = req.body;
 
   console.log("Ticket: Request body POST:", req.body);
   try {
     const result = await pool.query(
-      'INSERT INTO "Ticket" ("ticketTypeId", "teamMemberId", "customerId", "title", "description", "createdAt") VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING *',
-      [ticketTypeId, teamMemberId, customerId, title, description]
+      'INSERT INTO "Ticket" ("ticketTypeId", "teamMemberId", "customerId", "ticketStatusId", "title", "description", "createdAt") VALUES ($1, $2, $3, $4, $5, $6, NOW()) RETURNING *',
+      [
+        ticketTypeId,
+        teamMemberId,
+        customerId,
+        ticketStatusId,
+        title,
+        description,
+      ]
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {
@@ -35,14 +48,28 @@ const createTicket = async (req, res) => {
 const updateTicket = async (req, res) => {
   const { id } = req.params;
 
-  const { ticketTypeId, teamMemberId, customerId, title, description } =
-    req.body;
+  const {
+    ticketTypeId,
+    teamMemberId,
+    customerId,
+    ticketStatusId,
+    title,
+    description,
+  } = req.body;
 
   console.log("Ticket: Request body PUT:", req.body);
   try {
     const result = await pool.query(
-      'UPDATE "Ticket" SET "ticketTypeId" = $1, "teamMemberId" = $2, "customerId" = $3, "title" = $4, "description" = $5 WHERE "ticketId" = $6 RETURNING *',
-      [ticketTypeId, teamMemberId, customerId, title, description, id]
+      'UPDATE "Ticket" SET "ticketTypeId" = $1, "teamMemberId" = $2, "customerId" = $3, "ticketStatusId" = $4, "title" = $5, "description" = $6 WHERE "ticketId" = $7 RETURNING *',
+      [
+        ticketTypeId,
+        teamMemberId,
+        customerId,
+        ticketStatusId,
+        title,
+        description,
+        id,
+      ]
     );
 
     res.status(200).json(result.rows[0]);

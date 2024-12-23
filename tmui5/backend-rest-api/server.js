@@ -6,6 +6,7 @@ const ticketTypeRoute = require("./route/ticketTypeRoute"); //
 const ticketRoute = require("./route/ticketRoute");
 const ticketCommentRoute = require("./route/ticketCommentRoute"); //
 const customerRoute = require("./route/customerRoute");
+const ticketStatusRoute = require("./route/ticketStatusRoute");
 const roleRoute = require("./route/roleRoute"); //
 const teamMemberRoute = require("./route/teamMemberRoute");
 
@@ -21,6 +22,7 @@ app.use("/api/ticketTypes", ticketTypeRoute);
 app.use("/api/tickets", ticketRoute);
 app.use("/api/ticketComments", ticketCommentRoute);
 app.use("/api/customers", customerRoute);
+app.use("/api/ticketStatus", ticketStatusRoute);
 app.use("/api/roles", roleRoute);
 app.use("/api/teamMembers", teamMemberRoute);
 
