@@ -9,7 +9,7 @@ const getAllTicketStatuses = async (req, res) => {
       `
         SELECT 
             "ticketStatusId",
-            TRIM("name") AS "name" 
+            TRIM("name") AS "statusName" 
         FROM "TicketStatus" 
         ORDER BY 
             "ticketStatusId" ASC

@@ -223,6 +223,10 @@ sap.ui.define(
         }
       },
 
+      onCancelTicket: function () {
+        this.navTo("RouteMainView");
+      },
+
       _onRouteMatched: function () {
         this._resetCreateTicketForm(); // Reset form whenever the route is matched
       },

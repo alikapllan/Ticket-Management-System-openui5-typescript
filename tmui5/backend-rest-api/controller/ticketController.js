@@ -15,18 +15,30 @@ const getAllTickets = async (req, res) => {
 
 // CREATE a ticket
 const createTicket = async (req, res) => {
+  // .. Creates a new ticket with a default status of "New"
+  // ..Dynamically fetches the ticketStatusId for "New" from the TicketStatus table
+
   // ticketId is created serially via Postresql so no need to provide, createdAt via NOW() Method below
-  const {
-    ticketTypeId,
-    teamMemberId,
-    customerId,
-    ticketStatusId,
-    title,
-    description,
-  } = req.body;
+  const { ticketTypeId, teamMemberId, customerId, title, description } =
+    req.body;
 
   console.log("Ticket: Request body POST:", req.body);
   try {
+    // Fetch the ticketStatusId for "New" dynamically
+    const { rows } = await pool.query(
+      'SELECT "ticketStatusId" FROM "TicketStatus" WHERE "name" = $1',
+      ["New"]
+    );
+
+    if (!rows.length) {
+      // If no "New" status is found -> return error
+      return res.status(400).json({
+        message: 'Default status "New" not found in TicketStatus table',
+      });
+    }
+
+    const ticketStatusId = rows[0].ticketStatusId;
+
     const result = await pool.query(
       'INSERT INTO "Ticket" ("ticketTypeId", "teamMemberId", "customerId", "ticketStatusId", "title", "description", "createdAt") VALUES ($1, $2, $3, $4, $5, $6, NOW()) RETURNING *',
       [
