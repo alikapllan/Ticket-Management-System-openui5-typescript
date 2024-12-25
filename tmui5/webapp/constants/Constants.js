@@ -6,11 +6,13 @@ sap.ui.define([], function () {
       ASSIGNED_TO_VALUEHELP:
         "tmui5.view.valueHelpFragments.AssignedToValueHelp",
       CUSTOMER_VALUEHELP: "tmui5.view.valueHelpFragments.CustomerValueHelp",
+      TICKET_ID_VALUEHELP: "tmui5.view.valueHelpFragments.TicketIdValueHelp",
     },
 
     FRAGMENTS_ID: {
       ASSIGNED_TO_VALUEHELP: "AssignedToValueHelp",
       CUSTOMER_VALUEHELP: "CustomerValueHelp",
+      TICKET_ID_VALUEHELP: "TicketIdValueHelp",
     },
   };
 });

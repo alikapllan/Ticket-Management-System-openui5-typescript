@@ -9,6 +9,8 @@ sap.ui.define(
     "sap/ui/model/FilterOperator",
     "sap/m/Token",
     "tmui5/services/ticketService",
+    "tmui5/util/FragmentUtil",
+    "tmui5/constants/Constants",
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -22,7 +24,9 @@ sap.ui.define(
     Filter,
     FilterOperator,
     Token,
-    ticketService
+    ticketService,
+    FragmentUtil,
+    Constants
   ) {
     "use strict";
 
@@ -156,59 +160,48 @@ sap.ui.define(
         });
       },
 
-      onTicketIdValueHelp: function (oEvent) {
-        let sInputValue = oEvent.getSource().getValue(),
-          oView = this.getView();
+      onTicketIdValueHelp: async function (oEvent) {
+        // Load fragment
+        const oDialog = await FragmentUtil.loadValueHelpFragment(
+          this,
+          Constants.FRAGMENTS.TICKET_ID_VALUEHELP,
+          Constants.FRAGMENTS_ID.TICKET_ID_VALUEHELP
+        );
 
-        // create value help dialog
-        if (!this._pValueHelpDialog) {
-          this._pValueHelpDialog = Fragment.load({
-            id: oView.getId(),
-            name: "tmui5.view.valueHelpFragments.TicketIdValueHelp",
-            controller: this,
-          }).then(function (oValueHelpDialog) {
-            oView.addDependent(oValueHelpDialog);
-            return oValueHelpDialog;
+        oDialog.open();
+      },
+
+      _onTicketIdValueHelpSearch: function (oEvent) {
+        const sValue = oEvent.getParameter("value");
+        const oFilter = new Filter("title", FilterOperator.Contains, sValue);
+        oEvent.getSource().getBinding("items").filter([oFilter]);
+      },
+
+      _onTicketIdValueHelpClose: function (oEvent) {
+        const aSelectedItems = oEvent.getParameter("selectedItems"),
+          oMultiInput = this.byId("multiTicketIdInput");
+
+        if (aSelectedItems && aSelectedItems.length > 0) {
+          // remove previous tokens
+          oMultiInput.removeAllTokens();
+
+          aSelectedItems.forEach(function (oItem) {
+            oMultiInput.addToken(
+              new Token({
+                text: oItem.getTitle(), // also ticketId
+                key: oItem
+                  .getBindingContext("ticketModel")
+                  .getProperty("ticketId"),
+              })
+            );
           });
         }
 
-        this._pValueHelpDialog.then(function (oValueHelpDialog) {
-          // create a filter for the binding
-          /*
-          oValueHelpDialog
-            .getBinding("items")
-            .filter([new Filter("Name", FilterOperator.Contains, sInputValue)]);
-          */
-          // open value help dialog filtered by the input value
-          oValueHelpDialog.open(sInputValue);
-        });
-      },
-
-      _onTicketIdValueHelpSearch: function (evt) {
-        /*
-			let sValue = evt.getParameter("value");
-			let oFilter = new Filter(
-				"Name",
-				FilterOperator.Contains,
-				sValue
-			);
-			evt.getSource().getBinding("items").filter([oFilter]); 
-        */
-      },
-
-      _onTicketIdValueHelpClose: function (evt) {
-        /*
-			let aSelectedItems = evt.getParameter("selectedItems"),
-				oMultiInput = this.byId("multiTicketIdInput");
-
-			if (aSelectedItems && aSelectedItems.length > 0) {
-				aSelectedItems.forEach(function (oItem) {
-					oMultiInput.addToken(new Token({
-						text: oItem.getTitle()
-					}));
-				});
-			}
-        */
+        // destroy fragment
+        FragmentUtil.destroyFragment(
+          this,
+          Constants.FRAGMENTS_ID.TICKET_ID_VALUEHELP
+        );
       },
 
       onNavBack: function () {

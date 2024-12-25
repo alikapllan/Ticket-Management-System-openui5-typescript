@@ -4,7 +4,7 @@
     <SelectDialog
         id="ticketIdValueHelpDialog"
         title="Tickets"
-        items="{/TicketsCollection}"
+        items="{ticketModel>/}"
         search="_onTicketIdValueHelpSearch"
         confirm="_onTicketIdValueHelpClose"
         cancel="_onTicketIdValueHelpClose"
@@ -12,7 +12,7 @@
         <StandardListItem
             iconDensityAware="false"
             iconInset="false"
-            title="{Id}"
-            description="{Title}" />
+            title="{ticketModel>ticketId}"
+            description="{ticketModel>title}" />
     </SelectDialog>
 </core:FragmentDefinition>
