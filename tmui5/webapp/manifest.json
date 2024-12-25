@@ -77,27 +77,27 @@
         },
         {
           "name": "RouteTicketOverview",
-          "pattern": "ticketoverview",
+          "pattern": "TicketOverview",
           "target": ["TargetTicketOverview"]
         },
         {
           "name": "RouteEditTicket",
-          "pattern": "editticket",
+          "pattern": "EditTicket/{ticketId}",
           "target": ["TargetEditTicket"]
         },
         {
           "name": "RouteCreateTicket",
-          "pattern": "createticket",
+          "pattern": "CreateTicket",
           "target": ["TargetCreateTicket"]
         },
         {
           "name": "RouteDeleteTeamMember",
-          "pattern": "deleteteammember",
+          "pattern": "DeleteTeamMember",
           "target": ["TargetDeleteTeamMember"]
         },
         {
           "name": "RouteDeleteCustomer",
-          "pattern": "deletecustomer",
+          "pattern": "DeleteCustomer",
           "target": ["TargetDeleteCustomer"]
         }
       ],

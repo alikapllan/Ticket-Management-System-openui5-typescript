@@ -6,7 +6,14 @@ const getAllRoles = async (req, res) => {
 
   try {
     const result = await pool.query(
-      'SELECT "roleId", "name" FROM "Role" ORDER BY "roleId" ASC'
+      `
+      SELECT 
+        "roleId", 
+        "name"
+      FROM "Role" 
+      ORDER BY 
+        "roleId" ASC
+      `
     );
     res.status(200).json(result.rows);
   } catch (error) {

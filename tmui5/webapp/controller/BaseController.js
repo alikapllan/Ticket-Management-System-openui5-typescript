@@ -5,13 +5,17 @@ sap.ui.define(
     "sap/m/MessageBox",
     "tmui5/services/customerService",
     "tmui5/services/teamMemberService",
+    "tmui5/services/ticketService",
+    "tmui5/services/ticketStatusService",
   ],
   function (
     Controller,
     JSONModel,
     MessageBox,
     customerService,
-    teamMemberService
+    teamMemberService,
+    ticketService,
+    ticketStatusService
   ) {
     "use strict";
 
@@ -67,6 +71,41 @@ sap.ui.define(
         } catch (error) {
           console.error(error);
           MessageBox.error(this.oBundle.getText("MBoxGETReqFailedOnCustomer"));
+        }
+      },
+
+      /**
+       * @public
+       * Fetches & loads tickets through the REST API.
+       */
+      loadTickets: async function () {
+        try {
+          const tickets = await ticketService.fetchTickets();
+          const oTicketModel = new JSONModel(tickets);
+          this.getOwnerComponent().setModel(oTicketModel, "ticketModel");
+        } catch (error) {
+          console.error(error);
+          MessageBox.error(this.oBundle.getText("MBoxGETReqFailedOnTicket"));
+        }
+      },
+
+      /**
+       * @public
+       * Fetches & loads tickets through the REST API.
+       */
+      loadTicketStatuses: async function () {
+        try {
+          const tickets = await ticketStatusService.fetchTicketStatuses();
+          const oTicketStatusModel = new JSONModel(tickets);
+          this.getOwnerComponent().setModel(
+            oTicketStatusModel,
+            "ticketStatusModel"
+          );
+        } catch (error) {
+          console.error(error);
+          MessageBox.error(
+            this.oBundle.getText("MBoxGETReqFailedOnTicketStatus")
+          );
         }
       },
     });

@@ -16,6 +16,23 @@ sap.ui.define([], function () {
       return response.json();
     },
 
+    fetchTicket: async function (iTicketId) {
+      const response = await fetch(
+        `http://localhost:3000/api/tickets/${iTicketId}`,
+        {
+          method: "GET",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch Ticket: HTTP ${response.status}: ${response.statusText}`
+        );
+      }
+
+      return response.json();
+    },
+
     createTickets: async function (oPayload) {
       const response = await fetch("http://localhost:3000/api/tickets", {
         method: "POST",
@@ -48,6 +65,27 @@ sap.ui.define([], function () {
         );
       }
       // no return response.json() , as no response for deletion in our case
+    },
+
+    updateTickets: async function (iTicketId, oPayload) {
+      const response = await fetch(
+        `http://localhost:3000/api/tickets/${iTicketId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json", // tells the server the body is JSON
+          },
+          body: JSON.stringify(oPayload),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Ticket Update Failed! HTTP ${response.status}: ${response.statusText}`
+        );
+      }
+
+      return response.json();
     },
   };
 });

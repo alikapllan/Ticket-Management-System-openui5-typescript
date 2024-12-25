@@ -31,15 +31,47 @@ sap.ui.define(
         // Call the BaseController's onInit to initialize to be able to use 'oBundle'
         BaseController.prototype.onInit.apply(this, arguments);
 
-        await this._loadTickets();
+        // Attach handler for when the TicketOverview is matched
+        const oRouter = this.getOwnerComponent().getRouter();
+        oRouter
+          .getRoute("RouteTicketOverview")
+          .attachPatternMatched(this._onRouteMatched, this);
+      },
+
+      _onRouteMatched: async function (oEvent) {
+        await this.loadTickets();
+        await this.loadTicketStatuses();
+
+        this._removePreviousTicketSelections();
+      },
+
+      _removePreviousTicketSelections: function () {
+        this.byId("ticketsTable").removeSelections(true);
       },
 
       onCreateTicket: function () {
         this.navTo("RouteCreateTicket");
       },
 
-      onEditTicket: function () {
-        this.navTo("RouteEditTicket");
+      onEditTicket: async function () {
+        const oTable = this.byId("ticketsTable");
+        const aSelectedItems = oTable.getSelectedContexts();
+
+        if (aSelectedItems.length !== 1) {
+          MessageBox.error(
+            this.oBundle.getText("MBoxErrorSelectOnlyOneTicketToEdit")
+          );
+          return;
+        }
+
+        const oSelectedTicket = aSelectedItems[0].getObject(); // get the bound data
+        const sTicketId = oSelectedTicket.ticketId;
+
+        // Navigate to the EditTicket page with ticketId as parameter
+        const oRouter = this.getOwnerComponent().getRouter();
+        oRouter.navTo("RouteEditTicket", {
+          ticketId: sTicketId,
+        });
       },
 
       onDeleteSelectedTickets: function () {
@@ -70,7 +102,7 @@ sap.ui.define(
                 }
 
                 // refresh Customers on Table after deletion
-                await this._loadTickets();
+                await this.loadTickets();
 
                 MessageBox.success(
                   this.oBundle.getText("MBoxSuccessOfDeletionTicket")
@@ -89,6 +121,38 @@ sap.ui.define(
               oTable.removeSelections(true);
             }
           }.bind(this),
+        });
+      },
+
+      onEditTicketNavigation: async function (oEvent) {
+        const oTable = this.byId("ticketsTable");
+        const aSelectedItems = oTable.getSelectedContexts();
+
+        // Prevent navigation if any rows are selected -> if selected, user should use 'Edit' button to edit
+        if (aSelectedItems.length > 0) {
+          MessageBox.warning(
+            this.oBundle.getText("MBoxNavigationDisabledDueToSelection")
+          );
+          return;
+        }
+
+        // Get the binding context of the clicked row
+        const oSelectedItem = oEvent.getSource();
+        const oBindingContext = oSelectedItem.getBindingContext("ticketModel");
+
+        if (!oBindingContext) {
+          MessageBox.error(
+            this.oBundle.getText("MBoxTicketDetailsNotFoundToEdit")
+          );
+          return;
+        }
+
+        const sTicketId = oBindingContext.getProperty("ticketId");
+
+        // Navigate to the EditTicket page with ticketId as parameter
+        const oRouter = this.getOwnerComponent().getRouter();
+        oRouter.navTo("RouteEditTicket", {
+          ticketId: sTicketId,
         });
       },
 
@@ -145,17 +209,6 @@ sap.ui.define(
 				});
 			}
         */
-      },
-
-      _loadTickets: async function () {
-        try {
-          const tickets = await ticketService.fetchTickets();
-          const oTicketModel = new JSONModel(tickets);
-          this.getOwnerComponent().setModel(oTicketModel, "ticketModel");
-        } catch (error) {
-          console.error(error);
-          MessageBox.error(this.oBundle.getText("MBoxGETReqFailedOnTicket"));
-        }
       },
 
       onNavBack: function () {

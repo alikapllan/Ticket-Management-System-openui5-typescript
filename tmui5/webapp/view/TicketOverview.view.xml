@@ -36,9 +36,10 @@
 
                 <VBox class="sapUiSmallMarginEnd">
                     <Label text="Ticket Status:" />
-                    <Select id="selectTicketStatus" items="{statusesModel>/}"
-                        selectedKey="{statusesModel>selectedStatus}">
-                        <core:Item key="{statusesModel>key}" text="{statusesModel>text}" />
+                    <Select id="selectTicketStatus" items="{ticketStatusModel>/}"
+                        selectedKey="{ticketStatusModel>ticketStatusId}">
+                        <core:Item key="{ticketStatusModel>ticketStatusId}"
+                            text="{ticketStatusModel>ticketStatusName}" />
                     </Select>
                 </VBox>
 
@@ -77,16 +78,20 @@
                             <Text text="Assigned To" />
                         </Column>
                         <Column>
+                            <Text text="Customer" />
+                        </Column>
+                        <Column>
                             <Text text="Created On" />
                         </Column>
                     </columns>
 
                     <items>
-                        <ColumnListItem>
+                        <ColumnListItem type="Navigation" press=".onEditTicketNavigation">
                             <cells>
                                 <Text text="{ticketModel>ticketId}" />
-                                <Text text="{ticketModel>statusName}" />
-                                <Text text="{ticketModel>teamMember}" />
+                                <Text text="{ticketModel>ticketStatusName}" />
+                                <Text text="{ticketModel>teamMemberFullName}" />
+                                <Text text="{ticketModel>customerName}" />
                                 <Text text="{ticketModel>createdAt}" />
                             </cells>
                         </ColumnListItem>

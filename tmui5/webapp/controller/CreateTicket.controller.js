@@ -3,11 +3,12 @@ sap.ui.define(
     "tmui5/controller/BaseController",
     "sap/ui/core/routing/History",
     "sap/ui/model/json/JSONModel",
-    "sap/ui/core/Fragment",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
     "tmui5/services/ticketService",
+    "tmui5/constants/Constants",
+    "tmui5/util/FragmentUtil",
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -16,11 +17,12 @@ sap.ui.define(
     BaseController,
     History,
     JSONModel,
-    Fragment,
     Filter,
     FilterOperator,
     MessageBox,
-    ticketService
+    ticketService,
+    Constants,
+    FragmentUtil
   ) {
     "use strict";
 
@@ -29,6 +31,7 @@ sap.ui.define(
         // Call the BaseController's onInit to initialize to be able to use 'oBundle'
         BaseController.prototype.onInit.apply(this, arguments);
 
+        // Form Model to hold IDs
         const oCreateTicketFormData = {
           teamMemberId: null,
           customerId: null,
@@ -53,22 +56,14 @@ sap.ui.define(
           // Read Team members through api
           await this.loadTeamMembers();
 
-          const oView = this.getView();
+          // Load fragment
+          const oDialog = await FragmentUtil.loadValueHelpFragment(
+            this,
+            Constants.FRAGMENTS.ASSIGNED_TO_VALUEHELP,
+            Constants.FRAGMENTS_ID.ASSIGNED_TO_VALUEHELP
+          );
 
-          if (!this._pAssignedToValueHelpDialog) {
-            this._pAssignedToValueHelpDialog = Fragment.load({
-              id: oView.getId(),
-              name: "tmui5.view.valueHelpFragments.AssignedToValueHelp",
-              controller: this,
-            }).then(function (oDialog) {
-              oView.addDependent(oDialog);
-              return oDialog;
-            });
-          }
-
-          this._pAssignedToValueHelpDialog.then(function (oDialog) {
-            oDialog.open();
-          });
+          oDialog.open();
         } catch (error) {
           console.error(error);
           MessageBox.error(this.oBundle.getText("MBoxErrorLoadingAssignedTo"));
@@ -95,20 +90,22 @@ sap.ui.define(
         );
 
         // Retrieve the full obj. for the selected team member to get email
-        const oTeamMember = oSelectedItem
+        const oSelectedTeamMember = oSelectedItem
           .getBindingContext("teamMemberModel")
           .getObject(); // actual data in JSON
         // Set the email to the input field of Email
-        this.byId("emailInput").setValue(oTeamMember.email);
+        this.byId("emailInput").setValue(oSelectedTeamMember.email);
 
         // Store the teamMemberId in model -> createTicketFormModel
         this.getView()
           .getModel("createTicketFormModel")
-          .setProperty("/teamMemberId", oTeamMember.teamMemberId);
+          .setProperty("/teamMemberId", oSelectedTeamMember.teamMemberId);
 
-        const oDialog = oEvent.getSource(); // get Dialog
-        oDialog.destroy();
-        this._pAssignedToValueHelpDialog = null; // allow recreation on next request
+        // Destroy fragment
+        FragmentUtil.destroyFragment(
+          this,
+          Constants.FRAGMENTS_ID.ASSIGNED_TO_VALUEHELP
+        );
       },
       // Value Help 'Assigned To' - END
 
@@ -118,21 +115,13 @@ sap.ui.define(
           // Read Customers through api
           await this.loadCustomers();
 
-          const oView = this.getView();
-
-          if (!this._pCustomerValueHelpDialog) {
-            this._pCustomerValueHelpDialog = Fragment.load({
-              id: oView.getId(),
-              name: "tmui5.view.valueHelpFragments.CustomerValueHelp",
-              controller: this,
-            }).then(function (oDialog) {
-              oView.addDependent(oDialog);
-              return oDialog;
-            });
-          }
-          this._pCustomerValueHelpDialog.then(function (oDialog) {
-            oDialog.open();
-          });
+          // Load fragment
+          const oDialog = await FragmentUtil.loadValueHelpFragment(
+            this,
+            Constants.FRAGMENTS.CUSTOMER_VALUEHELP,
+            Constants.FRAGMENTS_ID.CUSTOMER_VALUEHELP
+          );
+          oDialog.open();
         } catch (error) {
           console.error(error);
           MessageBox.error(this.oBundle.getText("MBoxErrorLoadingCustomer"));
@@ -165,20 +154,23 @@ sap.ui.define(
           .getModel("createTicketFormModel")
           .setProperty("/customerId", oCustomer.customerId);
 
-        const oDialog = oEvent.getSource(); // get Dialog
-        oDialog.destroy();
-        this._pCustomerValueHelpDialog = null; // allow recreation on next request
+        // Destroy fragment
+        FragmentUtil.destroyFragment(
+          this,
+          Constants.FRAGMENTS_ID.CUSTOMER_VALUEHELP
+        );
       },
       // Value Help 'Customer' - END
 
       onCreateTicket: async function () {
         // retrieve values of Input fields
         const sTicketTypeId = this.byId("ticketTypeInput").getSelectedKey();
-        const oCreateTicketModel = this.getView().getModel(
+        const oCreateTicketFormModel = this.getView().getModel(
           "createTicketFormModel"
         );
-        const sTeamMemberId = oCreateTicketModel.getProperty("/teamMemberId");
-        const sCustomerId = oCreateTicketModel.getProperty("/customerId");
+        const sTeamMemberId =
+          oCreateTicketFormModel.getProperty("/teamMemberId");
+        const sCustomerId = oCreateTicketFormModel.getProperty("/customerId");
         const sTitle = this.byId("titleInput").getValue();
         const sDescription = this.byId("descriptionInput").getValue();
 

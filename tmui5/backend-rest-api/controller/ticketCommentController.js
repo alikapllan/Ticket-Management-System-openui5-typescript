@@ -8,7 +8,19 @@ const getAllTicketComments = async (req, res) => {
 
   try {
     const result = await pool.query(
-      'SELECT * FROM "TicketComment" WHERE "ticketId" = $1 ORDER BY "ticketCommentId", "ticketId" ASC',
+      `
+      SELECT 
+        "ticketCommentId",
+        "ticketId",
+        TRIM("comment") AS "comment",
+        "createdAt"
+      FROM 
+        "TicketComment" 
+      WHERE 
+        "ticketId" = $1 
+      ORDER BY 
+        "ticketCommentId", "ticketId" ASC
+      `,
       [id]
     );
     res.status(200).json(result.rows);

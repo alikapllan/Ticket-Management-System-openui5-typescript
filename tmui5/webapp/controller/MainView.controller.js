@@ -33,13 +33,17 @@ sap.ui.define(
 
       onPress: async function (sRoute, sFragment) {
         if (sRoute) {
+          if (sRoute === "RouteTicketOverview") {
+            // Refresh tickets to ensure new additions of tickets are visible
+            await this.loadTickets();
+          }
+
           if (sRoute === "RouteDeleteTeamMember") {
-            // Refresh team members to ensure new additions of Team Members are visible
-            this.loadTeamMembers();
+            await this.loadTeamMembers();
           }
 
           if (sRoute === "RouteDeleteCustomer") {
-            this.loadCustomers();
+            await this.loadCustomers();
           }
 
           this.navTo(sRoute);
@@ -137,8 +141,8 @@ sap.ui.define(
       },
 
       // fragment CreateCustomer
-      onCreateCustomer: function () {
-        this._createCustomerPOST();
+      onCreateCustomer: async function () {
+        await this._createCustomerPOST();
       },
 
       _createCustomerPOST: async function () {

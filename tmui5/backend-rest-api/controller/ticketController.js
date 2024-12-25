@@ -5,7 +5,77 @@ const getAllTickets = async (req, res) => {
   console.log("Ticket: Request GET");
   try {
     const result = await pool.query(
-      'SELECT * FROM "Ticket" ORDER BY "ticketId" ASC'
+      `
+      SELECT 
+        t."ticketId",
+        t."ticketTypeId",
+        TRIM(tt."name") AS "ticketTypeName",
+        t."teamMemberId",
+        CONCAT(TRIM(tm."name"), ' ', TRIM(tm."surname")) AS "teamMemberFullName",
+        TRIM(tm."email") AS "teamMemberEmail",
+        t."customerId",
+        TRIM(c."name") AS "customerName",
+        t."ticketStatusId",
+        TRIM(ts."name") AS "ticketStatusName",
+        TRIM(t."title") AS "title",
+        TRIM(t."description") AS "description",
+        t."createdAt"
+      FROM 
+        "Ticket" t
+      LEFT JOIN "TicketType" tt
+        ON t."ticketTypeId" = tt."ticketTypeId"
+      LEFT JOIN "Customer" c
+        ON t."customerId" = c."customerId"
+      LEFT JOIN "TeamMember" tm 
+        ON t."teamMemberId" = tm."teamMemberId"
+      LEFT JOIN "TicketStatus" ts 
+        ON t."ticketStatusId" = ts."ticketStatusId"
+      ORDER BY 
+        t."ticketId" ASC
+      `
+    );
+    res.status(200).json(result.rows);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getTicket = async (req, res) => {
+  const { id } = req.params;
+  console.log(`Ticket: Request GET for ticketId: ${id}`);
+  try {
+    const result = await pool.query(
+      `
+      SELECT 
+        t."ticketId",
+        t."ticketTypeId",
+        TRIM(tt."name") AS "ticketTypeName",
+        t."teamMemberId",
+        CONCAT(TRIM(tm."name"), ' ', TRIM(tm."surname")) AS "teamMemberFullName",
+        TRIM(tm."email") AS "teamMemberEmail",
+        t."customerId",
+        TRIM(c."name") AS "customerName",
+        t."ticketStatusId",
+        TRIM(ts."name") AS "ticketStatusName",
+        TRIM(t."title") AS "title",
+        TRIM(t."description") AS "description",
+        t."createdAt"
+      FROM 
+        "Ticket" t
+      LEFT JOIN "TicketType" tt
+        ON t."ticketTypeId" = tt."ticketTypeId"
+      LEFT JOIN "Customer" c
+        ON t."customerId" = c."customerId"
+      LEFT JOIN "TeamMember" tm 
+        ON t."teamMemberId" = tm."teamMemberId"
+      LEFT JOIN "TicketStatus" ts 
+        ON t."ticketStatusId" = ts."ticketStatusId"
+      WHERE 
+        "ticketId" = $1
+      ORDER BY 
+        t."ticketId" ASC
+      `,
+      [id]
     );
     res.status(200).json(result.rows);
   } catch (error) {
@@ -69,7 +139,7 @@ const updateTicket = async (req, res) => {
     description,
   } = req.body;
 
-  console.log("Ticket: Request body PUT:", req.body);
+  console.log(`Ticket: Request PUT for ticketId: ${id}`, req.body);
   try {
     const result = await pool.query(
       'UPDATE "Ticket" SET "ticketTypeId" = $1, "teamMemberId" = $2, "customerId" = $3, "ticketStatusId" = $4, "title" = $5, "description" = $6 WHERE "ticketId" = $7 RETURNING *',
@@ -104,4 +174,10 @@ const deleteTicket = async (req, res) => {
   }
 };
 
-module.exports = { getAllTickets, createTicket, updateTicket, deleteTicket };
+module.exports = {
+  getAllTickets,
+  getTicket,
+  createTicket,
+  updateTicket,
+  deleteTicket,
+};

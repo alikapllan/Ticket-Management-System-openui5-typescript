@@ -13,7 +13,8 @@
                 </contentLeft>
                 <contentMiddle>
                     <core:Icon src="sap-icon://sap-ui5" color="#1e90ff"></core:Icon>
-                    <Title text="{i18n>editTicket}" class="sapUiTinyMarginBegin"></Title>
+                    <Title text="{= ${i18n>editTicket} + ' - ' + ${editTicketModel>/ticketId}}"
+                        class="sapUiTinyMarginBegin"></Title>
                 </contentMiddle>
             </Bar>
         </customHeader>
@@ -23,6 +24,7 @@
             <layoutF:SimpleForm
                 id="createTicketForm"
                 layout="ResponsiveGridLayout"
+                binding="{/}"
                 editable="true"
                 labelSpanXL="3"
                 labelSpanL="3"
@@ -34,34 +36,59 @@
                 <layoutF:content>
                     <!-- Ticket Number -->
                     <Label text="{i18n>ticketNumberEdit}" />
-                    <Input id="ticketNumberInput" editable="false" />
+                    <Input id="ticketNumberEditInput" value="{editTicketModel>/ticketId}"
+                        editable="false" />
 
                     <!-- Ticket Type -->
                     <Label text="{i18n>ticketTypeEdit}" />
-                    <Select>
-                        <core:Item key="bug" text="Bug" />
-                        <core:Item key="change" text="Change Request" />
+                    <Select id="ticketTypeEditInput" items="{ticketTypeModel>/}"
+                        selectedKey="{editTicketModel>/ticketTypeId}">
+                        <core:Item key="{ticketTypeModel>ticketTypeId}"
+                            text="{ticketTypeModel>name}" />
                     </Select>
 
                     <!-- Assigned To -->
                     <Label text="{i18n>assignedToEdit}" />
-                    <Input id="assignedToInput" placeholder="{i18n>assignToPlaceholderEdit}"
+                    <Input id="assignedToEditValueHelpInput"
+                        value="{editTicketModel>/teamMemberFullName}"
                         showValueHelp="true"
                         valueHelpRequest=".onValueHelpRequestAssignedTo" />
 
+                    <!-- Assigned To - Email -->
+                    <Label text="{i18n>assignedToEmail}" />
+                    <Input id="assignedToEditEmailInput" value="{editTicketModel>/teamMemberEmail}"
+                        editable="false" />
+
+                    <!-- Customer -->
+                    <Label text="{i18n>customerEdit}" />
+                    <Input id="customerEditValueHelpInput"
+                        value="{editTicketModel>/customerName}"
+                        showValueHelp="true"
+                        valueHelpRequest=".onValueHelpRequestCustomer" />
+
+                    <!-- Ticket Status -->
+                    <Label text="{i18n>ticketStatusEdit}" />
+                    <Select id="ticketStatusEditInput" items="{ticketStatusModel>/}"
+                        selectedKey="{editTicketModel>/ticketStatusId}">
+                        <core:Item key="{ticketStatusModel>ticketStatusId}"
+                            text="{ticketStatusModel>ticketStatusName}" />
+                    </Select>
+
+
                     <!-- Ticket Title -->
                     <Label text="{i18n>ticketTitleEdit}" />
-                    <Input id="titleInput" />
+                    <Input id="titleEditInput" value="{editTicketModel>/title}" />
 
                     <!-- Description -->
                     <Label text="{i18n>descriptionEdit}" />
-                    <TextArea rows="5" maxLength="200"
+                    <TextArea id="descriptionEditInput" value="{editTicketModel>/description}"
+                        rows="5" maxLength="200"
                         placeholder="{i18n>descriptionPlaceholderEdit}"
                         showExceededText="true" />
 
                     <!-- Upload Comment -->
                     <Label text="{i18n>updateCommentEdit}" />
-                    <Input id="updateComment">
+                    <Input id="updateCommentEditInput">
                         <layoutData>
                             <layout:GridData span="L6 M6 S6" />
                         </layoutData>
@@ -75,6 +102,12 @@
                         <Button text="{i18n>cancelButtonText}" type="Reject"
                             class="sapUiTinyMarginBeginEnd"
                             press=".onCancelTicket" />
+                    </HBox>
+
+                    <Label text="" /> <!-- ensures that HBOX starts in a separat row -->
+                    <!-- Ticket Comments  -->
+                    <HBox id="HBoxTicketComment" justifyContent="End" class="sapUiLargeMarginTop">
+
                     </HBox>
                 </layoutF:content>
             </layoutF:SimpleForm>
