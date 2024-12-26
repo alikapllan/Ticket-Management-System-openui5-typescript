@@ -14,5 +14,13 @@ sap.ui.define([], function () {
       CUSTOMER_VALUEHELP: "CustomerValueHelp",
       TICKET_ID_VALUEHELP: "TicketIdValueHelp",
     },
+
+    VALUE_STATES: {
+      INFORMATION: "Information",
+      SUCCESS: "Success",
+      WARNING: "Warning",
+      ERROR: "Error",
+      NONE: "None",
+    },
   };
 });

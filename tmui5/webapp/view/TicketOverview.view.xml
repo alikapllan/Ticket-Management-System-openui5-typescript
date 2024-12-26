@@ -103,14 +103,16 @@
                             <cells>
                                 <Text text="{ticketModel>ticketId}" />
                                 <Text text="{ticketModel>ticketTypeName}" />
-                                <Text text="{ticketModel>ticketStatusName}" />
+                                <ObjectStatus
+                                    class="customObjectStatus"
+                                    text="{ticketModel>ticketStatusName}"
+                                    state="{ path: 'ticketModel>ticketStatusName' , 
+                                             formatter: '.formatter.getStatusState' }" />
                                 <Text text="{ticketModel>teamMemberFullName}" />
                                 <Text text="{ticketModel>customerName}" />
                                 <Text
-                                    text="{ 
-                                            path: 'ticketModel>createdAt', 
-                                            formatter: '.formatter.formatDateTime'
-                                            }" />
+                                    text="{ path: 'ticketModel>createdAt', 
+                                            formatter: '.formatter.formatDateTime' }" />
                             </cells>
                         </ColumnListItem>
                     </items>
