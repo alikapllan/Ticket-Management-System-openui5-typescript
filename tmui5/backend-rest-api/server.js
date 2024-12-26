@@ -37,7 +37,8 @@ app.listen(PORT, () => {
 
 // DB Connection check
 const pool = require("./config/db");
-pool.query("SELECT NOW()", (err, res) => {
+// "SELECT NOW()::timestamp" -> in pg : timestamp without timezone
+pool.query("SELECT NOW()::timestamp", (err, res) => {
   if (err) {
     console.error("Database connection error:", err);
   } else {

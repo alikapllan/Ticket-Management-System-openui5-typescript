@@ -33,6 +33,23 @@ sap.ui.define([], function () {
       return response.json();
     },
 
+    fetchFilteredTickets: async function (queryString) {
+      const response = await fetch(
+        `http://localhost:3000/api/tickets/filtered?${queryString}`,
+        {
+          method: "GET",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch Ticket: HTTP ${response.status}: ${response.statusText}`
+        );
+      }
+
+      return response.json();
+    },
+
     createTickets: async function (oPayload) {
       const response = await fetch("http://localhost:3000/api/tickets", {
         method: "POST",

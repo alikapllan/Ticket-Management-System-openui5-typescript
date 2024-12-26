@@ -38,7 +38,7 @@ const createTicketComment = async (req, res) => {
 
   try {
     const result = await pool.query(
-      'INSERT INTO "TicketComment" ("ticketId", "comment", "createdAt") VALUES ($1, $2, NOW()) RETURNING *',
+      'INSERT INTO "TicketComment" ("ticketId", "comment", "createdAt") VALUES ($1, $2, NOW()::timestamp) RETURNING *',
       [ticketId, comment]
     );
     res.status(201).json(result.rows[0]);

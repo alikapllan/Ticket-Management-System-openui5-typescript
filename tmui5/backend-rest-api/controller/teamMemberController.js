@@ -37,7 +37,7 @@ const createTeamMember = async (req, res) => {
 
   try {
     const result = await pool.query(
-      'INSERT INTO "TeamMember" ("name", "surname", "roleId", "email", "phone", "createdAt") VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING *',
+      'INSERT INTO "TeamMember" ("name", "surname", "roleId", "email", "phone", "createdAt") VALUES ($1, $2, $3, $4, $5, NOW()::timestamp) RETURNING *',
       [name, surname, roleId, email, phone]
     );
     res.status(201).json(result.rows[0]);

@@ -44,13 +44,115 @@ sap.ui.define(
 
       _onRouteMatched: async function (oEvent) {
         await this.loadTickets();
-        await this.loadTicketStatuses();
+        await this._cacheTicketTypeId();
+        await this._loadAndCacheTicketStatuses();
 
         this._removePreviousTicketSelections();
+        this._clearSearchInputFields();
+      },
+
+      /**
+       * Caches the "Bug" as default ticket type
+       *
+       * Usage:
+       * - Caches "Bug" to reset the ticket type filter efficiently when navigating back
+       */
+      _cacheTicketTypeId: async function () {
+        const oTicketTypeModel = this.getView().getModel("ticketTypeModel");
+
+        if (oTicketTypeModel) {
+          const aTicketTypes = oTicketTypeModel.getData();
+          // Cache Type "Bug"
+          this._defaultTicketTypeId =
+            aTicketTypes.find((ticketType) => ticketType.name === "Bug")
+              ?.ticketTypeId || "";
+        }
+      },
+
+      /**
+       * Loads ticket statuses and caches the "New" as default ticket status
+       *
+       * Usage:
+       * - Ensures ticket statuses are loaded for the view
+       * - Caches "New" to reset the ticket status filter efficiently when navigating back
+       */
+      _loadAndCacheTicketStatuses: async function () {
+        await this.loadTicketStatuses();
+
+        const oTicketStatusModel = this.getView().getModel("ticketStatusModel");
+
+        if (oTicketStatusModel) {
+          const aStatuses = oTicketStatusModel.getData();
+          // Cache status "New"
+          this._defaultTicketStatus =
+            aStatuses.find((status) => status.ticketStatusName === "New")
+              ?.ticketStatusId || "";
+        }
       },
 
       _removePreviousTicketSelections: function () {
         this.byId("ticketsTable").removeSelections(true);
+      },
+
+      _clearSearchInputFields: async function () {
+        this.byId("multiTicketIdInput").removeAllTokens();
+        this.byId("ticketTypeOverviewInput").setSelectedKey(
+          this._defaultTicketTypeId || ""
+        );
+        this.byId("ticketStatusOverviewInput").setSelectedKey(
+          this._defaultTicketStatus || ""
+        );
+        this.byId("idTicketCreatedOnDatePicker").setValue("");
+      },
+
+      onGoFilterTicket: async function () {
+        // Take values of input fields
+        const aTicketIds = this.byId("multiTicketIdInput")
+          .getTokens()
+          .map((token) => token.getKey());
+        const sSelectedTicketTypeId = this.byId(
+          "ticketTypeOverviewInput"
+        ).getSelectedKey();
+        const sSelectedTicketStatus = this.byId(
+          "ticketStatusOverviewInput"
+        ).getSelectedKey();
+        const sCreatedAt = this.byId("idTicketCreatedOnDatePicker").getValue();
+
+        // Add values to filter in case any provided
+        const oFilters = {};
+        if (aTicketIds.length > 0) {
+          oFilters.ticketIds = aTicketIds.join(","); // naming of filter keys must match with req.query inside rest api
+        }
+        if (sSelectedTicketTypeId) {
+          oFilters.ticketTypeId = sSelectedTicketTypeId;
+        }
+        if (sSelectedTicketStatus) {
+          oFilters.ticketStatusId = sSelectedTicketStatus;
+        }
+        if (sCreatedAt) {
+          oFilters.createdAt = sCreatedAt;
+        }
+
+        // Encode URL parameters and format the query string
+        const queryString = new URLSearchParams(oFilters).toString();
+
+        try {
+          // GET req. to fetch tickets based on provided filters
+          const filteredTickets = await ticketService.fetchFilteredTickets(
+            queryString
+          );
+          const oFilteredTicketModel = new JSONModel(filteredTickets);
+          // Replace ticketModel with filtered tickets
+          this.getOwnerComponent().setModel(
+            oFilteredTicketModel,
+            "ticketModel"
+          );
+        } catch (error) {
+          console.error(error);
+          MessageBox.error(
+            this.oBundle.getText("MBoxGETReqFailedOnFilteredTickets")
+          );
+        }
       },
 
       onCreateTicket: function () {

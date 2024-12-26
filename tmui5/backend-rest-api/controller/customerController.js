@@ -30,7 +30,7 @@ const createCustomer = async (req, res) => {
 
   try {
     const result = await pool.query(
-      'INSERT INTO "Customer" ("name", "email", "phone", "createdAt") VALUES ($1, $2, $3, NOW()) RETURNING *',
+      'INSERT INTO "Customer" ("name", "email", "phone", "createdAt") VALUES ($1, $2, $3, NOW()::timestamp) RETURNING *',
       [name, email, phone]
     );
     res.status(201).json(result.rows[0]);

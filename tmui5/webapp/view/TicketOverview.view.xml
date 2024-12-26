@@ -25,6 +25,7 @@
                     <Label text="Ticket Number:" />
                     <MultiInput
                         id="multiTicketIdInput"
+                        width="15rem"
                         showValueHelp="true"
                         suggestionItems="{
                             path: 'ticketModel>/',
@@ -36,9 +37,16 @@
                 </VBox>
 
                 <VBox class="sapUiSmallMarginEnd">
+                    <Label text="Ticket Type:" />
+                    <Select id="ticketTypeOverviewInput" items="{ticketTypeModel>/}">
+                        <core:Item key="{ticketTypeModel>ticketTypeId}"
+                            text="{ticketTypeModel>name}" />
+                    </Select>
+                </VBox>
+
+                <VBox class="sapUiSmallMarginEnd">
                     <Label text="Ticket Status:" />
-                    <Select id="selectTicketStatus" items="{ticketStatusModel>/}"
-                        selectedKey="{ticketStatusModel>ticketStatusId}">
+                    <Select id="ticketStatusOverviewInput" items="{ticketStatusModel>/}">
                         <core:Item key="{ticketStatusModel>ticketStatusId}"
                             text="{ticketStatusModel>ticketStatusName}" />
                     </Select>
@@ -46,12 +54,13 @@
 
                 <VBox class="sapUiSmallMarginEnd">
                     <Label text="Created On:" />
-                    <DatePicker id="idTicketCreatedOnDatePicker" value="{filtersModel>createdOn}" />
+                    <DatePicker id="idTicketCreatedOnDatePicker" />
                 </VBox>
             </HBox>
 
             <ToolbarSpacer />
-            <Button class="sapUiMediumMarginEnd" text="Go" type="Emphasized" press=".onGo" />
+            <Button class="sapUiMediumMarginEnd" text="Go" type="Emphasized"
+                press=".onGoFilterTicket" />
         </Toolbar>
 
 
@@ -73,6 +82,9 @@
                             <Text text="Ticket No" />
                         </Column>
                         <Column>
+                            <Text text="Ticket Type" />
+                        </Column>
+                        <Column>
                             <Text text="Ticket Status" />
                         </Column>
                         <Column>
@@ -90,6 +102,7 @@
                         <ColumnListItem type="Navigation" press=".onEditTicketNavigation">
                             <cells>
                                 <Text text="{ticketModel>ticketId}" />
+                                <Text text="{ticketModel>ticketTypeName}" />
                                 <Text text="{ticketModel>ticketStatusName}" />
                                 <Text text="{ticketModel>teamMemberFullName}" />
                                 <Text text="{ticketModel>customerName}" />

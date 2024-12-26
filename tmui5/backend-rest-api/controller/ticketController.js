@@ -40,6 +40,82 @@ const getAllTickets = async (req, res) => {
   }
 };
 
+// GET filtered tickets
+const getFilteredTickets = async (req, res) => {
+  const { ticketIds, ticketTypeId, ticketStatusId, createdAt } = req.query;
+
+  console.log("Ticket: Request GET with Filters", req.query);
+
+  try {
+    let query = `
+      SELECT 
+        t."ticketId",
+        t."ticketTypeId",
+        TRIM(tt."name") AS "ticketTypeName",
+        t."teamMemberId",
+        CONCAT(TRIM(tm."name"), ' ', TRIM(tm."surname")) AS "teamMemberFullName",
+        TRIM(tm."email") AS "teamMemberEmail",
+        t."customerId",
+        TRIM(c."name") AS "customerName",
+        t."ticketStatusId",
+        TRIM(ts."name") AS "ticketStatusName",
+        TRIM(t."title") AS "title",
+        TRIM(t."description") AS "description",
+        t."createdAt"
+      FROM 
+        "Ticket" t
+      LEFT JOIN "TicketType" tt
+        ON t."ticketTypeId" = tt."ticketTypeId"
+      LEFT JOIN "Customer" c
+        ON t."customerId" = c."customerId"
+      LEFT JOIN "TeamMember" tm 
+        ON t."teamMemberId" = tm."teamMemberId"
+      LEFT JOIN "TicketStatus" ts 
+        ON t."ticketStatusId" = ts."ticketStatusId"
+    `;
+
+    // Dynamic WHERE conditions
+    const conditions = [];
+    const values = [];
+
+    if (ticketIds) {
+      const ids = ticketIds.split(",").map((id) => parseInt(id.trim()));
+      conditions.push(`t."ticketId" = ANY($${conditions.length + 1})`);
+      values.push(ids);
+    }
+
+    if (ticketTypeId) {
+      conditions.push(`t."ticketTypeId" = $${conditions.length + 1}`);
+      values.push(parseInt(ticketTypeId));
+    }
+
+    if (ticketStatusId) {
+      conditions.push(`t."ticketStatusId" = $${conditions.length + 1}`);
+      values.push(parseInt(ticketStatusId));
+    }
+
+    if (createdAt) {
+      conditions.push(`DATE(t."createdAt") = $${conditions.length + 1}`);
+      values.push(createdAt);
+    }
+
+    // Add conditions to th query
+    if (conditions.length > 0) {
+      query += ` WHERE ` + conditions.join(" AND ");
+    }
+
+    // Append ORDER BY
+    query += ` ORDER BY t."ticketId" ASC`;
+
+    // Execute query
+    const result = await pool.query(query, values);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to fetch filtered tickets." });
+  }
+};
+
 const getTicket = async (req, res) => {
   const { id } = req.params;
   console.log(`Ticket: Request GET for ticketId: ${id}`);
@@ -110,7 +186,7 @@ const createTicket = async (req, res) => {
     const ticketStatusId = rows[0].ticketStatusId;
 
     const result = await pool.query(
-      'INSERT INTO "Ticket" ("ticketTypeId", "teamMemberId", "customerId", "ticketStatusId", "title", "description", "createdAt") VALUES ($1, $2, $3, $4, $5, $6, NOW()) RETURNING *',
+      'INSERT INTO "Ticket" ("ticketTypeId", "teamMemberId", "customerId", "ticketStatusId", "title", "description", "createdAt") VALUES ($1, $2, $3, $4, $5, $6, NOW()::timestamp) RETURNING *',
       [
         ticketTypeId,
         teamMemberId,
@@ -176,6 +252,7 @@ const deleteTicket = async (req, res) => {
 
 module.exports = {
   getAllTickets,
+  getFilteredTickets,
   getTicket,
   createTicket,
   updateTicket,
