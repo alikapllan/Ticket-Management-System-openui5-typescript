@@ -86,7 +86,7 @@
                         placeholder="{i18n>descriptionPlaceholderEdit}"
                         showExceededText="true" />
 
-                    <!-- Upload Comment -->
+                    <!-- Update Comment -->
                     <Label text="{i18n>updateCommentEdit}" />
                     <Input id="updateCommentEditInput">
                         <layoutData>

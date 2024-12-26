@@ -16,8 +16,8 @@ sap.ui.define(["tmui5/constants/Constants"], function (Constants) {
       return oDateFormat.format(oDate);
     },
 
-    getStatusState: function (sStatus) {
-      if (!sStatus) {
+    getStatusState: function (sTicketStatusName) {
+      if (!sTicketStatusName) {
         return Constants.VALUE_STATES.NONE; // Default state if status is missing
       }
 
@@ -25,7 +25,7 @@ sap.ui.define(["tmui5/constants/Constants"], function (Constants) {
         .getModel("i18n")
         .getResourceBundle();
 
-      switch (sStatus) {
+      switch (sTicketStatusName) {
         case oResourceBundle.getText("statusNew"):
           return Constants.VALUE_STATES.INFORMATION;
         case oResourceBundle.getText("statusInPlanning"):

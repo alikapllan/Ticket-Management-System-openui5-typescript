@@ -43,7 +43,7 @@ sap.ui.define([], function () {
 
       if (!response.ok) {
         throw new Error(
-          `Failed to fetch Ticket: HTTP ${response.status}: ${response.statusText}`
+          `Failed to fetch Filtered Tickets: HTTP ${response.status}: ${response.statusText}`
         );
       }
 

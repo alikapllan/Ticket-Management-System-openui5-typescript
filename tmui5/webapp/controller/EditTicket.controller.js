@@ -8,6 +8,7 @@ sap.ui.define(
     "sap/m/MessageToast",
     "sap/m/MessageBox",
     "tmui5/services/ticketService",
+    "tmui5/services/ticketCommentService",
     "tmui5/constants/Constants",
     "tmui5/util/FragmentUtil",
   ],
@@ -23,6 +24,7 @@ sap.ui.define(
     MessageToast,
     MessageBox,
     ticketService,
+    ticketCommentService,
     Constants,
     FragmentUtil
   ) {
@@ -202,23 +204,36 @@ sap.ui.define(
       // Value Help 'Customer' - END
 
       onSaveTicket: async function () {
-        //
         // If any Update Comment provided -> POST Request in order to add to TicketComment table
-        //
+        await this._createTicketCommentPOST();
 
         // PUT Request to Update Ticket
-        const bIsUpdateSuccessful = await this._updateCustomerPUT();
+        await this._updateCustomerPUT();
+      },
 
-        if (bIsUpdateSuccessful) {
-          MessageToast.show(
-            this.oBundle.getText("MToastTicketEditedSuccessfully")
-          );
-          // wait 1 sec & Navigate back to the Ticket Overview Page
-          setTimeout(
-            async function () {
-              this.navTo("RouteTicketOverview");
-            }.bind(this), // setTimeout callback refers to the controller instance
-            1000
+      _createTicketCommentPOST: async function () {
+        // Retrieve values of related input fields
+        const sTicketId = this.byId("ticketNumberEditInput").getValue();
+        const sTicketComment = this.byId("updateCommentEditInput").getValue();
+
+        // Validate input fields
+        if (!sTicketId || !sTicketComment) {
+          return;
+        }
+
+        // Prepare Payload to pass
+        const oPayload = {
+          ticketId: parseInt(sTicketId),
+          comment: sTicketComment,
+        };
+
+        // Send POST request
+        try {
+          await ticketCommentService.createTicketComment(oPayload);
+        } catch (error) {
+          console.error(error);
+          MessageBox.error(
+            this.oBundle.getText("MBoxFailedToCreateTicketComment")
           );
         }
       },
@@ -267,7 +282,16 @@ sap.ui.define(
         try {
           await ticketService.updateTickets(parseInt(sTicketId), oPayload);
           // Success
-          return true;
+          MessageToast.show(
+            this.oBundle.getText("MToastTicketEditedSuccessfully")
+          );
+          // wait 1 sec & Navigate back to the Ticket Overview Page
+          setTimeout(
+            async function () {
+              this.navTo("RouteTicketOverview");
+            }.bind(this), // setTimeout callback refers to the controller instance
+            1000
+          );
         } catch (error) {
           console.error(error);
           MessageBox.error(this.oBundle.getText("MBoxFailedToCreateTicket"));
