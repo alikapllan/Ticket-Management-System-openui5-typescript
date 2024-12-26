@@ -106,7 +106,11 @@
                                 <Text text="{ticketModel>ticketStatusName}" />
                                 <Text text="{ticketModel>teamMemberFullName}" />
                                 <Text text="{ticketModel>customerName}" />
-                                <Text text="{ticketModel>createdAt}" />
+                                <Text
+                                    text="{ 
+                                            path: 'ticketModel>createdAt', 
+                                            formatter: '.formatter.formatDateTime'
+                                            }" />
                             </cells>
                         </ColumnListItem>
                     </items>

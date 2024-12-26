@@ -3,7 +3,6 @@ sap.ui.define(
     "tmui5/controller/BaseController",
     "sap/ui/core/routing/History",
     "sap/ui/model/json/JSONModel",
-    "sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -11,6 +10,7 @@ sap.ui.define(
     "tmui5/services/ticketService",
     "tmui5/util/FragmentUtil",
     "tmui5/constants/Constants",
+    "tmui5/model/formatter",
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -19,18 +19,19 @@ sap.ui.define(
     BaseController,
     History,
     JSONModel,
-    Fragment,
     MessageBox,
     Filter,
     FilterOperator,
     Token,
     ticketService,
     FragmentUtil,
-    Constants
+    Constants,
+    formatter
   ) {
     "use strict";
 
     return BaseController.extend("tmui5.controller.TicketOverview", {
+      formatter: formatter,
       onInit: async function () {
         // Call the BaseController's onInit to initialize to be able to use 'oBundle'
         BaseController.prototype.onInit.apply(this, arguments);
