@@ -11,6 +11,7 @@ sap.ui.define(
     "tmui5/services/ticketCommentService",
     "tmui5/constants/Constants",
     "tmui5/util/FragmentUtil",
+    "tmui5/model/formatter",
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -26,11 +27,13 @@ sap.ui.define(
     ticketService,
     ticketCommentService,
     Constants,
-    FragmentUtil
+    FragmentUtil,
+    formatter
   ) {
     "use strict";
 
     return BaseController.extend("tmui5.controller.EditTicket", {
+      formatter: formatter,
       onInit: async function () {
         // Call the BaseController's onInit to initialize to be able to use 'oBundle'
         BaseController.prototype.onInit.apply(this, arguments);
@@ -54,14 +57,17 @@ sap.ui.define(
       _onRouteMatched: async function (oEvent) {
         const oArgs = oEvent.getParameter("arguments");
         const sTicketId = oArgs.ticketId;
+        const iTicketId = parseInt(sTicketId);
 
         await this.loadTicketStatuses();
+        await this._loadAndBindTicketDetailToEdit(iTicketId);
+        await this._loadTicketComments(iTicketId);
+      },
 
+      _loadAndBindTicketDetailToEdit: async function (iTicketId) {
         try {
           // Fetch ticket details from backend throug service
-          const ticketToEdit = await ticketService.fetchTicket(
-            parseInt(sTicketId)
-          );
+          const ticketToEdit = await ticketService.fetchTicket(iTicketId);
           // ticketToEdit is returned as a array with a single ticket object so [0] is taken
           const oEditTicketModel = new JSONModel(ticketToEdit[0]);
           // Bind the selected ticket data to the view
@@ -84,6 +90,24 @@ sap.ui.define(
           MessageBox.error(
             this.oBundle.getText("MBoxGETReqFailedOnTicketToEdit")
           );
+        }
+      },
+
+      _loadTicketComments: async function (iTicketId) {
+        try {
+          const ticketComments = await ticketCommentService.fetchTicketComments(
+            iTicketId
+          );
+
+          const oTicketCommentModel = new JSONModel(ticketComments);
+
+          this.getOwnerComponent().setModel(
+            oTicketCommentModel,
+            "ticketCommentModel"
+          );
+        } catch (error) {
+          console.error(error);
+          this.oBundle.getText("MBoxGETReqFailedOnTicketComment");
         }
       },
 
@@ -226,6 +250,9 @@ sap.ui.define(
           ticketId: parseInt(sTicketId),
           comment: sTicketComment,
         };
+
+        // Clear update comment field
+        this.byId("updateCommentEditInput").setValue("");
 
         // Send POST request
         try {

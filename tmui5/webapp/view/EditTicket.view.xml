@@ -104,11 +104,30 @@
                             press=".onCancelTicket" />
                     </HBox>
 
-                    <Label text="" /> <!-- ensures that HBOX starts in a separat row -->
+                    <Label text="" /> <!-- ensures that VerticalLayout starts in a separat row -->
                     <!-- Ticket Comments  -->
-                    <HBox id="HBoxTicketComment" justifyContent="End" class="sapUiLargeMarginTop">
+                    <layout:VerticalLayout
+                        class="sapUiContentPadding"
+                        width="100%">
+                        <layout:content>
+                            <List
+                                headerText="Feed Entries({= ${ticketCommentModel>/}.length })"
+                                items="{ path: 'ticketCommentModel>/',
+                                         sorter:[ { path: 'ticketCommentModel>createdAt',
+                                                    descending:true } ] }">
+                                <FeedListItem
+                                    sender="{i18n>anonymous}"
+                                    icon="sap-icon://employee"
+                                    info="{i18n>comment}"
+                                    timestamp="{ path: 'ticketCommentModel>createdAt',
+                                                 formatter: '.formatter.formatDateTime' }"
+                                    text="{ticketCommentModel>comment}"
+                                    convertLinksToAnchorTags="All">
+                                </FeedListItem>
+                            </List>
+                        </layout:content>
+                    </layout:VerticalLayout>
 
-                    </HBox>
                 </layoutF:content>
             </layoutF:SimpleForm>
 

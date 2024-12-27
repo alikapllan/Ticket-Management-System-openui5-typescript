@@ -2,6 +2,22 @@ sap.ui.define([], function () {
   "use strict";
 
   return {
+    fetchTicketComments: async function (iTicketId) {
+      const response = await fetch(
+        `http://localhost:3000/api/ticketComments/${iTicketId}`,
+        {
+          method: "GET",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch Ticket Comments: HTTP ${response.status}: ${response.statusText}`
+        );
+      }
+
+      return response.json();
+    },
     createTicketComment: async function (oPayload) {
       const response = await fetch("http://localhost:3000/api/ticketComments", {
         method: "POST",
