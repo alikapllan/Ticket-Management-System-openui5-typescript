@@ -7,6 +7,7 @@ sap.ui.define(
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
     "tmui5/services/ticketService",
+    "tmui5/services/ticketEmailService",
     "tmui5/constants/Constants",
     "tmui5/util/FragmentUtil",
   ],
@@ -21,6 +22,7 @@ sap.ui.define(
     FilterOperator,
     MessageBox,
     ticketService,
+    ticketEmailService,
     Constants,
     FragmentUtil
   ) {
@@ -31,9 +33,11 @@ sap.ui.define(
         // Call the BaseController's onInit to initialize to be able to use 'oBundle'
         BaseController.prototype.onInit.apply(this, arguments);
 
-        // Form Model to hold IDs
+        // Form Model to hold data to for cache purpose and email operation
         const oCreateTicketFormData = {
           teamMemberId: null,
+          teamMemberEmail: null,
+          teamMemberFullName: null,
           customerId: null,
           defaultTicketTypeId: null,
         };
@@ -96,10 +100,18 @@ sap.ui.define(
         // Set the email to the input field of Email
         this.byId("emailInput").setValue(oSelectedTeamMember.email);
 
-        // Store the teamMemberId in model -> createTicketFormModel
+        // Store the teamMemberId & teamMemberMail & teamMemberFullName in model -> createTicketFormModel
         this.getView()
           .getModel("createTicketFormModel")
           .setProperty("/teamMemberId", oSelectedTeamMember.teamMemberId);
+
+        this.getView()
+          .getModel("createTicketFormModel")
+          .setProperty("/teamMemberEmail", oSelectedTeamMember.email);
+
+        this.getView()
+          .getModel("createTicketFormModel")
+          .setProperty("/teamMemberFullName", oSelectedTeamMember.fullName);
 
         // Destroy fragment
         FragmentUtil.destroyFragment(
@@ -163,6 +175,10 @@ sap.ui.define(
       // Value Help 'Customer' - END
 
       onCreateTicket: async function () {
+        this._createTicketPOSTandSendCreationEmail();
+      },
+
+      _createTicketPOSTandSendCreationEmail: async function () {
         // retrieve values of Input fields
         const sTicketTypeId = this.byId("ticketTypeInput").getSelectedKey();
         const oCreateTicketFormModel = this.getView().getModel(
@@ -197,7 +213,29 @@ sap.ui.define(
 
         // Send POST request
         try {
-          await ticketService.createTickets(oPayload);
+          const createdTicketResponse = await ticketService.createTickets(
+            oPayload
+          );
+
+          // Extract ticketId & other related fields and SEND ticket creation email
+          const ticketId = createdTicketResponse.ticketId;
+          const teamMemberEmail =
+            oCreateTicketFormModel.getProperty("/teamMemberEmail");
+          const teamMemberFullName = oCreateTicketFormModel.getProperty(
+            "/teamMemberFullName"
+          );
+
+          try {
+            await ticketEmailService.sendTicketCreatedEmail({
+              ticketId,
+              teamMemberEmail,
+              teamMemberFullName,
+              title: sTitle,
+              description: sDescription,
+            });
+          } catch (emailError) {
+            console.error("Failed to send ticket creation email:", emailError);
+          }
 
           // Success
           MessageBox.success(
