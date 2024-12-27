@@ -9,6 +9,7 @@ const customerRoute = require("./route/customerRoute");
 const ticketStatusRoute = require("./route/ticketStatusRoute");
 const roleRoute = require("./route/roleRoute"); //
 const teamMemberRoute = require("./route/teamMemberRoute");
+const emailRoute = require("./route/emailRoute");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,6 +26,7 @@ app.use("/api/customers", customerRoute);
 app.use("/api/ticketStatus", ticketStatusRoute);
 app.use("/api/roles", roleRoute);
 app.use("/api/teamMembers", teamMemberRoute);
+app.use("/api/send-email", emailRoute);
 
 app.get("/", (req, res) => {
   res.send("Welcome to the REST API for Ticket Management using Node.js!");

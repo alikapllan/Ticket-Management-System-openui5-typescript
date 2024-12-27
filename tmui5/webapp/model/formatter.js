@@ -5,7 +5,6 @@ sap.ui.define(
 
     return {
       formatDateTime: function (sDate) {
-        debugger;
         if (!sDate) {
           return "";
         }

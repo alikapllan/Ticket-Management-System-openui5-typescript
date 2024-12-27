@@ -9,6 +9,7 @@ sap.ui.define(
     "sap/m/MessageBox",
     "tmui5/services/ticketService",
     "tmui5/services/ticketCommentService",
+    "tmui5/services/ticketEmailService",
     "tmui5/constants/Constants",
     "tmui5/util/FragmentUtil",
     "tmui5/model/formatter",
@@ -26,6 +27,7 @@ sap.ui.define(
     MessageBox,
     ticketService,
     ticketCommentService,
+    ticketEmailService,
     Constants,
     FragmentUtil,
     formatter
@@ -39,9 +41,11 @@ sap.ui.define(
         BaseController.prototype.onInit.apply(this, arguments);
         // onInit lifecycle method in the child controller overrides the onInit of the parent (BaseController)
 
-        // Form Model to hold teamMemberId, customerId
+        // Form Model to hold data to for cache purpose and email operation
         const oEditTicketFormData = {
           teamMemberId: null,
+          teamMemberEmail: null,
+          teamMemberFullName: null,
           customerId: null,
         };
         const oEditTicketFormModel = new JSONModel(oEditTicketFormData);
@@ -75,16 +79,29 @@ sap.ui.define(
 
           // Update the 'editTicketFormModel' with values from the fetched ticket
           // It is overridden when updated
-          this.getView()
-            .getModel("editTicketFormModel")
-            .setProperty(
-              "/teamMemberId",
-              oEditTicketModel.getData().teamMemberId
-            );
+          const oEditTicketFormModel = this.getView().getModel(
+            "editTicketFormModel"
+          );
 
-          this.getView()
-            .getModel("editTicketFormModel")
-            .setProperty("/customerId", oEditTicketModel.getData().customerId);
+          oEditTicketFormModel.setProperty(
+            "/teamMemberId",
+            oEditTicketModel.getData().teamMemberId
+          );
+
+          oEditTicketFormModel.setProperty(
+            "/teamMemberEmail",
+            oEditTicketModel.getData().teamMemberEmail
+          );
+
+          oEditTicketFormModel.setProperty(
+            "/teamMemberFullName",
+            oEditTicketModel.getData().teamMemberFullName
+          );
+
+          oEditTicketFormModel.setProperty(
+            "/customerId",
+            oEditTicketModel.getData().customerId
+          );
         } catch (error) {
           console.error(error);
           MessageBox.error(
@@ -159,10 +176,25 @@ sap.ui.define(
           oSelectedTeamMember.email
         );
 
-        // Store the teamMemberId in model -> editTicketFormModel
-        this.getView()
-          .getModel("editTicketFormModel")
-          .setProperty("/teamMemberId", oSelectedTeamMember.teamMemberId);
+        // Store the teamMemberId & teamMemberFullName & teamMemberMail in model -> editTicketFormModel
+        const oEditTicketFormModel = this.getView().getModel(
+          "editTicketFormModel"
+        );
+        // in case a new team member is selected, override oEditTicketFormModel
+        oEditTicketFormModel.setProperty(
+          "/teamMemberId",
+          oSelectedTeamMember.teamMemberId
+        );
+
+        oEditTicketFormModel.setProperty(
+          "/teamMemberEmail",
+          oSelectedTeamMember.email
+        );
+
+        oEditTicketFormModel.setProperty(
+          "/teamMemberFullName",
+          oSelectedTeamMember.fullName
+        );
 
         // Destroy fragment
         FragmentUtil.destroyFragment(
@@ -232,7 +264,11 @@ sap.ui.define(
         await this._createTicketCommentPOST();
 
         // PUT Request to Update Ticket
-        await this._updateCustomerPUT();
+        await this._updateCustomerPUTandSendUpdateEmail();
+      },
+
+      onCancelTicket: function () {
+        this.navTo("RouteTicketOverview");
       },
 
       _createTicketCommentPOST: async function () {
@@ -265,16 +301,15 @@ sap.ui.define(
         }
       },
 
-      _updateCustomerPUT: async function () {
+      _updateCustomerPUTandSendUpdateEmail: async function () {
         // Retrieve values of Input fields
         const sTicketId = this.byId("ticketNumberEditInput").getValue();
         const sTicketTypeId = this.byId("ticketTypeEditInput").getSelectedKey();
-        const sTeamMemberId = this.getView()
-          .getModel("editTicketFormModel")
-          .getProperty("/teamMemberId");
-        const sCustomerId = this.getView()
-          .getModel("editTicketFormModel")
-          .getProperty("/customerId");
+        const oEditTicketFormModel = this.getView().getModel(
+          "editTicketFormModel"
+        );
+        const sTeamMemberId = oEditTicketFormModel.getProperty("/teamMemberId");
+        const sCustomerId = oEditTicketFormModel.getProperty("/customerId");
         const sTicketStatusId = this.byId(
           "ticketStatusEditInput"
         ).getSelectedKey();
@@ -307,7 +342,31 @@ sap.ui.define(
 
         // Send PUT request
         try {
-          await ticketService.updateTickets(parseInt(sTicketId), oPayload);
+          const updatedTicketResponse = await ticketService.updateTickets(
+            parseInt(sTicketId),
+            oPayload
+          );
+
+          // Extract related fields and SEND ticket update email
+          const ticketId = updatedTicketResponse.ticketId;
+          const teamMemberEmail =
+            oEditTicketFormModel.getProperty("/teamMemberEmail");
+          const teamMemberFullName = oEditTicketFormModel.getProperty(
+            "/teamMemberFullName"
+          );
+
+          try {
+            await ticketEmailService.sendTicketUpdatedEmail({
+              ticketId,
+              teamMemberEmail,
+              teamMemberFullName,
+              title: sTitle,
+              description: sDescription,
+            });
+          } catch (emailError) {
+            console.error("Failed to send ticket update email:", emailError);
+          }
+
           // Success
           MessageToast.show(
             this.oBundle.getText("MToastTicketEditedSuccessfully")
