@@ -45,50 +45,10 @@ sap.ui.define(
 
       _onRouteMatched: async function (oEvent) {
         await this.loadTickets();
-        await this._cacheTicketTypeId();
-        await this._loadAndCacheTicketStatuses();
+        await this.loadTicketStatuses();
 
         this._removePreviousTicketSelections();
         this._clearSearchInputFields();
-      },
-
-      /**
-       * Caches the "Bug" as default ticket type
-       *
-       * Usage:
-       * - Caches "Bug" to reset the ticket type filter efficiently when navigating back
-       */
-      _cacheTicketTypeId: async function () {
-        const oTicketTypeModel = this.getView().getModel("ticketTypeModel");
-
-        if (oTicketTypeModel) {
-          const aTicketTypes = oTicketTypeModel.getData();
-          // Cache Type "Bug"
-          this._defaultTicketTypeId =
-            aTicketTypes.find((ticketType) => ticketType.name === "Bug")
-              ?.ticketTypeId || "";
-        }
-      },
-
-      /**
-       * Loads ticket statuses and caches the "New" as default ticket status
-       *
-       * Usage:
-       * - Ensures ticket statuses are loaded for the view
-       * - Caches "New" to reset the ticket status filter efficiently when navigating back
-       */
-      _loadAndCacheTicketStatuses: async function () {
-        await this.loadTicketStatuses();
-
-        const oTicketStatusModel = this.getView().getModel("ticketStatusModel");
-
-        if (oTicketStatusModel) {
-          const aStatuses = oTicketStatusModel.getData();
-          // Cache status "New"
-          this._defaultTicketStatus =
-            aStatuses.find((status) => status.ticketStatusName === "New")
-              ?.ticketStatusId || "";
-        }
       },
 
       _removePreviousTicketSelections: function () {
@@ -97,12 +57,8 @@ sap.ui.define(
 
       _clearSearchInputFields: async function () {
         this.byId("multiTicketIdInput").removeAllTokens();
-        this.byId("ticketTypeOverviewInput").setSelectedKey(
-          this._defaultTicketTypeId || ""
-        );
-        this.byId("ticketStatusOverviewInput").setSelectedKey(
-          this._defaultTicketStatus || ""
-        );
+        this.byId("ticketTypeOverviewInput").setSelectedKey("");
+        this.byId("ticketStatusOverviewInput").setSelectedKey("");
         this.byId("idTicketCreatedOnDatePicker").setValue("");
       },
 
@@ -118,6 +74,19 @@ sap.ui.define(
           "ticketStatusOverviewInput"
         ).getSelectedKey();
         const sCreatedAt = this.byId("idTicketCreatedOnDatePicker").getValue();
+
+        // If all fields are empty, return early
+        if (
+          aTicketIds.length === 0 &&
+          !sSelectedTicketTypeId &&
+          !sSelectedTicketStatus &&
+          !sCreatedAt
+        ) {
+          MessageBox.information(
+            this.oBundle.getText("MBoxProvideAtLeastOneFilter")
+          );
+          return;
+        }
 
         // Add values to filter in case any provided
         const oFilters = {};

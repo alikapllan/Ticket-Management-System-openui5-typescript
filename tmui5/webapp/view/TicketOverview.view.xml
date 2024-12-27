@@ -38,18 +38,24 @@
 
                 <VBox class="sapUiSmallMarginEnd">
                     <Label text="Ticket Type:" />
-                    <Select id="ticketTypeOverviewInput" items="{ticketTypeModel>/}">
+                    <ComboBox
+                        id="ticketTypeOverviewInput"
+                        placeholder="Ticket Status"
+                        items="{ticketTypeModel>/}">
                         <core:Item key="{ticketTypeModel>ticketTypeId}"
                             text="{ticketTypeModel>name}" />
-                    </Select>
+                    </ComboBox>
                 </VBox>
 
                 <VBox class="sapUiSmallMarginEnd">
                     <Label text="Ticket Status:" />
-                    <Select id="ticketStatusOverviewInput" items="{ticketStatusModel>/}">
+                    <ComboBox
+                        id="ticketStatusOverviewInput"
+                        placeholder="Ticket Status"
+                        items="{ticketStatusModel>/}">
                         <core:Item key="{ticketStatusModel>ticketStatusId}"
                             text="{ticketStatusModel>ticketStatusName}" />
-                    </Select>
+                    </ComboBox>
                 </VBox>
 
                 <VBox class="sapUiSmallMarginEnd">
