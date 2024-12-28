@@ -190,11 +190,6 @@ sap.ui.define(
         const sTitle = this.byId("titleInput").getValue();
         const sDescription = this.byId("descriptionInput").getValue();
 
-        // Retrieve file from FileUploader
-        const oFileUploader = this.byId("fileUploaderCreateTicket");
-        const oDomRef = oFileUploader.getDomRef("fu"); // Get the FileUploader's DOM reference -> fu : internal Id of inpult element used by Fileuploader
-        const file = oDomRef && oDomRef.files && oDomRef.files[0]; // Access the first file
-
         // Validate inputs
         if (
           !sTicketTypeId ||
@@ -218,13 +213,33 @@ sap.ui.define(
 
         // Send POST request
         try {
+          // -- CREATE TICKET --
           const createdTicketResponse = await ticketService.createTickets(
-            oPayload,
-            file // Pass file along with payload
+            oPayload
           );
 
-          // Extract ticketId & other related fields and SEND ticket creation email
+          // -- FILE UPLOAD --
+          // Retrieve file from FileUploader
           const ticketId = createdTicketResponse.ticketId;
+          const oFileUploader = this.byId("fileUploaderCreateTicket");
+          const oDomRef = oFileUploader.getDomRef("fu");
+          const aFiles = oDomRef && oDomRef.files; // Get all selected files
+
+          if (aFiles) {
+            const formData = new FormData();
+            formData.append("ticketId", ticketId);
+
+            if (aFiles.length > 0) {
+              for (const file of aFiles) {
+                formData.append("files", file);
+              }
+            }
+
+            // UPLOAD provided files - always trigger, even if no file is provided
+            await ticketService.uploadFiles(parseInt(ticketId), formData);
+          }
+
+          // -- EMAIL SENDING --
           const teamMemberEmail =
             oCreateTicketFormModel.getProperty("/teamMemberEmail");
           const teamMemberFullName = oCreateTicketFormModel.getProperty(
@@ -232,6 +247,7 @@ sap.ui.define(
           );
 
           try {
+            // Send mail
             await ticketEmailService.sendTicketCreatedEmail({
               ticketId,
               teamMemberEmail,
@@ -257,6 +273,25 @@ sap.ui.define(
           console.error(error);
           MessageBox.error(this.oBundle.getText("MBoxFailedToCreateTicket"));
         }
+      },
+
+      onFileUploaderFilenameLengthExceed: function () {
+        MessageBox.error(
+          this.oBundle.getText("MBoxFileNameLengthCannotExceed50Char")
+        );
+      },
+
+      onFileUploaderTypeMissmatch: function (oEvent) {
+        const aFileTypes = oEvent.getSource().getFileType();
+        aFileTypes.map(function (sType) {
+          return "*." + sType;
+        });
+        MessageBox.error(
+          "The file type *." +
+            oEvent.getParameter("fileType") +
+            " is not supported. Choose one of the following types: " +
+            aFileTypes.join(", ")
+        );
       },
 
       onCancelTicket: function () {

@@ -167,9 +167,7 @@ const createTicket = async (req, res) => {
   // ticketId is created serially via Postresql so no need to provide, createdAt via NOW() Method below
   const { ticketTypeId, teamMemberId, customerId, title, description } =
     req.body;
-  const file = req.file; // File uploaded via multer
 
-  console.log("Uploaded file:", file);
   console.log("Ticket: Request body POST:", req.body);
   try {
     // Fetch the ticketStatusId for "New" dynamically
@@ -188,7 +186,7 @@ const createTicket = async (req, res) => {
     const ticketStatusId = rows[0].ticketStatusId;
 
     const result = await pool.query(
-      'INSERT INTO "Ticket" ("ticketTypeId", "teamMemberId", "customerId", "ticketStatusId", "title", "description", "filePath", "file", "createdAt") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW()::timestamp) RETURNING *',
+      'INSERT INTO "Ticket" ("ticketTypeId", "teamMemberId", "customerId", "ticketStatusId", "title", "description", "createdAt") VALUES ($1, $2, $3, $4, $5, $6, NOW()::timestamp) RETURNING *',
       [
         ticketTypeId,
         teamMemberId,
@@ -196,13 +194,44 @@ const createTicket = async (req, res) => {
         ticketStatusId,
         title,
         description,
-        file ? file.originalname : null, // save  file name as filePath
-        file ? file.buffer : null, // save file data in bytea column
       ]
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+// UPLOAD Files
+const uploadFiles = async (req, res) => {
+  const { id: ticketId } = req.params;
+
+  if (!req.files || req.files.length === 0) {
+    console.log(`No files provided for ticket ID: ${ticketId}`);
+    return res
+      .status(200)
+      .json({ message: "No files provided, so no further operation needed." });
+  }
+
+  try {
+    console.log(`Starting file upload for ticket ID: ${ticketId}`);
+    const fileNames = req.files.map((file) => file.originalname);
+    console.log(`File names to be uploaded:`, fileNames);
+
+    for (const file of req.files) {
+      // filePath = file.originalname
+      await pool.query(
+        'INSERT INTO "File" ("ticketId", "filePath", "file") VALUES ($1, $2, $3)',
+        [ticketId, file.originalname, file.buffer]
+      );
+    }
+
+    console.log(`File upload successful for ticket ID: ${ticketId}`);
+
+    res.status(200).json({ message: "Files uploaded successfully." });
+  } catch (error) {
+    console.error("File upload error:", error);
+    res.status(500).json({ message: "Failed to upload files." });
   }
 };
 
@@ -259,6 +288,7 @@ module.exports = {
   getFilteredTickets,
   getTicket,
   createTicket,
+  uploadFiles,
   updateTicket,
   deleteTicket,
 };

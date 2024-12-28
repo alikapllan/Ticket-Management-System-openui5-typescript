@@ -50,26 +50,36 @@ sap.ui.define([], function () {
       return response.json();
     },
 
-    createTickets: async function (oPayload, file) {
-      const formData = new FormData();
-      formData.append("file", file); // append the file
-      Object.keys(oPayload).forEach((key) => {
-        formData.append(key, oPayload[key]);
-      });
-
+    createTickets: async function (oPayload) {
       const response = await fetch("http://localhost:3000/api/tickets", {
         method: "POST",
-        /*
         headers: {
           "Content-Type": "application/json", // tells the server the body is JSON
         },
-        body: JSON.stringify(oPayload), */
-        body: formData,
+        body: JSON.stringify(oPayload),
       });
 
       if (!response.ok) {
         throw new Error(
           `Ticket Creation Failed! HTTP ${response.status}: ${response.statusText}`
+        );
+      }
+
+      return response.json();
+    },
+
+    uploadFiles: async function (iTicketId, formData) {
+      const response = await fetch(
+        `http://localhost:3000/api/tickets/${iTicketId}/files`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `File upload failed! HTTP ${response.status}: ${response.statusText}`
         );
       }
 

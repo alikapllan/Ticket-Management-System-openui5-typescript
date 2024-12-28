@@ -66,17 +66,18 @@
                         showExceededText="true" />
 
                     <Label text="" />
-
                     <!-- File Upload -->
                     <Label text="{i18n>uploadFiles}" />
                     <unified:FileUploader
                         id="fileUploaderCreateTicket"
-                        placeholder="Choose a file to upload"
-                        multiple="true"
+                        name="files"
+                        placeholder="{i18n>uploadFilePlaceholder}"
                         maximumFilenameLength="50"
+                        filenameLengthExceed=".onFileUploaderFilenameLengthExceed"
                         maximumFileSize="10"
-                        uploadComplete=".onFileUploadComplete"
-                        change=".onFileChange" />
+                        typeMissmatch=".onFileUploaderTypeMissmatch"
+                        multiple="true"
+                        dragDropConfig="true" />
 
                     <Label text="" />
                 </layoutF:content>
