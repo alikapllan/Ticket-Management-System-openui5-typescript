@@ -3,7 +3,7 @@
     xmlns:core="sap.ui.core">
     <SelectDialog
         id="AssignedToValueHelpDialog"
-        title="Team Members"
+        title="{i18n>teamMembersTitleValueHelp}"
         items="{teamMemberModel>/}"
         search=".onValueHelpSearchAssignedTo"
         confirm=".onValueHelpCloseAssignedTo"

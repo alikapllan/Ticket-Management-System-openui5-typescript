@@ -7,8 +7,8 @@
             <Toolbar>
                 <ToolbarSpacer />
                 <!-- Icon color : dodgerblue https://www.w3.org/TR/css-color-3/#css-system -->
-                <core:Icon src="sap-icon://sap-ui5" color="#1e90ff"></core:Icon>
-                <Title text="{i18n>title}" class="sapUiTinyMarginBegin"></Title>
+                <core:Icon src="sap-icon://sap-ui5" color="#1e90ff" />
+                <Title text="{i18n>title}" class="sapUiTinyMarginBegin" />
                 <ToolbarSpacer />
             </Toolbar>
         </customHeader>
@@ -22,9 +22,9 @@
                         subheader="{tiles>subtitle}"
                         press=".onPress(${tiles>route}, ${tiles>fragment})">
                         <TileContent>
-                            <!-- Replacement of the Button to the bottom left-->
+                            <!-- Icons to the bottom left-->
                             <VBox class="sapUiLargeMarginTop">
-                                <core:Icon src="{tiles>icon}" size="1.5rem"></core:Icon>
+                                <core:Icon src="{tiles>icon}" size="1.5rem" />
                             </VBox>
                         </TileContent>
                     </GenericTile>

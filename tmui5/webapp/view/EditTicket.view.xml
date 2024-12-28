@@ -9,12 +9,12 @@
         <customHeader>
             <Bar>
                 <contentLeft>
-                    <Button icon="sap-icon://nav-back" press=".onNavBack"></Button>
+                    <Button icon="sap-icon://nav-back" press=".onNavBack" />
                 </contentLeft>
                 <contentMiddle>
-                    <core:Icon src="sap-icon://sap-ui5" color="#1e90ff"></core:Icon>
+                    <core:Icon src="sap-icon://sap-ui5" color="#1e90ff" />
                     <Title text="{= ${i18n>editTicket} + ' - ' + ${editTicketModel>/ticketId}}"
-                        class="sapUiTinyMarginBegin"></Title>
+                        class="sapUiTinyMarginBegin" />
                 </contentMiddle>
             </Bar>
         </customHeader>

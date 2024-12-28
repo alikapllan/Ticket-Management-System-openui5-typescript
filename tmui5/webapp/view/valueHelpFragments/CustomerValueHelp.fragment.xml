@@ -3,7 +3,7 @@
     xmlns:core="sap.ui.core">
     <SelectDialog
         id="customerValueHelpDialog"
-        title="Customers"
+        title="{i18n>customersTitleValueHelp}"
         items="{customerModel>/}"
         search=".onValueHelpSearchCustomer"
         confirm=".onValueHelpCloseCustomer"

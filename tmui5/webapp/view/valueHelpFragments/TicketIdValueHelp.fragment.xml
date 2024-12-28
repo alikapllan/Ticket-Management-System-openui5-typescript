@@ -3,7 +3,7 @@
     xmlns:core="sap.ui.core">
     <SelectDialog
         id="ticketIdValueHelpDialog"
-        title="Tickets"
+        title="{i18n>ticketIdTitleValueHelp}"
         items="{ticketModel>/}"
         search="_onTicketIdValueHelpSearch"
         confirm="_onTicketIdValueHelpClose"
