@@ -50,13 +50,21 @@ sap.ui.define([], function () {
       return response.json();
     },
 
-    createTickets: async function (oPayload) {
+    createTickets: async function (oPayload, file) {
+      const formData = new FormData();
+      formData.append("file", file); // append the file
+      Object.keys(oPayload).forEach((key) => {
+        formData.append(key, oPayload[key]);
+      });
+
       const response = await fetch("http://localhost:3000/api/tickets", {
         method: "POST",
+        /*
         headers: {
           "Content-Type": "application/json", // tells the server the body is JSON
         },
-        body: JSON.stringify(oPayload),
+        body: JSON.stringify(oPayload), */
+        body: formData,
       });
 
       if (!response.ok) {

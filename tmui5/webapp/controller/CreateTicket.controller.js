@@ -190,6 +190,11 @@ sap.ui.define(
         const sTitle = this.byId("titleInput").getValue();
         const sDescription = this.byId("descriptionInput").getValue();
 
+        // Retrieve file from FileUploader
+        const oFileUploader = this.byId("fileUploaderCreateTicket");
+        const oDomRef = oFileUploader.getDomRef("fu"); // Get the FileUploader's DOM reference -> fu : internal Id of inpult element used by Fileuploader
+        const file = oDomRef && oDomRef.files && oDomRef.files[0]; // Access the first file
+
         // Validate inputs
         if (
           !sTicketTypeId ||
@@ -214,7 +219,8 @@ sap.ui.define(
         // Send POST request
         try {
           const createdTicketResponse = await ticketService.createTickets(
-            oPayload
+            oPayload,
+            file // Pass file along with payload
           );
 
           // Extract ticketId & other related fields and SEND ticket creation email
@@ -271,11 +277,16 @@ sap.ui.define(
         this.byId("titleInput").setValue("");
         this.byId("descriptionInput").setValue("");
 
+        // Clear File Uploader
+        this.byId("fileUploaderCreateTicket").setValue("");
+
         // Reset CreateTicketFormModel (teamMemberId, customerId, pick first TicketTypeId as default)
         const oCreateTicketFormModel = this.getView().getModel(
           "createTicketFormModel"
         );
         oCreateTicketFormModel.setProperty("/teamMemberId", null);
+        oCreateTicketFormModel.setProperty("/teamMemberEmail", null);
+        oCreateTicketFormModel.setProperty("/teamMemberFullName", null);
         oCreateTicketFormModel.setProperty("/customerId", null);
         oCreateTicketFormModel.setProperty(
           "/defaultTicketTypeId",

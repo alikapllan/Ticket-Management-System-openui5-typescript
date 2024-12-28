@@ -167,7 +167,9 @@ const createTicket = async (req, res) => {
   // ticketId is created serially via Postresql so no need to provide, createdAt via NOW() Method below
   const { ticketTypeId, teamMemberId, customerId, title, description } =
     req.body;
+  const file = req.file; // File uploaded via multer
 
+  console.log("Uploaded file:", file);
   console.log("Ticket: Request body POST:", req.body);
   try {
     // Fetch the ticketStatusId for "New" dynamically
@@ -186,7 +188,7 @@ const createTicket = async (req, res) => {
     const ticketStatusId = rows[0].ticketStatusId;
 
     const result = await pool.query(
-      'INSERT INTO "Ticket" ("ticketTypeId", "teamMemberId", "customerId", "ticketStatusId", "title", "description", "createdAt") VALUES ($1, $2, $3, $4, $5, $6, NOW()::timestamp) RETURNING *',
+      'INSERT INTO "Ticket" ("ticketTypeId", "teamMemberId", "customerId", "ticketStatusId", "title", "description", "filePath", "file", "createdAt") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW()::timestamp) RETURNING *',
       [
         ticketTypeId,
         teamMemberId,
@@ -194,6 +196,8 @@ const createTicket = async (req, res) => {
         ticketStatusId,
         title,
         description,
+        file ? file.originalname : null, // save  file name as filePath
+        file ? file.buffer : null, // save file data in bytea column
       ]
     );
     res.status(201).json(result.rows[0]);

@@ -3,6 +3,7 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:layoutF="sap.ui.layout.form"
+    xmlns:unified="sap.ui.unified"
     displayBlock="true">
     <Page id="pageCreateTicket">
         <customHeader>
@@ -63,6 +64,19 @@
                     <TextArea id="descriptionInput" rows="5" maxLength="200"
                         placeholder="{i18n>descriptionPlaceholder}"
                         showExceededText="true" />
+
+                    <Label text="" />
+
+                    <!-- File Upload -->
+                    <Label text="{i18n>uploadFiles}" />
+                    <unified:FileUploader
+                        id="fileUploaderCreateTicket"
+                        placeholder="Choose a file to upload"
+                        multiple="true"
+                        maximumFilenameLength="50"
+                        maximumFileSize="10"
+                        uploadComplete=".onFileUploadComplete"
+                        change=".onFileChange" />
 
                     <Label text="" />
                 </layoutF:content>
