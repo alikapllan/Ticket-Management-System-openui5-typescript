@@ -3,7 +3,6 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:layoutF="sap.ui.layout.form"
-    xmlns:unified="sap.ui.unified"
     displayBlock="true">
     <Page id="pageCreateTicket">
         <customHeader>

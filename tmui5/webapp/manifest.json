@@ -67,7 +67,10 @@
         "viewPath": "tmui5.view",
         "controlAggregation": "pages",
         "controlId": "app",
-        "clearControlAggregation": false
+        "clearControlAggregation": false,
+        "bypassed": {
+          "target": "TargetNotFound"
+        }
       },
       "routes": [
         {
@@ -143,6 +146,12 @@
           "clearControlAggregation": false,
           "viewId": "DeleteCustomer",
           "viewName": "DeleteCustomer"
+        },
+        "TargetNotFound": {
+          "viewType": "XML",
+          "viewId": "NotFound",
+          "viewName": "NotFound",
+          "transition": "Slide"
         }
       }
     },
