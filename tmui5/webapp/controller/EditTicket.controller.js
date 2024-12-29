@@ -9,10 +9,11 @@ sap.ui.define(
     "sap/m/MessageBox",
     "tmui5/services/ticketService",
     "tmui5/services/ticketCommentService",
-    "tmui5/services/ticketEmailService",
     "tmui5/constants/Constants",
     "tmui5/util/FragmentUtil",
+    "tmui5/util/FileUploaderUtil",
     "tmui5/model/formatter",
+    "tmui5/util/EmailUtil",
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -27,10 +28,11 @@ sap.ui.define(
     MessageBox,
     ticketService,
     ticketCommentService,
-    ticketEmailService,
     Constants,
     FragmentUtil,
-    formatter
+    FileUploaderUtil,
+    formatter,
+    EmailUtil
   ) {
     "use strict";
 
@@ -63,9 +65,20 @@ sap.ui.define(
         const sTicketId = oArgs.ticketId;
         const iTicketId = parseInt(sTicketId);
 
+        // Clear necessary input fields which are not filled when navigating to EditTicket Page
+        this._resetEditTicketForm();
+
         await this.loadTicketStatuses();
         await this._loadAndBindTicketDetailToEdit(iTicketId);
         await this._loadTicketComments(iTicketId);
+      },
+
+      _resetEditTicketForm: function () {
+        // Clear input field of upload files
+        this.byId("fileUploaderEditTicket").setValue("");
+
+        // Clear update comment field
+        this.byId("updateCommentEditInput").setValue("");
       },
 
       _loadAndBindTicketDetailToEdit: async function (iTicketId) {
@@ -259,49 +272,27 @@ sap.ui.define(
       },
       // Value Help 'Customer' - END
 
+      onFileUploaderFilenameLengthExceed: function () {
+        FileUploaderUtil.handleFilenameLengthExceed(this.oBundle);
+      },
+
+      onFileUploaderTypeMissmatch: function (oEvent) {
+        FileUploaderUtil.handleTypeMissmatch(oEvent, this.oBundle);
+      },
+
       onSaveTicket: async function () {
+        await this._executeTicketUpdateWorkflow();
+      },
+
+      _executeTicketUpdateWorkflow: async function () {
         // If any Update Comment provided -> POST Request in order to add to TicketComment table
         await this._createTicketCommentPOST();
 
-        // PUT Request to Update Ticket
-        await this._updateCustomerPUTandSendUpdateEmail();
+        // PUT Request to Update Ticket with Files and SEND Email Notification
+        await this._updateTicketWithFilesAndNotification();
       },
 
-      onCancelTicket: function () {
-        this.navTo("RouteTicketOverview");
-      },
-
-      _createTicketCommentPOST: async function () {
-        // Retrieve values of related input fields
-        const sTicketId = this.byId("ticketNumberEditInput").getValue();
-        const sTicketComment = this.byId("updateCommentEditInput").getValue();
-
-        // Validate input fields
-        if (!sTicketId || !sTicketComment) {
-          return;
-        }
-
-        // Prepare Payload to pass
-        const oPayload = {
-          ticketId: parseInt(sTicketId),
-          comment: sTicketComment,
-        };
-
-        // Clear update comment field
-        this.byId("updateCommentEditInput").setValue("");
-
-        // Send POST request
-        try {
-          await ticketCommentService.createTicketComment(oPayload);
-        } catch (error) {
-          console.error(error);
-          MessageBox.error(
-            this.oBundle.getText("MBoxFailedToCreateTicketComment")
-          );
-        }
-      },
-
-      _updateCustomerPUTandSendUpdateEmail: async function () {
+      _updateTicketWithFilesAndNotification: async function () {
         // Retrieve values of Input fields
         const sTicketId = this.byId("ticketNumberEditInput").getValue();
         const sTicketTypeId = this.byId("ticketTypeEditInput").getSelectedKey();
@@ -347,25 +338,29 @@ sap.ui.define(
             oPayload
           );
 
-          // Extract related fields and SEND ticket update email
+          // File Upload
           const ticketId = updatedTicketResponse.ticketId;
-          const teamMemberEmail =
-            oEditTicketFormModel.getProperty("/teamMemberEmail");
-          const teamMemberFullName = oEditTicketFormModel.getProperty(
-            "/teamMemberFullName"
+          await FileUploaderUtil.uploadFiles(
+            ticketId,
+            this.byId("fileUploaderEditTicket")
           );
 
-          try {
-            await ticketEmailService.sendTicketUpdatedEmail({
-              ticketId,
-              teamMemberEmail,
-              teamMemberFullName,
-              title: sTitle,
-              description: sDescription,
-            });
-          } catch (emailError) {
-            console.error("Failed to send ticket update email:", emailError);
-          }
+          // Send Ticket Update Email
+          const emailPayload = {
+            ticketId,
+            teamMemberEmail:
+              oEditTicketFormModel.getProperty("/teamMemberEmail"),
+            teamMemberFullName: oEditTicketFormModel.getProperty(
+              "/teamMemberFullName"
+            ),
+            title: sTitle,
+            description: sDescription,
+          };
+
+          await EmailUtil.sendEmail(
+            Constants.EMAIL_SENDING_TYPE.UPDATED,
+            emailPayload
+          );
 
           // Success
           MessageToast.show(
@@ -380,7 +375,38 @@ sap.ui.define(
           );
         } catch (error) {
           console.error(error);
-          MessageBox.error(this.oBundle.getText("MBoxFailedToCreateTicket"));
+          MessageBox.error(this.oBundle.getText("MBoxFailedToEditTicket"));
+        }
+      },
+
+      onCancelTicket: function () {
+        this.navTo("RouteTicketOverview");
+      },
+
+      _createTicketCommentPOST: async function () {
+        // Retrieve values of related input fields
+        const sTicketId = this.byId("ticketNumberEditInput").getValue();
+        const sTicketComment = this.byId("updateCommentEditInput").getValue();
+
+        // Validate input fields
+        if (!sTicketId || !sTicketComment) {
+          return;
+        }
+
+        // Prepare Payload to pass
+        const oPayload = {
+          ticketId: parseInt(sTicketId),
+          comment: sTicketComment,
+        };
+
+        // Send POST request
+        try {
+          await ticketCommentService.createTicketComment(oPayload);
+        } catch (error) {
+          console.error(error);
+          MessageBox.error(
+            this.oBundle.getText("MBoxFailedToCreateTicketComment")
+          );
         }
       },
 

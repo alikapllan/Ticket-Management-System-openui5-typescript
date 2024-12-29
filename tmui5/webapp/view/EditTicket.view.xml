@@ -4,6 +4,7 @@
     xmlns:core="sap.ui.core"
     xmlns:layout="sap.ui.layout"
     xmlns:layoutF="sap.ui.layout.form"
+    xmlns:unified="sap.ui.unified"
     displayBlock="true">
     <Page id="pageEditTicket" title="{i18n>editticket}">
         <customHeader>
@@ -94,6 +95,18 @@
                         </layoutData>
                     </Input>
 
+                    <Label text="{i18n>uploadFiles}" />
+                    <unified:FileUploader
+                        id="fileUploaderEditTicket"
+                        name="files"
+                        placeholder="{i18n>uploadFilePlaceholder}"
+                        maximumFilenameLength="50"
+                        filenameLengthExceed=".onFileUploaderFilenameLengthExceed"
+                        maximumFileSize="10"
+                        typeMissmatch=".onFileUploaderTypeMissmatch"
+                        multiple="true"
+                        dragDropConfig="true" />
+
                     <Label text="" /> <!-- ensures that HBOX starts in a separat row -->
                     <!-- Save and Cancel Buttons -->
                     <HBox justifyContent="End" class="sapUiLargeMarginTop">
@@ -103,6 +116,7 @@
                             class="sapUiTinyMarginBeginEnd"
                             press=".onCancelTicket" />
                     </HBox>
+
 
                     <Label text="" /> <!-- ensures that VerticalLayout starts in a separat row -->
                     <!-- Ticket Comments  -->

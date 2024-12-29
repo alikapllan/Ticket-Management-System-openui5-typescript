@@ -22,5 +22,10 @@ sap.ui.define([], function () {
       ERROR: "Error",
       NONE: "None",
     },
+
+    EMAIL_SENDING_TYPE: {
+      CREATED: "created",
+      UPDATED: "updated",
+    },
   };
 });

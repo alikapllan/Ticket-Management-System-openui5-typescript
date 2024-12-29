@@ -7,9 +7,10 @@ sap.ui.define(
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
     "tmui5/services/ticketService",
-    "tmui5/services/ticketEmailService",
     "tmui5/constants/Constants",
     "tmui5/util/FragmentUtil",
+    "tmui5/util/FileUploaderUtil",
+    "tmui5/util/EmailUtil",
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -22,9 +23,10 @@ sap.ui.define(
     FilterOperator,
     MessageBox,
     ticketService,
-    ticketEmailService,
     Constants,
-    FragmentUtil
+    FragmentUtil,
+    FileUploaderUtil,
+    EmailUtil
   ) {
     "use strict";
 
@@ -175,10 +177,15 @@ sap.ui.define(
       // Value Help 'Customer' - END
 
       onCreateTicket: async function () {
-        this._createTicketPOSTandSendCreationEmail();
+        await this._executeTicketCreateWorkflow();
       },
 
-      _createTicketPOSTandSendCreationEmail: async function () {
+      _executeTicketCreateWorkflow: async function () {
+        // POST Request to Create Ticket with Files and SEND Email Notification
+        await this._createTicketWithFilesAndNotification();
+      },
+
+      _createTicketWithFilesAndNotification: async function () {
         // retrieve values of Input fields
         const sTicketTypeId = this.byId("ticketTypeInput").getSelectedKey();
         const oCreateTicketFormModel = this.getView().getModel(
@@ -218,46 +225,29 @@ sap.ui.define(
             oPayload
           );
 
-          // -- FILE UPLOAD --
-          // Retrieve file from FileUploader
+          // File Upload
           const ticketId = createdTicketResponse.ticketId;
-          const oFileUploader = this.byId("fileUploaderCreateTicket");
-          const oDomRef = oFileUploader.getDomRef("fu");
-          const aFiles = oDomRef && oDomRef.files; // Get all selected files
-
-          if (aFiles) {
-            const formData = new FormData();
-            formData.append("ticketId", ticketId);
-
-            if (aFiles.length > 0) {
-              for (const file of aFiles) {
-                formData.append("files", file);
-              }
-            }
-
-            // UPLOAD provided files - always trigger, even if no file is provided
-            await ticketService.uploadFiles(parseInt(ticketId), formData);
-          }
-
-          // -- EMAIL SENDING --
-          const teamMemberEmail =
-            oCreateTicketFormModel.getProperty("/teamMemberEmail");
-          const teamMemberFullName = oCreateTicketFormModel.getProperty(
-            "/teamMemberFullName"
+          await FileUploaderUtil.uploadFiles(
+            ticketId,
+            this.byId("fileUploaderCreateTicket")
           );
 
-          try {
-            // Send mail
-            await ticketEmailService.sendTicketCreatedEmail({
-              ticketId,
-              teamMemberEmail,
-              teamMemberFullName,
-              title: sTitle,
-              description: sDescription,
-            });
-          } catch (emailError) {
-            console.error("Failed to send ticket creation email:", emailError);
-          }
+          // Send Ticket Creation Email
+          const emailPayload = {
+            ticketId,
+            teamMemberEmail:
+              oCreateTicketFormModel.getProperty("/teamMemberEmail"),
+            teamMemberFullName: oCreateTicketFormModel.getProperty(
+              "/teamMemberFullName"
+            ),
+            title: sTitle,
+            description: sDescription,
+          };
+
+          await EmailUtil.sendEmail(
+            Constants.EMAIL_SENDING_TYPE.CREATED,
+            emailPayload
+          );
 
           // Success
           MessageBox.success(
@@ -276,22 +266,11 @@ sap.ui.define(
       },
 
       onFileUploaderFilenameLengthExceed: function () {
-        MessageBox.error(
-          this.oBundle.getText("MBoxFileNameLengthCannotExceed50Char")
-        );
+        FileUploaderUtil.handleFilenameLengthExceed(this.oBundle);
       },
 
       onFileUploaderTypeMissmatch: function (oEvent) {
-        const aFileTypes = oEvent.getSource().getFileType();
-        aFileTypes.map(function (sType) {
-          return "*." + sType;
-        });
-        MessageBox.error(
-          "The file type *." +
-            oEvent.getParameter("fileType") +
-            " is not supported. Choose one of the following types: " +
-            aFileTypes.join(", ")
-        );
+        FileUploaderUtil.handleTypeMissmatch(oEvent, this.oBundle);
       },
 
       onCancelTicket: function () {
