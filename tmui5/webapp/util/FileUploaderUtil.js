@@ -1,6 +1,10 @@
 sap.ui.define(
-  ["sap/m/MessageBox", "tmui5/services/ticketService"],
-  function (MessageBox, ticketService) {
+  [
+    "sap/m/MessageBox",
+    "tmui5/services/ticketService",
+    "sap/ui/model/json/JSONModel",
+  ],
+  function (MessageBox, ticketService, JSONModel) {
     "use strict";
 
     return {
@@ -45,6 +49,17 @@ sap.ui.define(
         ]);
 
         MessageBox.error(sMessage);
+      },
+
+      loadTicketFiles: async function (iTicketId, oBundle) {
+        try {
+          const ticketFiles = await ticketService.fetchTicketFiles(iTicketId);
+
+          return new JSONModel(ticketFiles);
+        } catch (error) {
+          console.error(error);
+          MessageBox.error(oBundle.getText("MBoxGETReqFailedOnFiles"));
+        }
       },
     };
   }

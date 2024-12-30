@@ -235,6 +235,38 @@ const uploadFiles = async (req, res) => {
   }
 };
 
+const getTicketFiles = async (req, res) => {
+  const { id: ticketId } = req.params;
+
+  console.log(`Files: Request GET for ticketId: `, ticketId);
+
+  try {
+    const result = await pool.query(
+      `
+      SELECT 
+        "fileId",
+        "ticketId",
+        TRIM("filePath") AS "filePath", 
+        "file" 
+      FROM "File" 
+      WHERE 
+        "ticketId" = $1`,
+      [ticketId]
+    );
+
+    const files = result.rows.map((file) => ({
+      fileId: file.fileId,
+      filePath: file.filePath,
+      file: file.file.toString("base64"), // Convert binary data to base64 for frontend
+    }));
+
+    res.status(200).json(files);
+  } catch (error) {
+    console.error(`Failed to fetch files for ticket ID ${ticketId}:`, error);
+    res.status(500).json({ message: "Failed to fetch files." });
+  }
+};
+
 // UPDATE a ticket
 const updateTicket = async (req, res) => {
   const { id } = req.params;
@@ -289,6 +321,7 @@ module.exports = {
   getTicket,
   createTicket,
   uploadFiles,
+  getTicketFiles,
   updateTicket,
   deleteTicket,
 };

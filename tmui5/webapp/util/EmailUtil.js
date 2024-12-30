@@ -14,7 +14,7 @@ sap.ui.define(
             await ticketEmailService.sendTicketUpdatedEmail(emailPayload);
           }
         } catch (error) {
-          console.error(`Failed to send ${emailType} email:`, error);
+          console.error(`Failed to send ${emailSendingType} email:`, error);
         }
       },
     };

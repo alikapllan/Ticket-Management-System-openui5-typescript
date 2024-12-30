@@ -86,6 +86,23 @@ sap.ui.define([], function () {
       return response.json();
     },
 
+    fetchTicketFiles: async function (iTicketId) {
+      const response = await fetch(
+        `http://localhost:3000/api/tickets/${iTicketId}/files`,
+        {
+          method: "GET",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch files for ticket ID ${iTicketId}: HTTP ${response.status}`
+        );
+      }
+
+      return response.json();
+    },
+
     deleteTickets: async function (iTicketId) {
       const response = await fetch(
         `http://localhost:3000/api/tickets/${iTicketId}`,

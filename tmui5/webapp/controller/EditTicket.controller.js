@@ -71,11 +71,18 @@ sap.ui.define(
         await this.loadTicketStatuses();
         await this._loadAndBindTicketDetailToEdit(iTicketId);
         await this._loadTicketComments(iTicketId);
+        await this._loadUploadedTicketFilesAndBindToView(
+          iTicketId,
+          this.oBundle
+        );
       },
 
       _resetEditTicketForm: function () {
         // Clear input field of upload files
         this.byId("fileUploaderEditTicket").setValue("");
+
+        // Clear list of uploaded files of a ticket
+        this.byId("uploadedFilesSetEditTicket").destroyItems();
 
         // Clear update comment field
         this.byId("updateCommentEditInput").setValue("");
@@ -139,6 +146,52 @@ sap.ui.define(
           console.error(error);
           this.oBundle.getText("MBoxGETReqFailedOnTicketComment");
         }
+      },
+
+      _loadUploadedTicketFilesAndBindToView: async function (
+        iTicketId,
+        oBundle
+      ) {
+        const oFilesModel = await FileUploaderUtil.loadTicketFiles(
+          iTicketId,
+          oBundle
+        );
+
+        if (oFilesModel && oFilesModel.getData().length > 0) {
+          // Bind the model if files are present
+          this.getView().setModel(oFilesModel, "editTicketUploadedFilesModel");
+
+          // Make the Label and UploadSet visible
+          this.byId("idUploadedFilesLabelEditTicket").setVisible(true);
+          this.byId("uploadedFilesSetEditTicket").setVisible(true);
+        }
+      },
+
+      onDownloadSelectedButton: function () {
+        const oUploadSet = this.byId("uploadedFilesSetEditTicket");
+
+        const aSelectedItems = oUploadSet.getSelectedItems();
+
+        if (!aSelectedItems.length) {
+          MessageBox.warning("Please select at least one file to download!");
+          return;
+        }
+
+        // Loop over selected items and initiate download
+        aSelectedItems.forEach(function (oItem) {
+          const sFileName = oItem.getFileName();
+          const sUrl = oItem
+            .getBindingContext("editTicketUploadedFilesModel")
+            .getProperty("file");
+
+          // Create a temporary link to download the file
+          const oLink = document.createElement("a");
+          oLink.href = `data:application/octet-stream;base64,${sUrl}`;
+          oLink.download = sFileName;
+          document.body.appendChild(oLink);
+          oLink.click();
+          document.body.removeChild(oLink);
+        });
       },
 
       // Value Help 'Assigned To' - START

@@ -5,6 +5,7 @@
     xmlns:layout="sap.ui.layout"
     xmlns:layoutF="sap.ui.layout.form"
     xmlns:unified="sap.ui.unified"
+    xmlns:upload="sap.m.upload"
     displayBlock="true">
     <Page id="pageEditTicket" title="{i18n>editticket}">
         <customHeader>
@@ -95,17 +96,46 @@
                         </layoutData>
                     </Input>
 
-                    <Label text="{i18n>uploadFiles}" />
+                    <Label class="sapUiSmallMarginTop" text="{i18n>uploadFiles}" />
                     <unified:FileUploader
                         id="fileUploaderEditTicket"
                         name="files"
+                        class="sapUiSmallMarginTop"
                         placeholder="{i18n>uploadFilePlaceholder}"
                         maximumFilenameLength="50"
                         filenameLengthExceed=".onFileUploaderFilenameLengthExceed"
                         maximumFileSize="10"
                         typeMissmatch=".onFileUploaderTypeMissmatch"
-                        multiple="true"
-                        dragDropConfig="true" />
+                        multiple="true" />
+
+                    <!-- Uploaded files of the Ticket to be downloaded -->
+                    <Label id="idUploadedFilesLabelEditTicket" class="sapUiSmallMarginTop"
+                        visible="false"
+                        text="{i18n>uploadedFiles}" />
+                    <upload:UploadSet
+                        id="uploadedFilesSetEditTicket"
+                        class="sapUiSmallMarginTop"
+                        visible="false"
+                        items="{editTicketUploadedFilesModel>/}"
+                        uploadButtonInvisible="true">
+                        <upload:toolbar>
+                            <OverflowToolbar>
+                                <ToolbarSpacer />
+                                <Button
+                                    id="downloadSelectedButton"
+                                    text="{i18n>download}"
+                                    type="Emphasized"
+                                    press=".onDownloadSelectedButton" />
+                                <upload:UploadSetToolbarPlaceholder />
+                            </OverflowToolbar>
+                        </upload:toolbar>
+                        <upload:items>
+                            <upload:UploadSetItem
+                                fileName="{editTicketUploadedFilesModel>filePath}"
+                                visibleEdit="false"
+                                visibleRemove="false" />
+                        </upload:items>
+                    </upload:UploadSet>
 
                     <Label text="" /> <!-- ensures that HBOX starts in a separat row -->
                     <!-- Save and Cancel Buttons -->
@@ -117,7 +147,6 @@
                             press=".onCancelTicket" />
                     </HBox>
 
-
                     <Label text="" /> <!-- ensures that VerticalLayout starts in a separat row -->
                     <!-- Ticket Comments  -->
                     <layout:VerticalLayout
@@ -127,7 +156,7 @@
                             <List
                                 headerText="Feed Entries({= ${ticketCommentModel>/}.length })"
                                 items="{ path: 'ticketCommentModel>/',
-                                         sorter:[ { path: 'ticketCommentModel>createdAt',
+                                         sorter:[ { path: 'createdAt',
                                                     descending:true } ] }">
                                 <FeedListItem
                                     sender="{i18n>anonymous}"
