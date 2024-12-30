@@ -202,6 +202,54 @@ const createTicket = async (req, res) => {
   }
 };
 
+// UPDATE a ticket
+const updateTicket = async (req, res) => {
+  const { id } = req.params;
+
+  const {
+    ticketTypeId,
+    teamMemberId,
+    customerId,
+    ticketStatusId,
+    title,
+    description,
+  } = req.body;
+
+  console.log(`Ticket: Request PUT for ticketId: ${id}`, req.body);
+  try {
+    const result = await pool.query(
+      'UPDATE "Ticket" SET "ticketTypeId" = $1, "teamMemberId" = $2, "customerId" = $3, "ticketStatusId" = $4, "title" = $5, "description" = $6 WHERE "ticketId" = $7 RETURNING *',
+      [
+        ticketTypeId,
+        teamMemberId,
+        customerId,
+        ticketStatusId,
+        title,
+        description,
+        id,
+      ]
+    );
+
+    res.status(200).json(result.rows[0]);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// DELETE a ticket
+const deleteTicket = async (req, res) => {
+  const { id } = req.params;
+
+  console.log("Ticket: Request Delete, ticketId: ", id);
+
+  try {
+    await pool.query('DELETE FROM "Ticket" WHERE "ticketId" = $1', [id]);
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // UPLOAD Files
 const uploadFiles = async (req, res) => {
   const { id: ticketId } = req.params;
@@ -267,61 +315,13 @@ const getTicketFiles = async (req, res) => {
   }
 };
 
-// UPDATE a ticket
-const updateTicket = async (req, res) => {
-  const { id } = req.params;
-
-  const {
-    ticketTypeId,
-    teamMemberId,
-    customerId,
-    ticketStatusId,
-    title,
-    description,
-  } = req.body;
-
-  console.log(`Ticket: Request PUT for ticketId: ${id}`, req.body);
-  try {
-    const result = await pool.query(
-      'UPDATE "Ticket" SET "ticketTypeId" = $1, "teamMemberId" = $2, "customerId" = $3, "ticketStatusId" = $4, "title" = $5, "description" = $6 WHERE "ticketId" = $7 RETURNING *',
-      [
-        ticketTypeId,
-        teamMemberId,
-        customerId,
-        ticketStatusId,
-        title,
-        description,
-        id,
-      ]
-    );
-
-    res.status(200).json(result.rows[0]);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// DELETE a ticket
-const deleteTicket = async (req, res) => {
-  const { id } = req.params;
-
-  console.log("Ticket: Request Delete, ticketId: ", id);
-
-  try {
-    await pool.query('DELETE FROM "Ticket" WHERE "ticketId" = $1', [id]);
-    res.status(204).send();
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
 module.exports = {
   getAllTickets,
   getFilteredTickets,
   getTicket,
   createTicket,
-  uploadFiles,
-  getTicketFiles,
   updateTicket,
   deleteTicket,
+  uploadFiles,
+  getTicketFiles,
 };
