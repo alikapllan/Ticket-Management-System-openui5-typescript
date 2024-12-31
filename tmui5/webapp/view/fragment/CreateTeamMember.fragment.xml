@@ -15,11 +15,11 @@
                 editable="true">
                 <!-- name -->
                 <Label text="Name" required="true" />
-                <Input id="teamMemberNameInput" placeholder="Name" />
+                <Input id="teamMemberNameInput" placeholder="Name" maxLength="50" />
 
                 <!-- surname -->
                 <Label text="Surname:" required="true" />
-                <Input id="teamMemberSurnameInput" placeholder="Surname" />
+                <Input id="teamMemberSurnameInput" placeholder="Surname" maxLength="50" />
 
                 <!-- role -->
                 <Label text="Role" required="true" />
@@ -29,11 +29,13 @@
 
                 <!-- email -->
                 <Label text="Email" required="true" />
-                <Input id="teamMemberEmailInput" type="Email" placeholder="Email Address" />
+                <Input id="teamMemberEmailInput" type="Email" placeholder="Email Address"
+                    maxLength="100" />
 
                 <!-- phone -->
                 <Label text="Phone" required="true" />
-                <Input id="teamMemberPhoneInput" type="Tel" placeholder="Phone Number" />
+                <Input id="teamMemberPhoneInput" type="Tel" placeholder="Phone Number"
+                    maxLength="15" />
             </layoutF:SimpleForm>
         </content>
 

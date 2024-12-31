@@ -9,7 +9,6 @@ sap.ui.define(
     "sap/m/Token",
     "tmui5/services/ticketService",
     "tmui5/util/FragmentUtil",
-    "tmui5/constants/Constants",
     "tmui5/model/formatter",
   ],
   /**
@@ -25,7 +24,6 @@ sap.ui.define(
     Token,
     ticketService,
     FragmentUtil,
-    Constants,
     formatter
   ) {
     "use strict";
@@ -39,13 +37,12 @@ sap.ui.define(
         // Attach handler for when the TicketOverview is matched
         const oRouter = this.getOwnerComponent().getRouter();
         oRouter
-          .getRoute("RouteTicketOverview")
+          .getRoute(this.Constants.ROUTES.TICKET_OVERVIEW)
           .attachPatternMatched(this._onRouteMatched, this);
       },
 
       _onRouteMatched: async function (oEvent) {
         await this.loadTickets();
-        await this.loadTicketStatuses();
 
         this._removePreviousTicketSelections();
         this._clearSearchInputFields();
@@ -126,7 +123,15 @@ sap.ui.define(
       },
 
       onCreateTicket: function () {
-        this.navTo("RouteCreateTicket");
+        const oRouter = this.getOwnerComponent().getRouter();
+        const oPreviousRoute = oRouter.getHashChanger().getHash(); // Get the current route
+
+        // Save the previous route to a global model or a variable
+        this.getOwnerComponent()
+          .getModel("appState")
+          .setProperty("/previousRoute", oPreviousRoute);
+
+        this.navTo(this.Constants.ROUTES.CREATE_TICKET);
       },
 
       onEditTicket: async function () {
@@ -145,7 +150,7 @@ sap.ui.define(
 
         // Navigate to the EditTicket page with ticketId as parameter
         const oRouter = this.getOwnerComponent().getRouter();
-        oRouter.navTo("RouteEditTicket", {
+        oRouter.navTo(this.Constants.ROUTES.EDIT_TICKET, {
           ticketId: sTicketId,
         });
       },
@@ -227,7 +232,7 @@ sap.ui.define(
 
         // Navigate to the EditTicket page with ticketId as parameter
         const oRouter = this.getOwnerComponent().getRouter();
-        oRouter.navTo("RouteEditTicket", {
+        oRouter.navTo(this.Constants.ROUTES.EDIT_TICKET, {
           ticketId: sTicketId,
         });
       },
@@ -236,8 +241,8 @@ sap.ui.define(
         // Load fragment
         const oDialog = await FragmentUtil.loadValueHelpFragment(
           this,
-          Constants.FRAGMENTS.TICKET_ID_VALUEHELP,
-          Constants.FRAGMENTS_ID.TICKET_ID_VALUEHELP
+          this.Constants.FRAGMENTS.TICKET_ID_VALUEHELP,
+          this.Constants.FRAGMENTS_ID.TICKET_ID_VALUEHELP
         );
 
         oDialog.open();
@@ -272,7 +277,7 @@ sap.ui.define(
         // destroy fragment
         FragmentUtil.destroyFragment(
           this,
-          Constants.FRAGMENTS_ID.TICKET_ID_VALUEHELP
+          this.Constants.FRAGMENTS_ID.TICKET_ID_VALUEHELP
         );
       },
 
@@ -283,7 +288,7 @@ sap.ui.define(
         if (sPreviousHash !== undefined) {
           window.history.go(-1);
         } else {
-          this.navTo("RouteMainView");
+          this.navTo(this.Constants.ROUTES.MAIN);
         }
       },
     });

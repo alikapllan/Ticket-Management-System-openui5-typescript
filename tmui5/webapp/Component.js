@@ -11,6 +11,7 @@ sap.ui.define(
     "sap/m/MessageBox",
     "tmui5/services/roleService",
     "tmui5/services/ticketTypeService",
+    "tmui5/services/ticketStatusService",
   ],
   function (
     UIComponent,
@@ -19,7 +20,8 @@ sap.ui.define(
     JSONModel,
     MessageBox,
     roleService,
-    ticketTypeService
+    ticketTypeService,
+    ticketStatusService
   ) {
     "use strict";
 
@@ -47,6 +49,9 @@ sap.ui.define(
         // set the device model
         this.setModel(models.createDeviceModel(), "device");
 
+        // Initialize appState model
+        this.initializeAppStateModel();
+
         // load roles once during application startup --> here called as Roles rarely change
         try {
           const roles = await roleService.fetchRoles();
@@ -66,6 +71,24 @@ sap.ui.define(
           console.error(error);
           MessageBox.error(oBundle.getText("MBoxGETReqFailedOnTicketType"));
         }
+
+        // load ticket statuses and bind as model -> rarely changes
+        try {
+          const tickets = await ticketStatusService.fetchTicketStatuses();
+          const oTicketStatusModel = new JSONModel(tickets);
+          this.setModel(oTicketStatusModel, "ticketStatusModel");
+        } catch (error) {
+          console.error(error);
+          MessageBox.error(oBundle.getText("MBoxGETReqFailedOnTicketStatus"));
+        }
+      },
+
+      initializeAppStateModel: function () {
+        // Initialize appState model to track the previous route (for Create Ticket nav. decision as it is called from two places)
+        const oAppStateModel = new JSONModel({
+          previousRoute: "",
+        });
+        this.setModel(oAppStateModel, "appState"); // Setting the appState model globally throughout the app
       },
     });
   }

@@ -27,5 +27,14 @@ sap.ui.define([], function () {
       CREATED: "created",
       UPDATED: "updated",
     },
+
+    ROUTES: {
+      MAIN: "RouteMainView",
+      TICKET_OVERVIEW: "RouteTicketOverview",
+      EDIT_TICKET: "RouteEditTicket",
+      CREATE_TICKET: "RouteCreateTicket",
+      DELETE_TEAM_MEMBER: "RouteDeleteTeamMember",
+      DELETE_CUSTOMER: "RouteDeleteCustomer",
+    },
   };
 });

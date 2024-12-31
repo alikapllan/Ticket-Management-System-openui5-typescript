@@ -7,7 +7,8 @@ sap.ui.define(
       onInit: function () {},
 
       onNavBackToHomePage: function () {
-        this.navTo("RouteMainView");
+        debugger;
+        this.navTo(this.Constants.ROUTES.MAIN);
       },
 
       onNavBack: function () {
@@ -17,7 +18,7 @@ sap.ui.define(
         if (sPreviousHash !== undefined) {
           window.history.go(-1);
         } else {
-          this.navTo("RouteMainView");
+          this.navTo(this.Constants.ROUTES.MAIN);
         }
       },
     });

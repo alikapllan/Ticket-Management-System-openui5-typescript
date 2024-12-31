@@ -79,18 +79,19 @@
 
                     <!-- Ticket Title -->
                     <Label text="{i18n>ticketTitleEdit}" />
-                    <Input id="titleEditInput" value="{editTicketModel>/title}" />
+                    <Input id="titleEditInput" value="{editTicketModel>/title}" maxLength="100" />
 
                     <!-- Description -->
                     <Label text="{i18n>descriptionEdit}" />
                     <TextArea id="descriptionEditInput" value="{editTicketModel>/description}"
                         rows="5" maxLength="200"
                         placeholder="{i18n>descriptionPlaceholderEdit}"
-                        showExceededText="true" />
+                        showExceededText="true"
+                        liveChange=".onDescriptionLiveChange" />
 
                     <!-- Update Comment -->
                     <Label text="{i18n>updateCommentEdit}" />
-                    <Input id="updateCommentEditInput">
+                    <Input id="updateCommentEditInput" maxLength="200">
                         <layoutData>
                             <layout:GridData span="L6 M6 S6" />
                         </layoutData>
@@ -109,7 +110,7 @@
                         multiple="true" />
 
                     <!-- Uploaded files of the Ticket to be downloaded -->
-                    <Label id="idUploadedFilesLabelEditTicket" class="sapUiSmallMarginTop"
+                    <Label id="uploadedFilesLabelEditTicket" class="sapUiSmallMarginTop"
                         visible="false"
                         text="{i18n>uploadedFiles}" />
                     <upload:UploadSet
@@ -154,7 +155,7 @@
                         width="100%">
                         <layout:content>
                             <List
-                                headerText="Feed Entries({= ${ticketCommentModel>/}.length })"
+                                headerText="{= ${i18n>comments} + ' (' + ${ticketCommentModel>/length} + ')'}"
                                 items="{ path: 'ticketCommentModel>/',
                                          sorter:[ { path: 'createdAt',
                                                     descending:true } ] }">

@@ -57,13 +57,14 @@
                         valueHelpRequest=".onValueHelpRequestCustomer" />
 
                     <Label text="{i18n>ticketTitle}" />
-                    <Input id="titleInput" />
+                    <Input id="titleInput" maxLength="100" />
 
                     <!-- Description -->
                     <Label text="{i18n>description}" />
                     <TextArea id="descriptionInput" rows="5" maxLength="200"
                         placeholder="{i18n>descriptionPlaceholder}"
-                        showExceededText="true" />
+                        showExceededText="true"
+                        liveChange=".onDescriptionLiveChange" />
 
                     <Label text="" />
                     <!-- File Upload -->
@@ -76,8 +77,7 @@
                         filenameLengthExceed=".onFileUploaderFilenameLengthExceed"
                         maximumFileSize="10"
                         typeMissmatch=".onFileUploaderTypeMissmatch"
-                        multiple="true"
-                        dragDropConfig="true" />
+                        multiple="true" />
 
                     <Label text="" />
                 </layoutF:content>

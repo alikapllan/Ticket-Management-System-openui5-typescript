@@ -9,11 +9,12 @@ sap.ui.define(
     "sap/m/MessageBox",
     "tmui5/services/ticketService",
     "tmui5/services/ticketCommentService",
-    "tmui5/constants/Constants",
     "tmui5/util/FragmentUtil",
     "tmui5/util/FileUploaderUtil",
     "tmui5/model/formatter",
     "tmui5/util/EmailUtil",
+    "sap/ui/core/BusyIndicator",
+    "tmui5/util/ValidationUtil",
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -28,11 +29,12 @@ sap.ui.define(
     MessageBox,
     ticketService,
     ticketCommentService,
-    Constants,
     FragmentUtil,
     FileUploaderUtil,
     formatter,
-    EmailUtil
+    EmailUtil,
+    BusyIndicator,
+    ValidationUtil
   ) {
     "use strict";
 
@@ -68,7 +70,6 @@ sap.ui.define(
         // Clear necessary input fields which are not filled when navigating to EditTicket Page
         this._resetEditTicketForm();
 
-        await this.loadTicketStatuses();
         await this._loadAndBindTicketDetailToEdit(iTicketId);
         await this._loadTicketComments(iTicketId);
         await this._loadUploadedTicketFilesAndBindToView(
@@ -138,10 +139,7 @@ sap.ui.define(
 
           const oTicketCommentModel = new JSONModel(ticketComments);
 
-          this.getOwnerComponent().setModel(
-            oTicketCommentModel,
-            "ticketCommentModel"
-          );
+          this.getView().setModel(oTicketCommentModel, "ticketCommentModel");
         } catch (error) {
           console.error(error);
           this.oBundle.getText("MBoxGETReqFailedOnTicketComment");
@@ -152,6 +150,10 @@ sap.ui.define(
         iTicketId,
         oBundle
       ) {
+        // Make the Label and UploadSet unvisible - if visibility set to true once then should be reset again
+        this.byId("uploadedFilesLabelEditTicket").setVisible(false);
+        this.byId("uploadedFilesSetEditTicket").setVisible(false);
+
         const oFilesModel = await FileUploaderUtil.loadTicketFiles(
           iTicketId,
           oBundle
@@ -162,7 +164,7 @@ sap.ui.define(
           this.getView().setModel(oFilesModel, "editTicketUploadedFilesModel");
 
           // Make the Label and UploadSet visible
-          this.byId("idUploadedFilesLabelEditTicket").setVisible(true);
+          this.byId("uploadedFilesLabelEditTicket").setVisible(true);
           this.byId("uploadedFilesSetEditTicket").setVisible(true);
         }
       },
@@ -173,7 +175,9 @@ sap.ui.define(
         const aSelectedItems = oUploadSet.getSelectedItems();
 
         if (!aSelectedItems.length) {
-          MessageBox.warning("Please select at least one file to download!");
+          MessageBox.warning(
+            this.oBundle.getText("MBoxSelectAtLeastOneFileToDownload")
+          );
           return;
         }
 
@@ -192,6 +196,9 @@ sap.ui.define(
           oLink.click();
           document.body.removeChild(oLink);
         });
+
+        // Triggers a re-render of the UploadSet UI control and its children - to reset the selection of the downloaded files
+        oUploadSet.invalidate();
       },
 
       // Value Help 'Assigned To' - START
@@ -203,8 +210,8 @@ sap.ui.define(
           // Load Fragment
           const oDialog = await FragmentUtil.loadValueHelpFragment(
             this,
-            Constants.FRAGMENTS.ASSIGNED_TO_VALUEHELP,
-            Constants.FRAGMENTS_ID.ASSIGNED_TO_VALUEHELP
+            this.Constants.FRAGMENTS.ASSIGNED_TO_VALUEHELP,
+            this.Constants.FRAGMENTS_ID.ASSIGNED_TO_VALUEHELP
           );
 
           oDialog.open();
@@ -265,7 +272,7 @@ sap.ui.define(
         // Destroy fragment
         FragmentUtil.destroyFragment(
           this,
-          Constants.FRAGMENTS_ID.ASSIGNED_TO_VALUEHELP
+          this.Constants.FRAGMENTS_ID.ASSIGNED_TO_VALUEHELP
         );
       },
       // Value Help 'Assigned To' - END
@@ -279,8 +286,8 @@ sap.ui.define(
           // Load fragment
           const oDialog = await FragmentUtil.loadValueHelpFragment(
             this,
-            Constants.FRAGMENTS.CUSTOMER_VALUEHELP,
-            Constants.FRAGMENTS_ID.CUSTOMER_VALUEHELP
+            this.Constants.FRAGMENTS.CUSTOMER_VALUEHELP,
+            this.Constants.FRAGMENTS_ID.CUSTOMER_VALUEHELP
           );
           oDialog.open();
         } catch (error) {
@@ -320,7 +327,7 @@ sap.ui.define(
         // Destroy fragment
         FragmentUtil.destroyFragment(
           this,
-          Constants.FRAGMENTS_ID.CUSTOMER_VALUEHELP
+          this.Constants.FRAGMENTS_ID.CUSTOMER_VALUEHELP
         );
       },
       // Value Help 'Customer' - END
@@ -334,6 +341,9 @@ sap.ui.define(
       },
 
       onSaveTicket: async function () {
+        // Show busy indicator
+        BusyIndicator.show();
+
         await this._executeTicketUpdateWorkflow();
       },
 
@@ -370,6 +380,8 @@ sap.ui.define(
           !sTitle ||
           !sDescription
         ) {
+          // remove busy indicator in case of any error as well, so that it stops blocking UI in anycase
+          BusyIndicator.hide();
           MessageBox.error(this.oBundle.getText("MBoxFillAllFieldsEdit"));
           return false;
         }
@@ -411,7 +423,7 @@ sap.ui.define(
           };
 
           await EmailUtil.sendEmail(
-            Constants.EMAIL_SENDING_TYPE.UPDATED,
+            this.Constants.EMAIL_SENDING_TYPE.UPDATED,
             emailPayload
           );
 
@@ -419,21 +431,27 @@ sap.ui.define(
           MessageToast.show(
             this.oBundle.getText("MToastTicketEditedSuccessfully")
           );
-          // wait 1 sec & Navigate back to the Ticket Overview Page
+
+          // Remove busy indicator
+          BusyIndicator.hide();
+
+          // wait 0.5 sec & Navigate back to the Ticket Overview Page
           setTimeout(
             async function () {
-              this.navTo("RouteTicketOverview");
+              this.navTo(this.Constants.ROUTES.TICKET_OVERVIEW);
             }.bind(this), // setTimeout callback refers to the controller instance
             1000
           );
         } catch (error) {
+          // remove busy indicator in case of any error as well, so that it stops blocking UI in anycase
+          BusyIndicator.hide();
           console.error(error);
           MessageBox.error(this.oBundle.getText("MBoxFailedToEditTicket"));
         }
       },
 
       onCancelTicket: function () {
-        this.navTo("RouteTicketOverview");
+        this.navTo(this.Constants.ROUTES.TICKET_OVERVIEW);
       },
 
       _createTicketCommentPOST: async function () {
@@ -456,11 +474,18 @@ sap.ui.define(
         try {
           await ticketCommentService.createTicketComment(oPayload);
         } catch (error) {
+          // remove busy indicator in case of any error as well, so that it stops blocking UI in anycase
+          BusyIndicator.hide();
+
           console.error(error);
           MessageBox.error(
             this.oBundle.getText("MBoxFailedToCreateTicketComment")
           );
         }
+      },
+
+      onDescriptionLiveChange: function (oEvent) {
+        ValidationUtil.validateTextAreaLength(oEvent, this.Constants);
       },
 
       onNavBack: function () {
@@ -470,7 +495,7 @@ sap.ui.define(
         if (sPreviousHash !== undefined) {
           window.history.go(-1);
         } else {
-          this.navTo("RouteTicketOverview");
+          this.navTo(this.Constants.ROUTES.TICKET_OVERVIEW);
         }
       },
     });

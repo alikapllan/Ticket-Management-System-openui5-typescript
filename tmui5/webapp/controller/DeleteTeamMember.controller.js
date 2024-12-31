@@ -49,6 +49,7 @@ sap.ui.define(
                     const oTeamMember = oSelectedTeamMember.getObject(); // get bound data for each Team Member
                     const iTeamMemberId = oTeamMember.teamMemberId;
 
+                    // Delete team members
                     await teamMemberService.deleteTeamMembers(iTeamMemberId);
                   }
 
@@ -82,7 +83,7 @@ sap.ui.define(
         if (sPreviousHash !== undefined) {
           window.history.go(-1);
         } else {
-          this.navTo("RouteMainView");
+          this.navTo(this.Constants.ROUTES.MAIN);
         }
       },
     });

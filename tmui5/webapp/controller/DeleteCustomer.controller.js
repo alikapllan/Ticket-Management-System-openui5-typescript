@@ -83,7 +83,7 @@ sap.ui.define(
         if (sPreviousHash !== undefined) {
           window.history.go(-1);
         } else {
-          this.navTo("RouteMainView");
+          this.navTo(this.Constants.ROUTES.MAIN);
         }
       },
     });

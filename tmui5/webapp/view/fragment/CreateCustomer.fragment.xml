@@ -15,15 +15,16 @@
                 editable="true">
                 <!-- name -->
                 <Label text="Name" required="true" />
-                <Input id="customerNameInput" placeholder="Name" />
+                <Input id="customerNameInput" placeholder="Name" maxLength="50" />
 
                 <!-- email -->
                 <Label text="Email" required="true" />
-                <Input id="customerEmailInput" type="Email" placeholder="Email Address" />
+                <Input id="customerEmailInput" type="Email" placeholder="Email Address"
+                    maxLength="100" />
 
                 <!-- phone -->
                 <Label text="Phone" required="true" />
-                <Input id="customerPhoneInput" type="Tel" placeholder="Phone Number" />
+                <Input id="customerPhoneInput" type="Tel" placeholder="Phone Number" maxLength="15" />
             </layoutF:SimpleForm>
         </content>
 

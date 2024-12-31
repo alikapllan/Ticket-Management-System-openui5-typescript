@@ -33,16 +33,16 @@ sap.ui.define(
 
       onPress: async function (sRoute, sFragment) {
         if (sRoute) {
-          if (sRoute === "RouteTicketOverview") {
+          if (sRoute === this.Constants.ROUTES.TICKET_OVERVIEW) {
             // Refresh tickets to ensure new additions of tickets are visible
             await this.loadTickets();
           }
 
-          if (sRoute === "RouteDeleteTeamMember") {
+          if (sRoute === this.Constants.ROUTES.DELETE_TEAM_MEMBER) {
             await this.loadTeamMembers();
           }
 
-          if (sRoute === "RouteDeleteCustomer") {
+          if (sRoute === this.Constants.ROUTES.DELETE_CUSTOMER) {
             await this.loadCustomers();
           }
 

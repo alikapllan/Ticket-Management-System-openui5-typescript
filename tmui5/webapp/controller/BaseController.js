@@ -7,6 +7,7 @@ sap.ui.define(
     "tmui5/services/teamMemberService",
     "tmui5/services/ticketService",
     "tmui5/services/ticketStatusService",
+    "tmui5/constants/Constants",
   ],
   function (
     Controller,
@@ -15,11 +16,13 @@ sap.ui.define(
     customerService,
     teamMemberService,
     ticketService,
-    ticketStatusService
+    ticketStatusService,
+    Constants // Used in all other child controllers extending BaseController
   ) {
     "use strict";
 
     return Controller.extend("tmui5.controller.BaseController", {
+      Constants: Constants, // Attach constants to the BaseController -> all child controllers : E.g. this.Constants.ROUTE.MAIN
       onInit: function () {
         // Initialize the i18n resource bundle
         this.oBundle = this.getOwnerComponent()
@@ -86,26 +89,6 @@ sap.ui.define(
         } catch (error) {
           console.error(error);
           MessageBox.error(this.oBundle.getText("MBoxGETReqFailedOnTicket"));
-        }
-      },
-
-      /**
-       * @public
-       * Fetches & loads tickets through the REST API.
-       */
-      loadTicketStatuses: async function () {
-        try {
-          const tickets = await ticketStatusService.fetchTicketStatuses();
-          const oTicketStatusModel = new JSONModel(tickets);
-          this.getOwnerComponent().setModel(
-            oTicketStatusModel,
-            "ticketStatusModel"
-          );
-        } catch (error) {
-          console.error(error);
-          MessageBox.error(
-            this.oBundle.getText("MBoxGETReqFailedOnTicketStatus")
-          );
         }
       },
     });

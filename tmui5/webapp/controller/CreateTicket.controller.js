@@ -7,10 +7,11 @@ sap.ui.define(
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
     "tmui5/services/ticketService",
-    "tmui5/constants/Constants",
     "tmui5/util/FragmentUtil",
     "tmui5/util/FileUploaderUtil",
     "tmui5/util/EmailUtil",
+    "sap/ui/core/BusyIndicator",
+    "tmui5/util/ValidationUtil",
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -23,10 +24,11 @@ sap.ui.define(
     FilterOperator,
     MessageBox,
     ticketService,
-    Constants,
     FragmentUtil,
     FileUploaderUtil,
-    EmailUtil
+    EmailUtil,
+    BusyIndicator,
+    ValidationUtil
   ) {
     "use strict";
 
@@ -56,6 +58,10 @@ sap.ui.define(
           .attachPatternMatched(this._onRouteMatched, this);
       },
 
+      _onRouteMatched: function () {
+        this._resetCreateTicketForm(); // Reset form whenever the route is matched
+      },
+
       // Value Help 'Assigned To' - START
       onValueHelpRequestAssignedTo: async function (oEvent) {
         try {
@@ -65,8 +71,8 @@ sap.ui.define(
           // Load fragment
           const oDialog = await FragmentUtil.loadValueHelpFragment(
             this,
-            Constants.FRAGMENTS.ASSIGNED_TO_VALUEHELP,
-            Constants.FRAGMENTS_ID.ASSIGNED_TO_VALUEHELP
+            this.Constants.FRAGMENTS.ASSIGNED_TO_VALUEHELP,
+            this.Constants.FRAGMENTS_ID.ASSIGNED_TO_VALUEHELP
           );
 
           oDialog.open();
@@ -118,7 +124,7 @@ sap.ui.define(
         // Destroy fragment
         FragmentUtil.destroyFragment(
           this,
-          Constants.FRAGMENTS_ID.ASSIGNED_TO_VALUEHELP
+          this.Constants.FRAGMENTS_ID.ASSIGNED_TO_VALUEHELP
         );
       },
       // Value Help 'Assigned To' - END
@@ -132,8 +138,8 @@ sap.ui.define(
           // Load fragment
           const oDialog = await FragmentUtil.loadValueHelpFragment(
             this,
-            Constants.FRAGMENTS.CUSTOMER_VALUEHELP,
-            Constants.FRAGMENTS_ID.CUSTOMER_VALUEHELP
+            this.Constants.FRAGMENTS.CUSTOMER_VALUEHELP,
+            this.Constants.FRAGMENTS_ID.CUSTOMER_VALUEHELP
           );
           oDialog.open();
         } catch (error) {
@@ -171,12 +177,15 @@ sap.ui.define(
         // Destroy fragment
         FragmentUtil.destroyFragment(
           this,
-          Constants.FRAGMENTS_ID.CUSTOMER_VALUEHELP
+          this.Constants.FRAGMENTS_ID.CUSTOMER_VALUEHELP
         );
       },
       // Value Help 'Customer' - END
 
       onCreateTicket: async function () {
+        // Show busy indicator
+        BusyIndicator.show();
+
         await this._executeTicketCreateWorkflow();
       },
 
@@ -205,6 +214,8 @@ sap.ui.define(
           !sTitle ||
           !sDescription
         ) {
+          // remove busy indicator in case of any error as well, so that it stops blocking UI in anycase
+          BusyIndicator.hide();
           MessageBox.error(this.oBundle.getText("MBoxFillAllFields"));
           return;
         }
@@ -245,9 +256,12 @@ sap.ui.define(
           };
 
           await EmailUtil.sendEmail(
-            Constants.EMAIL_SENDING_TYPE.CREATED,
+            this.Constants.EMAIL_SENDING_TYPE.CREATED,
             emailPayload
           );
+
+          // remove busy indicator
+          BusyIndicator.hide();
 
           // Success
           MessageBox.success(
@@ -260,6 +274,9 @@ sap.ui.define(
             }
           );
         } catch (error) {
+          // remove busy indicator in case of any error as well, so that it stops blocking UI in anycase
+          BusyIndicator.hide();
+
           console.error(error);
           MessageBox.error(this.oBundle.getText("MBoxFailedToCreateTicket"));
         }
@@ -274,11 +291,7 @@ sap.ui.define(
       },
 
       onCancelTicket: function () {
-        this.navTo("RouteMainView");
-      },
-
-      _onRouteMatched: function () {
-        this._resetCreateTicketForm(); // Reset form whenever the route is matched
+        this.navTo(this.Constants.ROUTES.MAIN);
       },
 
       _resetCreateTicketForm: function () {
@@ -310,14 +323,21 @@ sap.ui.define(
         );
       },
 
-      onNavBack: function () {
-        const oHistory = History.getInstance();
-        const sPreviousHash = oHistory.getPreviousHash();
+      onDescriptionLiveChange: function (oEvent) {
+        ValidationUtil.validateTextAreaLength(oEvent, this.Constants);
+      },
 
-        if (sPreviousHash !== undefined) {
-          window.history.go(-1);
+      onNavBack: function () {
+        const oAppState = this.getOwnerComponent().getModel("appState");
+        const sPreviousRoute = oAppState.getProperty("/previousRoute");
+
+        // Decide where to navigate back based on the previous route
+        if (sPreviousRoute === "TicketOverview") {
+          // initialite AppState model as everytime navigated to 'ticket create' from 'overview' it is set
+          this.getOwnerComponent().initializeAppStateModel();
+          this.navTo(this.Constants.ROUTES.TICKET_OVERVIEW);
         } else {
-          this.navTo("RouteMainView");
+          this.navTo(this.Constants.ROUTES.MAIN);
         }
       },
     });
