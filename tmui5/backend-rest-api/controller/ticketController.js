@@ -186,7 +186,16 @@ const createTicket = async (req, res) => {
     const ticketStatusId = rows[0].ticketStatusId;
 
     const result = await pool.query(
-      'INSERT INTO "Ticket" ("ticketTypeId", "teamMemberId", "customerId", "ticketStatusId", "title", "description", "createdAt") VALUES ($1, $2, $3, $4, $5, $6, NOW()::timestamp) RETURNING *',
+      `INSERT INTO "Ticket" 
+        ("ticketTypeId", 
+         "teamMemberId", 
+         "customerId", 
+         "ticketStatusId", 
+         "title", 
+         "description", 
+         "createdAt") 
+       VALUES ($1, $2, $3, $4, $5, $6, NOW()::timestamp) 
+       RETURNING *`,
       [
         ticketTypeId,
         teamMemberId,
@@ -218,7 +227,15 @@ const updateTicket = async (req, res) => {
   console.log(`Ticket: Request PUT for ticketId: ${id}`, req.body);
   try {
     const result = await pool.query(
-      'UPDATE "Ticket" SET "ticketTypeId" = $1, "teamMemberId" = $2, "customerId" = $3, "ticketStatusId" = $4, "title" = $5, "description" = $6 WHERE "ticketId" = $7 RETURNING *',
+      `UPDATE "Ticket" 
+        SET "ticketTypeId" = $1, 
+            "teamMemberId" = $2, 
+            "customerId" = $3, 
+            "ticketStatusId" = $4, 
+            "title" = $5, 
+            "description" = $6 
+        WHERE "ticketId" = $7 
+        RETURNING *`,
       [
         ticketTypeId,
         teamMemberId,

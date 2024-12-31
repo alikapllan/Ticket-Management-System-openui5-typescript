@@ -7,7 +7,6 @@ sap.ui.define(
       onInit: function () {},
 
       onNavBackToHomePage: function () {
-        debugger;
         this.navTo(this.Constants.ROUTES.MAIN);
       },
 
