@@ -291,7 +291,17 @@ sap.ui.define(
       },
 
       onCancelTicket: function () {
-        this.navTo(this.Constants.ROUTES.MAIN);
+        const oAppState = this.getOwnerComponent().getModel("appState");
+        const sPreviousRoute = oAppState.getProperty("/previousRoute");
+
+        // Decide where to navigate back based on the previous route
+        if (sPreviousRoute === "TicketOverview") {
+          // initialite AppState model as everytime navigated to 'ticket create' from 'overview' it is set
+          this.getOwnerComponent().initializeAppStateModel();
+          this.navTo(this.Constants.ROUTES.TICKET_OVERVIEW);
+        } else {
+          this.navTo(this.Constants.ROUTES.MAIN);
+        }
       },
 
       _resetCreateTicketForm: function () {
