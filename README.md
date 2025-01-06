@@ -8,8 +8,9 @@
 
 ## Small Overview of Rules
 - User can create & delete Customers, Team Members.
-- User is also able to Create & Edit & Delete tickets.
+- User is also able to Create & Edit & Delete tickets (**Bug** or **Change Request**).
 - Each ticket has an assignee that is one of the created team members. On each creation and modification on Ticket, the assignee is notified via Email. After every change, an email is sent to the provided email address of the team member.
+- Newly created ticket has a status **New** but can be edited later on Edit Ticket Page. Other avaliable statuses are **In Planning, In Progress, Waiting for Customer Feedback, On Hold, Canceled, Done**.
 - While creating or editing a ticket, multiple files can be attached to ticket.
 - On Edit ticket page, comments can be written and they are listed at the end of Edit Ticket Page, if there are any Comments provided on that Ticket before.
 
