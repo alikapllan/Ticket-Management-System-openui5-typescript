@@ -1,10 +1,10 @@
-# Ticket Management System - openUI5
+# Ticket Management System - OpenUI5
 
--> This is my master project and on the other hand aimed to enhance my UI5 skills which I have been learning since end of september 2024.
+-> This is my master's project, which also served as a way to enhance my UI5 skills which I have been learning since late September 2024.
 
 **Frontend:** OpenUI5  
 **Backend:** Node.js, Express  
-**DB:** PostreSQL  
+**Database:** PostreSQL  
 
 ## Small Overview of Rules
 - User can create & delete Customers, Team Members.
@@ -13,18 +13,25 @@
 - While creating or editing a ticket, multiple files can be attached to ticket.
 - On Edit ticket page, comments can be written and they are listed at the end of Edit Ticket Page, if there are any Comments provided on that Ticket before.
 
-There is no login and user authentication implemented in this project. Another improvement could be maybe a logging mechanism about changes who did what.
+**Note:** There is no login and user authentication implemented in this project. Another improvement could be maybe a logging mechanism about changes who did what.
 
 ## Getting Started
 
--> You need to download Node.js and Postresql.
+### Prerequisites
+
+- Node.js and PostgreSQL must be installed on your system.
+- The database structure must be set up as described below.
+
+### Database Setup
 
 **1.** Create the tables as provided below. Dont forget the foreign key relations. For tables File and TicketComment, Action defined on the Foreign key to the Ticket Table. If you set the **ON DELETE** Action to **CASCADE** (see the second screenshot below), if any Ticket is deleted, entries inside File & TicketComment having foreign key to the this deleted ticket(s), are deleted automatically. Which ensures that you do not need to make any explicit implementation in logic to delete related entires. This also increases performance as no longer needed entries are kept in tables.
 ![image](https://github.com/user-attachments/assets/1f416db8-87ec-4759-82d3-5470a4cec05a)
 
 ![image](https://github.com/user-attachments/assets/334c474f-edee-4b2b-9683-6f4dcdb972aa)  
 
-**2.** Create an **.env** file in the **backend-rest-api** folder.
+### Environment Setup
+
+**1.** Create an **.env** file inside the **backend-rest-api** folder.
 
 **.env** file is used to store configuration settings, environment variables, and sensitive information securely. Create as in the screenshot below.  
 
@@ -33,14 +40,25 @@ There is no login and user authentication implemented in this project. Another i
   
 ![image](https://github.com/user-attachments/assets/f8c8a1dc-b7ad-43ec-8147-dc9c5dbf5fd0)
 
-**3.** Install dependencies
+### Install Dependencies
 
-- Run **npm install** on **tmui5** & **backend-rest-api** folders level.
+**1.** Install dependencies
 
-**4.** Start app
+- Run ```npm install``` in the following directories:
+  - **tmui5** folder
+  - **backend-rest-api** folder
 
-- Run **npm start** first on **backend-rest-api** folder level to connect to PostreSQL.
-- Then run **npm start** on **tmui5** folder level to start app UI.
+### Run the Application
 
+**1.** Start the **backend server**:
 
-## A Video on how Ticket Management App works
+- Navigate to the **backend-rest-api** folder and run ```npm start``` to connect to PostreSQL.
+
+**2.** Start the **UI application**:
+
+- Navigate to the **tmui5** folder and run ```npm start``` to start app UI.
+
+## Demo Video
+
+https://github.com/user-attachments/assets/e3521573-5fc1-4c59-829e-4f687c8438ee
+
