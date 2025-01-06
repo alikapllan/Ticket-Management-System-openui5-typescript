@@ -8,7 +8,13 @@
 
 ## Table of contents
 - [Small Overview of Rules](#small-overview-of-rules)
-
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Database Setup](#database-setup)
+  - [Environment Setup](#environment-setup)
+  - [Install Dependencies](#install-dependencies)
+  - [Run the Application](#run-the-application)
+- [Demo Video](#demo-video)
 
 ## Small Overview of Rules
 - User can create & delete Customers, Team Members.
