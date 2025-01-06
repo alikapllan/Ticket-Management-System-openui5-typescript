@@ -6,6 +6,10 @@
 **Backend:** Node.js, Express  
 **Database:** PostreSQL  
 
+## Table of contents
+- [Small Overview of Rules](#small-overview-of-rules)
+
+
 ## Small Overview of Rules
 - User can create & delete Customers, Team Members.
 - User is also able to Create & Edit & Delete tickets (**Bug** or **Change Request**).
