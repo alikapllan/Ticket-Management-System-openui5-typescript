@@ -35,7 +35,7 @@
 
 ### Database Setup
 
-**1.** Create the tables as provided below. Dont forget the foreign key relations. For tables File and TicketComment, Action defined on the Foreign key to the Ticket Table. If you set the **ON DELETE** Action to **CASCADE** (see the second screenshot below), if any Ticket is deleted, entries inside File & TicketComment having foreign key to the this deleted ticket(s), are deleted automatically. Which ensures that you do not need to make any explicit implementation in logic to delete related entires. This also increases performance as no longer needed entries are kept in tables.
+**1.** Create the tables as provided below. Dont forget the foreign key relations. For tables File and TicketComment, Action defined on the Foreign key to the Ticket Table. If you set the **ON DELETE** Action to **CASCADE** (see the second screenshot below), if any Ticket is deleted, entries inside File & TicketComment having foreign key to the this deleted ticket(s), are deleted automatically. Which ensures that you do not need to make any explicit implementation in logic to delete related entires. This also increases performance as no longer needed entries are automatically removed from tables.
 ![image](https://github.com/user-attachments/assets/1f416db8-87ec-4759-82d3-5470a4cec05a)
 
 ![image](https://github.com/user-attachments/assets/334c474f-edee-4b2b-9683-6f4dcdb972aa)  
