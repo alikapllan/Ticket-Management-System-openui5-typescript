@@ -20,7 +20,7 @@
             <Panel headerText="Customers({= ${customerModel>/}.length })"
                 class="sapUiResponsiveMargin" width="auto">
 
-                <Table id="teamCustomersTable" mode="MultiSelect" items="{customerModel>/}">
+                <Table id="customersTable" mode="MultiSelect" items="{customerModel>/}">
                     <!-- Toolbar for Delete Button -->
                     <headerToolbar>
                         <Toolbar>

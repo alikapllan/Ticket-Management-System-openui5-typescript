@@ -20,7 +20,7 @@ sap.ui.define(
       },
 
       onDeleteSelectedCustomer: async function () {
-        const oTable = this.byId("teamCustomersTable");
+        const oTable = this.byId("customersTable");
         const aSelectedCustomers = oTable.getSelectedContexts(); // Get selected row/s
 
         if (!aSelectedCustomers.length) {
