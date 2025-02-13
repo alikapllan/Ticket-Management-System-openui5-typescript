@@ -11,7 +11,8 @@
     "types": ["@sapui5/types"],
     "paths": {
       "tmui5/*": ["webapp/*"]
-    }
+    },
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["webapp/**/*"]
+  "include": ["./webapp/**/*"]
 }
