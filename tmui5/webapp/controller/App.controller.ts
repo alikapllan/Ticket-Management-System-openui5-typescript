@@ -1,5 +1,5 @@
-import Controller from "sap/ui/core/mvc/Controller";
+import BaseController from "./BaseController";
 
-export default class AppController extends Controller {
+export default class AppController extends BaseController {
   onInit(): void | undefined {}
 }
