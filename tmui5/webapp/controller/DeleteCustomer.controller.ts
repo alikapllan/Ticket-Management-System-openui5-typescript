@@ -20,7 +20,6 @@ export default class DeleteCustomer extends BaseController {
 
     // Confirm delete operation of customer/s
     MessageBox.confirm(this.oBundle.getText("MBoxConfirmToDeleteCustomer"), {
-      icon: MessageBox.Icon.QUESTION,
       title: this.oBundle.getText("MBoxConfirmationTitleToDeleteCustomer"),
       actions: [MessageBox.Action.YES, MessageBox.Action.NO],
       emphasizedAction: MessageBox.Action.YES,
