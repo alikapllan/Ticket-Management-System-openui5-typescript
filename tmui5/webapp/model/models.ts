@@ -15,3 +15,5 @@ export const createDeviceModel = (): JSONModel => {
   oModel.setDefaultBindingMode("OneWay" as BindingMode);
   return oModel;
 };
+
+export default { createDeviceModel };

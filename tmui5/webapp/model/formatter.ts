@@ -1,7 +1,5 @@
 import Constants from "tmui5/constants/Constants";
 import DateFormat from "sap/ui/core/format/DateFormat";
-import type ResourceModel from "sap/ui/model/resource/ResourceModel";
-import type ResourceBundle from "sap/base/i18n/ResourceBundle";
 
 export default {
   /**
