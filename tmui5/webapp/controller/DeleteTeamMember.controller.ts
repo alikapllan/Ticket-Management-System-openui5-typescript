@@ -1,7 +1,9 @@
 import BaseController from "./BaseController";
 import History from "sap/ui/core/routing/History";
 import MessageBox from "sap/m/MessageBox";
+import Table from "sap/m/Table";
 import teamMemberService from "tmui5/services/teamMemberService";
+import Integer from "sap/ui/model/type/Integer";
 
 export default class DeleteTeamMember extends BaseController {
   public async onInit(): Promise<void> {
@@ -10,7 +12,7 @@ export default class DeleteTeamMember extends BaseController {
   }
 
   public async onDeleteSelectedTeamMember(): Promise<void> {
-    const oTable = this.byId("teamMembersTable");
+    const oTable = this.byId("teamMembersTable") as Table;
     const aSelectedTeamMembers = oTable.getSelectedContexts(); // Get selected row/s
 
     if (!aSelectedTeamMembers.length) {
@@ -27,8 +29,9 @@ export default class DeleteTeamMember extends BaseController {
         if (sAction === MessageBox.Action.YES) {
           try {
             for (const oSelectedTeamMember of aSelectedTeamMembers) {
-              const oTeamMember = aSelectedTeamMembers.getObject();
-              const iTeamMemberId = oTeamMember.teamMemberId;
+              const iTeamMemberId = (
+                oSelectedTeamMember.getObject() as { teamMemberId: Integer }
+              ).teamMemberId;
 
               // DELETE request to API
               await teamMemberService.deleteTeamMembers(iTeamMemberId);

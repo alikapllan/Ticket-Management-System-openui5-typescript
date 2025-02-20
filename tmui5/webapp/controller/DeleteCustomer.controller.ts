@@ -2,6 +2,8 @@ import BaseController from "./BaseController";
 import History from "sap/ui/core/routing/History";
 import MessageBox from "sap/m/MessageBox";
 import customerService from "tmui5/services/CustomerService";
+import Table from "sap/m/Table";
+import Integer from "sap/ui/model/type/Integer";
 
 export default class DeleteCustomer extends BaseController {
   public async onInit(): Promise<void> {
@@ -10,7 +12,7 @@ export default class DeleteCustomer extends BaseController {
   }
 
   public async onDeleteSelectedCustomer(): Promise<void> {
-    const oTable = this.byId("customersTable");
+    const oTable = this.byId("customersTable") as Table;
     const aSelectedCustomers = oTable.getSelectedContexts(); // Get selected row/s
 
     if (!aSelectedCustomers.length) {
@@ -28,8 +30,9 @@ export default class DeleteCustomer extends BaseController {
           try {
             // Loop over selected rows
             for (const oSelectedCustomer of aSelectedCustomers) {
-              const oCustomer = oSelectedCustomer.getObject(); // Get bound data for each Customer
-              const iCustomerId = oCustomer.customerId;
+              const iCustomerId = (
+                oSelectedCustomer.getObject() as { customerId: Integer }
+              ).customerId;
 
               // Make DELETE Request for each selected Customer to REST API
               await customerService.deleteCustomers(iCustomerId);

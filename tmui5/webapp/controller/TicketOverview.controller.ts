@@ -15,7 +15,6 @@ import Select from "sap/m/Select";
 import DatePicker from "sap/m/DatePicker";
 import Dialog from "sap/m/Dialog";
 import Integer from "sap/ui/model/type/Integer";
-import Event from "sap/ui/base/Event";
 
 export default class TicketOverviewController extends BaseController {
   formatter = formatter;
