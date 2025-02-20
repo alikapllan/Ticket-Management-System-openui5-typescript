@@ -18,6 +18,7 @@ import FragmentUtil from "tmui5/util/FragmentUtil";
 import FileUploaderUtil from "tmui5/util/FileUploaderUtil";
 import EmailUtil from "tmui5/util/EmailUtil";
 import ValidationUtil from "tmui5/util/ValidationUtil";
+import Integer from "sap/ui/model/type/Integer";
 
 export default class EditTicketController extends BaseController {
   formatter = formatter;
@@ -39,7 +40,7 @@ export default class EditTicketController extends BaseController {
 
   private async _onRouteMatched(oEvent: any): Promise<void> {
     const sTicketId = oEvent.getParameter("arguments").ticketId;
-    const iTicketId = parseInt(sTicketId);
+    const iTicketId = (sTicketId as Integer);
     this._resetEditTicketForm();
     await this._loadAndBindTicketDetailToEdit(iTicketId);
     await this._loadTicketComments(iTicketId);
@@ -53,7 +54,7 @@ export default class EditTicketController extends BaseController {
   }
 
   private async _loadAndBindTicketDetailToEdit(
-    iTicketId: number
+    iTicketId: Integer
   ): Promise<void> {
     try {
       const ticketToEdit = await ticketService.fetchTicket(iTicketId);
@@ -84,7 +85,7 @@ export default class EditTicketController extends BaseController {
     }
   }
 
-  private async _loadTicketComments(iTicketId: number): Promise<void> {
+  private async _loadTicketComments(iTicketId: Integer): Promise<void> {
     try {
       const ticketComments = await ticketCommentService.fetchTicketComments(
         iTicketId
@@ -98,7 +99,7 @@ export default class EditTicketController extends BaseController {
   }
 
   private async _loadUploadedTicketFilesAndBindToView(
-    iTicketId: number
+    iTicketId: Integer
   ): Promise<void> {
     (this.byId("uploadedFilesLabelEditTicket") as Control).setVisible(false);
     (this.byId("uploadedFilesSetEditTicket") as Control).setVisible(false);
