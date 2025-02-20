@@ -10,7 +10,7 @@ interface Customer extends CustomerPayload {
   customerId: Integer;
 }
 
-export default class CustomerService {
+export default class customerService {
   public static async fetchCustomers(): Promise<Customer> {
     const response = await fetch("http://localhost:3000/api/customers", {
       method: "GET",

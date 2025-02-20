@@ -12,7 +12,7 @@ interface TeamMember extends TeamMemberPayload {
   teamMemberId: Integer;
 }
 
-export default class TeamMemberService {
+export default class teamMemberService {
   public static async fetchTeamMembers(): Promise<TeamMember> {
     const response = await fetch("http://localhost:3000/api/teamMembers", {
       method: "GET",
@@ -32,7 +32,7 @@ export default class TeamMemberService {
 
   public static async createTeamMembers(
     oPayload: TeamMemberPayload
-  ): Promise<TeamMemberPayload> {
+  ): Promise<any> {
     const response = await fetch("http://localhost:3000/api/teamMembers", {
       method: "POST",
       headers: {

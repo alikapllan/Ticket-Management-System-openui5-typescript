@@ -5,7 +5,7 @@ interface Role {
   name: string;
 }
 
-export default class RoleService {
+export default class roleService {
   public static async fetchRoles(): Promise<Role[]> {
     const response = await fetch("http://localhost:3000/api/roles", {
       method: "GET",
