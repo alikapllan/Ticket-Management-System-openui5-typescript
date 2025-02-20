@@ -14,6 +14,7 @@ import FragmentUtil from "tmui5/util/FragmentUtil";
 import FileUploaderUtil from "tmui5/util/FileUploaderUtil";
 import EmailUtil from "tmui5/util/EmailUtil";
 import ValidationUtil from "tmui5/util/ValidationUtil";
+import TextArea from "sap/m/TextArea";
 
 export default class CreateTicket extends BaseController {
   public onInit(): void {
@@ -242,6 +243,11 @@ export default class CreateTicket extends BaseController {
       "/defaultTicketTypeId",
       this.getView().getModel("ticketTypeModel")?.getProperty("/0/ticketTypeId")
     );
+
+    // TextArea live change - reset value state
+    const oTextArea = this.byId("descriptionInput") as TextArea;
+    oTextArea.setValue("");
+    oTextArea.setValueState(this.Constants.VALUE_STATES.NONE);
   }
 
   public onDescriptionLiveChange(oEvent: any): void {
