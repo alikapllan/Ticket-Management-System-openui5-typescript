@@ -1,7 +1,7 @@
 import BaseController from "./BaseController";
 import History from "sap/ui/core/routing/History";
 import MessageBox from "sap/m/MessageBox";
-import customerService from "tmui5/services/CustomerService";
+import customerService from "tmui5/services/customerService";
 import Table from "sap/m/Table";
 import Integer from "sap/ui/model/type/Integer";
 

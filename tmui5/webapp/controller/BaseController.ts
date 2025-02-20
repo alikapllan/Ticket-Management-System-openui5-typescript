@@ -3,7 +3,7 @@ import ResourceModel from "sap/ui/model/resource/ResourceModel";
 import Component from "sap/ui/core/UIComponent";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import MessageBox from "sap/m/MessageBox";
-import customerService from "tmui5/services/CustomerService";
+import customerService from "tmui5/services/customerService";
 import teamMemberService from "tmui5/services/teamMemberService";
 import ticketService from "tmui5/services/ticketService";
 import Constants from "tmui5/constants/Constants";

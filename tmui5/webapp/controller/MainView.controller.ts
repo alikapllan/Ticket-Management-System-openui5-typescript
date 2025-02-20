@@ -2,7 +2,7 @@ import BaseController from "./BaseController";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import MessageToast from "sap/m/MessageToast";
 import MessageBox from "sap/m/MessageBox";
-import customerService from "tmui5/services/CustomerService";
+import customerService from "tmui5/services/customerService";
 import teamMemberService from "tmui5/services/teamMemberService";
 import Input from "sap/m/Input";
 import Select from "sap/m/Select";
