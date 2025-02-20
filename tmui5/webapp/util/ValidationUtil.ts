@@ -23,3 +23,5 @@ export const validateTextAreaLength = (
 
   oTextArea.setValueState(sState);
 };
+
+export default { validateTextAreaLength };
