@@ -1,25 +1,27 @@
 import Integer from "sap/ui/model/type/Integer";
 
-interface CustomerPayload {
+interface TeamMemberPayload {
   name: string;
+  surname: string;
+  roleId: Integer;
   email: string;
   phone: string;
 }
 
-interface Customer extends CustomerPayload {
-  customerId: Integer;
+interface TeamMember extends TeamMemberPayload {
+  teamMemberId: Integer;
 }
 
-export default class CustomerService {
-  public static async fetchCustomers(): Promise<Customer> {
-    const response = await fetch("http://localhost:3000/api/customers", {
+export default class TeamMemberService {
+  public static async fetchTeamMembers(): Promise<TeamMember> {
+    const response = await fetch("http://localhost:3000/api/teamMembers", {
       method: "GET",
     });
 
     if (!response.ok) {
       const errorBody = await response.json();
       throw new Error(
-        `Customer Fetch Error: ${response.status} - ${
+        `Team Member Fetch Error: ${response.status} - ${
           errorBody.message || response.statusText
         }`
       );
@@ -28,8 +30,10 @@ export default class CustomerService {
     return response.json();
   }
 
-  public static async createCustomers(oPayload: CustomerPayload): Promise<any> {
-    const response = await fetch("http://localhost:3000/api/customers", {
+  public static async createTeamMembers(
+    oPayload: TeamMemberPayload
+  ): Promise<TeamMemberPayload> {
+    const response = await fetch("http://localhost:3000/api/teamMembers", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -40,7 +44,7 @@ export default class CustomerService {
     if (!response.ok) {
       const errorBody = await response.json();
       throw new Error(
-        `Customer Creation Error: ${response.status} - ${
+        `Team Member Creation Error: ${response.status} - ${
           errorBody.message || response.statusText
         }`
       );
@@ -49,9 +53,9 @@ export default class CustomerService {
     return response.json();
   }
 
-  public static async deleteCustomers(iCustomerId: Integer): Promise<void> {
+  public static async deleteTeamMembers(iTeamMemberId: Integer): Promise<void> {
     const response = await fetch(
-      `http://localhost:3000/api/customers/${iCustomerId}`,
+      `http://localhost:3000/api/teamMembers/${iTeamMemberId}`,
       {
         method: "DELETE",
       }
@@ -60,7 +64,7 @@ export default class CustomerService {
     if (!response.ok) {
       const errorBody = await response.json();
       throw new Error(
-        `Customer Deletion Error: ${response.status} - ${
+        `Team Member Deletion Error: ${response.status} - ${
           errorBody.message || response.statusText
         }`
       );
