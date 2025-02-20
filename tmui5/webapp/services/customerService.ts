@@ -1,3 +1,5 @@
+import Integer from "sap/ui/model/type/Integer";
+
 interface CustomerPayload {
   name: string;
   email: string;
@@ -5,7 +7,7 @@ interface CustomerPayload {
 }
 
 interface Customer extends CustomerPayload {
-  id: number;
+  customerId: Integer;
 }
 
 export default class CustomerService {
