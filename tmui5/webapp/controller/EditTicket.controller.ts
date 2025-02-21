@@ -60,9 +60,7 @@ export default class EditTicketController extends BaseController {
       const ticketToEdit = await ticketService.fetchTicket(iTicketId);
       const oEditTicketModel = new JSONModel(ticketToEdit[0]);
       this.getView().setModel(oEditTicketModel, "editTicketModel");
-      const oEditTicketFormModel = <JSONModel>(
-        this.getView().getModel("editTicketFormModel")
-      );
+      const oEditTicketFormModel = this.getView().getModel("editTicketFormModel") as JSONModel;
       oEditTicketFormModel.setProperty(
         "/teamMemberId",
         oEditTicketModel.getData().teamMemberId
@@ -296,9 +294,10 @@ export default class EditTicketController extends BaseController {
         oPayload
       );
       const ticketId = updatedTicketResponse.ticketId;
+      const oFileUploader = (this.byId("fileUploaderEditTicket") as UploadSet)
       await FileUploaderUtil.uploadFiles(
         ticketId,
-        this.byId("fileUploaderEditTicket")
+        oFileUploader
       );
       const emailPayload = {
         ticketId,
