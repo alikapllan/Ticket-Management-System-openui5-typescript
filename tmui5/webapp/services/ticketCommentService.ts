@@ -1,21 +1,18 @@
-import DateTime from "sap/ui/model/type/DateTime";
-import Integer from "sap/ui/model/type/Integer";
-
 interface TicketComment {
-  ticketCommentId: Integer;
-  ticketId: Integer;
+  ticketCommentId: number;
+  ticketId: number;
   comment: string;
-  createdAt: DateTime;
+  createdAt: Date;
 }
 
 interface TicketCommentPayload {
-  ticketId: Integer;
+  ticketId: number;
   comment: string;
 }
 
 export default class ticketCommentService {
   public static async fetchTicketComments(
-    iTicketId: Integer
+    iTicketId: number
   ): Promise<TicketComment[]> {
     const response = await fetch(
       `http://localhost:3000/api/ticketComments/${iTicketId}`,

@@ -14,7 +14,6 @@ import MultiInput from "sap/m/MultiInput";
 import Select from "sap/m/Select";
 import DatePicker from "sap/m/DatePicker";
 import Dialog from "sap/m/Dialog";
-import Integer from "sap/ui/model/type/Integer";
 
 export default class TicketOverviewController extends BaseController {
   formatter = formatter;
@@ -114,11 +113,11 @@ export default class TicketOverviewController extends BaseController {
       return;
     }
 
-    const sTicketId = (aSelectedItems[0].getObject() as { ticketId: Integer })
+    const iTicketId = (aSelectedItems[0].getObject() as { ticketId: number })
       .ticketId;
     (this.getOwnerComponent() as AppComponent)
       .getRouter()
-      .navTo(this.Constants.ROUTES.EDIT_TICKET, { ticketId: sTicketId });
+      .navTo(this.Constants.ROUTES.EDIT_TICKET, { ticketId: iTicketId });
   }
 
   public async onDeleteSelectedTickets(): Promise<void> {
@@ -138,7 +137,7 @@ export default class TicketOverviewController extends BaseController {
         if (sAction === MessageBox.Action.YES) {
           for (const oSelectedTicket of aSelectedTickets) {
             const iTicketId = (
-              oSelectedTicket.getObject() as { ticketId: Integer }
+              oSelectedTicket.getObject() as { ticketId: number }
             ).ticketId;
             await ticketService.deleteTickets(iTicketId);
           }

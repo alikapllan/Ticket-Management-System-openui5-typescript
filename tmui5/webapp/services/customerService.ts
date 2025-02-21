@@ -1,5 +1,3 @@
-import Integer from "sap/ui/model/type/Integer";
-
 interface CustomerPayload {
   name: string;
   email: string;
@@ -7,7 +5,7 @@ interface CustomerPayload {
 }
 
 interface Customer extends CustomerPayload {
-  customerId: Integer;
+  customerId: number;
 }
 
 export default class customerService {
@@ -49,7 +47,7 @@ export default class customerService {
     return response.json();
   }
 
-  public static async deleteCustomers(iCustomerId: Integer): Promise<void> {
+  public static async deleteCustomers(iCustomerId: number): Promise<void> {
     const response = await fetch(
       `http://localhost:3000/api/customers/${iCustomerId}`,
       {

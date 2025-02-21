@@ -3,7 +3,6 @@ import History from "sap/ui/core/routing/History";
 import MessageBox from "sap/m/MessageBox";
 import Table from "sap/m/Table";
 import teamMemberService from "tmui5/services/teamMemberService";
-import Integer from "sap/ui/model/type/Integer";
 
 export default class DeleteTeamMember extends BaseController {
   public async onInit(): Promise<void> {
@@ -30,7 +29,7 @@ export default class DeleteTeamMember extends BaseController {
           try {
             for (const oSelectedTeamMember of aSelectedTeamMembers) {
               const iTeamMemberId = (
-                oSelectedTeamMember.getObject() as { teamMemberId: Integer }
+                oSelectedTeamMember.getObject() as { teamMemberId: number }
               ).teamMemberId;
 
               // DELETE request to API

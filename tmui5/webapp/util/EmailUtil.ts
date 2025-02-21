@@ -1,9 +1,8 @@
-import Integer from "sap/ui/model/type/Integer";
 import Constants from "tmui5/constants/Constants";
 import ticketEmailService from "tmui5/services/ticketEmailService";
 
 interface EmailPayload {
-  ticketId: Integer;
+  ticketId: number;
   teamMemberEmail: string;
   teamMemberFullName: string;
   title: string;

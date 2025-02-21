@@ -1,15 +1,13 @@
-import Integer from "sap/ui/model/type/Integer";
-
 interface TeamMemberPayload {
   name: string;
   surname: string;
-  roleId: Integer;
+  roleId: number;
   email: string;
   phone: string;
 }
 
 interface TeamMember extends TeamMemberPayload {
-  teamMemberId: Integer;
+  teamMemberId: number;
 }
 
 export default class teamMemberService {
@@ -53,7 +51,7 @@ export default class teamMemberService {
     return response.json();
   }
 
-  public static async deleteTeamMembers(iTeamMemberId: Integer): Promise<void> {
+  public static async deleteTeamMembers(iTeamMemberId: number): Promise<void> {
     const response = await fetch(
       `http://localhost:3000/api/teamMembers/${iTeamMemberId}`,
       {

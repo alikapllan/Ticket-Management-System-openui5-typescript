@@ -1,5 +1,4 @@
 import DateTime from "sap/ui/model/type/DateTime";
-import Integer from "sap/ui/model/type/Integer";
 
 interface TicketPayload {
   ticketTypeId: number;

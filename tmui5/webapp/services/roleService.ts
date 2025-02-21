@@ -1,7 +1,5 @@
-import Integer from "sap/ui/model/type/Integer";
-
 interface Role {
-  roleId: Integer;
+  roleId: number;
   name: string;
 }
 

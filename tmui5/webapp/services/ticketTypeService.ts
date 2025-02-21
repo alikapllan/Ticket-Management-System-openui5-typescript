@@ -1,7 +1,5 @@
-import Integer from "sap/ui/model/type/Integer";
-
 interface TicketType {
-  ticketTypeId: Integer;
+  ticketTypeId: number;
   name: string;
 }
 

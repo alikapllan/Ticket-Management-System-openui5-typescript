@@ -18,7 +18,6 @@ import FragmentUtil from "tmui5/util/FragmentUtil";
 import FileUploaderUtil from "tmui5/util/FileUploaderUtil";
 import EmailUtil from "tmui5/util/EmailUtil";
 import ValidationUtil from "tmui5/util/ValidationUtil";
-import Integer from "sap/ui/model/type/Integer";
 
 export default class EditTicketController extends BaseController {
   formatter = formatter;
@@ -40,7 +39,7 @@ export default class EditTicketController extends BaseController {
 
   private async _onRouteMatched(oEvent: any): Promise<void> {
     const sTicketId = oEvent.getParameter("arguments").ticketId;
-    const iTicketId = (sTicketId as Integer);
+    const iTicketId = parseInt(sTicketId);
     this._resetEditTicketForm();
     await this._loadAndBindTicketDetailToEdit(iTicketId);
     await this._loadTicketComments(iTicketId);
@@ -54,13 +53,15 @@ export default class EditTicketController extends BaseController {
   }
 
   private async _loadAndBindTicketDetailToEdit(
-    iTicketId: Integer
+    iTicketId: number
   ): Promise<void> {
     try {
       const ticketToEdit = await ticketService.fetchTicket(iTicketId);
       const oEditTicketModel = new JSONModel(ticketToEdit[0]);
       this.getView().setModel(oEditTicketModel, "editTicketModel");
-      const oEditTicketFormModel = this.getView().getModel("editTicketFormModel") as JSONModel;
+      const oEditTicketFormModel = this.getView().getModel(
+        "editTicketFormModel"
+      ) as JSONModel;
       oEditTicketFormModel.setProperty(
         "/teamMemberId",
         oEditTicketModel.getData().teamMemberId
@@ -83,7 +84,7 @@ export default class EditTicketController extends BaseController {
     }
   }
 
-  private async _loadTicketComments(iTicketId: Integer): Promise<void> {
+  private async _loadTicketComments(iTicketId: number): Promise<void> {
     try {
       const ticketComments = await ticketCommentService.fetchTicketComments(
         iTicketId
@@ -97,7 +98,7 @@ export default class EditTicketController extends BaseController {
   }
 
   private async _loadUploadedTicketFilesAndBindToView(
-    iTicketId: Integer
+    iTicketId: number
   ): Promise<void> {
     (this.byId("uploadedFilesLabelEditTicket") as Control).setVisible(false);
     (this.byId("uploadedFilesSetEditTicket") as Control).setVisible(false);
@@ -294,11 +295,8 @@ export default class EditTicketController extends BaseController {
         oPayload
       );
       const ticketId = updatedTicketResponse.ticketId;
-      const oFileUploader = (this.byId("fileUploaderEditTicket") as UploadSet)
-      await FileUploaderUtil.uploadFiles(
-        ticketId,
-        oFileUploader
-      );
+      const oFileUploader = this.byId("fileUploaderEditTicket") as UploadSet;
+      await FileUploaderUtil.uploadFiles(ticketId, oFileUploader);
       const emailPayload = {
         ticketId,
         teamMemberEmail: oEditTicketFormModel.getProperty("/teamMemberEmail"),

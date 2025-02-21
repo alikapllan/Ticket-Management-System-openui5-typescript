@@ -3,11 +3,10 @@ import ticketService from "tmui5/services/ticketService";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import ResourceBundle from "sap/base/i18n/ResourceBundle";
 import UploadSet from "sap/m/upload/UploadSet";
-import Integer from "sap/ui/model/type/Integer";
 
 export default class FileUploaderUtil {
   public static async uploadFiles(
-    ticketId: Integer,
+    ticketId: number,
     oFileUploader: UploadSet
   ): Promise<void> {
     const oDomRef = oFileUploader.getDomRef("fu") as HTMLInputElement;
@@ -52,7 +51,7 @@ export default class FileUploaderUtil {
   }
 
   public static async loadTicketFiles(
-    iTicketId: Integer,
+    iTicketId: number,
     oBundle: ResourceBundle
   ): Promise<JSONModel | undefined> {
     try {
