@@ -1,7 +1,11 @@
-const pool = require("../config/db");
+import { Request, Response } from "express";
+import pool from "../config/db";
 
 // GET all team members
-const getAllTeamMembers = async (req, res) => {
+export const getAllTeamMembers = async (
+  _req: Request,
+  res: Response
+): Promise<void> => {
   console.log("Team Member: Request GET");
 
   try {
@@ -24,13 +28,16 @@ const getAllTeamMembers = async (req, res) => {
       `
     );
     res.status(200).json(result.rows);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
 
 // CREATE a team member
-const createTeamMember = async (req, res) => {
+export const createTeamMember = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const { name, surname, roleId, email, phone } = req.body;
 
   console.log("Team Member: Request body POST:", req.body);
@@ -49,13 +56,16 @@ const createTeamMember = async (req, res) => {
       [name, surname, roleId, email, phone]
     );
     res.status(201).json(result.rows[0]);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
 
 // DELETE a team member
-const deleteTeamMember = async (req, res) => {
+export const deleteTeamMember = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const { id } = req.params;
 
   console.log("Team Member: Request body DELETE, teamMemberId: ", id);
@@ -65,9 +75,7 @@ const deleteTeamMember = async (req, res) => {
       id,
     ]);
     res.status(204).send(); // No Content
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
-
-module.exports = { getAllTeamMembers, createTeamMember, deleteTeamMember };
