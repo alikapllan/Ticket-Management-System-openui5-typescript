@@ -1,14 +1,14 @@
-const express = require("express");
-const router = express.Router();
-const {
+import { Router } from "express";
+import {
   getAllTeamMembers,
   createTeamMember,
   deleteTeamMember,
-} = require("../controller/teamMemberController");
+} from "../controller/teamMemberController";
 
-// define routes
+const router: Router = Router();
+
 router.get("/", getAllTeamMembers);
 router.post("/", createTeamMember);
 router.delete("/:id", deleteTeamMember);
 
-module.exports = router;
+export default router;
