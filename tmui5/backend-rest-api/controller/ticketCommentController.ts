@@ -1,7 +1,11 @@
-const pool = require("../config/db");
+import { Request, Response } from "express";
+import pool from "../config/db";
 
 // GET all ticket comments of a ticket from db
-const getAllTicketComments = async (req, res) => {
+export const getAllTicketComments = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const { id } = req.params;
 
   console.log("Ticket Comment: Request GET for ticketId: ", id);
@@ -24,15 +28,17 @@ const getAllTicketComments = async (req, res) => {
       [id]
     );
     res.status(200).json(result.rows);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
 
 // CREATE a ticket comment
-const createTicketComment = async (req, res) => {
-  const { ticketId, comment } = req.body; // names must same as the columns inside db table
-  // OR -> const { ticketId: id, comment } = req.body;
+export const createTicketComment = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { ticketId, comment } = req.body;
 
   console.log("Ticket Comment: Request POST for ticketId: ", ticketId);
 
@@ -47,9 +53,7 @@ const createTicketComment = async (req, res) => {
       [ticketId, comment]
     );
     res.status(201).json(result.rows[0]);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
-
-module.exports = { getAllTicketComments, createTicketComment };
