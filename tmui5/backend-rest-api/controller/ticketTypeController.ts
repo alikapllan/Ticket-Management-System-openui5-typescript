@@ -1,7 +1,11 @@
-const pool = require("../config/db");
+import { Request, Response } from "express";
+import pool from "../config/db";
 
 // GET all ticket types from db
-const getAllTicketTypes = async (req, res) => {
+export const getAllTicketTypes = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   console.log("Ticket Type: Request GET");
   try {
     const result = await pool.query(
@@ -16,9 +20,7 @@ const getAllTicketTypes = async (req, res) => {
       `
     );
     res.status(200).json(result.rows);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
-
-module.exports = { getAllTicketTypes };
