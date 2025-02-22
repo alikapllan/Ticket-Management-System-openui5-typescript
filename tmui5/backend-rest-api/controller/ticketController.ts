@@ -1,11 +1,24 @@
-const pool = require("../config/db");
+import { Request, Response } from "express";
+import pool from "../config/db";
 
-// GET all tickets
-const getAllTickets = async (req, res) => {
+/**
+ * Optional interface for handling `req.files` if you want strong typing for file uploads.
+ * If you don't use `req.files`, you can remove this.
+ */
+interface MulterRequest extends Request {
+  files?: Express.Multer.File[];
+}
+
+/**
+ * GET all tickets
+ */
+export const getAllTickets = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   console.log("Ticket: Request GET");
   try {
-    const result = await pool.query(
-      `
+    const result = await pool.query(`
       SELECT 
         t."ticketId",
         t."ticketTypeId",
@@ -32,16 +45,20 @@ const getAllTickets = async (req, res) => {
         ON t."ticketStatusId" = ts."ticketStatusId"
       ORDER BY 
         t."ticketId" ASC
-      `
-    );
+    `);
     res.status(200).json(result.rows);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// GET filtered tickets
-const getFilteredTickets = async (req, res) => {
+/**
+ * GET filtered tickets
+ */
+export const getFilteredTickets = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const { ticketIds, ticketTypeId, ticketStatusId, createdAt } = req.query;
 
   console.log("Ticket: Request GET with Filters", req.query);
@@ -75,23 +92,25 @@ const getFilteredTickets = async (req, res) => {
     `;
 
     // Dynamic WHERE conditions
-    const conditions = [];
-    const values = [];
+    const conditions: string[] = [];
+    const values: any[] = [];
 
     if (ticketIds) {
-      const ids = ticketIds.split(",").map((id) => parseInt(id.trim()));
+      const ids = (ticketIds as string)
+        .split(",")
+        .map((id) => parseInt(id.trim(), 10));
       conditions.push(`t."ticketId" = ANY($${conditions.length + 1})`);
       values.push(ids);
     }
 
     if (ticketTypeId) {
       conditions.push(`t."ticketTypeId" = $${conditions.length + 1}`);
-      values.push(parseInt(ticketTypeId));
+      values.push(parseInt(ticketTypeId as string, 10));
     }
 
     if (ticketStatusId) {
       conditions.push(`t."ticketStatusId" = $${conditions.length + 1}`);
-      values.push(parseInt(ticketStatusId));
+      values.push(parseInt(ticketStatusId as string, 10));
     }
 
     if (createdAt) {
@@ -99,7 +118,7 @@ const getFilteredTickets = async (req, res) => {
       values.push(createdAt);
     }
 
-    // Add conditions to th query
+    // Add conditions to query if any
     if (conditions.length > 0) {
       query += ` WHERE ` + conditions.join(" AND ");
     }
@@ -110,15 +129,19 @@ const getFilteredTickets = async (req, res) => {
     // Execute query
     const result = await pool.query(query, values);
     res.status(200).json(result.rows);
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     res.status(500).json({ message: "Failed to fetch filtered tickets." });
   }
 };
 
-const getTicket = async (req, res) => {
+/**
+ * GET a single ticket by ID
+ */
+export const getTicket = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   console.log(`Ticket: Request GET for ticketId: ${id}`);
+
   try {
     const result = await pool.query(
       `
@@ -154,17 +177,20 @@ const getTicket = async (req, res) => {
       [id]
     );
     res.status(200).json(result.rows);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// CREATE a ticket
-const createTicket = async (req, res) => {
-  // .. Creates a new ticket with a default status of "New"
-  // ..Dynamically fetches the ticketStatusId for "New" from the TicketStatus table
-
-  // ticketId is created serially via Postresql so no need to provide, createdAt via NOW() Method below
+/**
+ * CREATE a ticket
+ * - Creates a new ticket with a default status of "New"
+ * - Dynamically fetches the ticketStatusId for "New" from the TicketStatus table
+ */
+export const createTicket = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const { ticketTypeId, teamMemberId, customerId, title, description } =
     req.body;
 
@@ -177,7 +203,6 @@ const createTicket = async (req, res) => {
     );
 
     if (!rows.length) {
-      // If no "New" status is found -> return error
       return res.status(400).json({
         message: 'Default status "New" not found in TicketStatus table',
       });
@@ -205,16 +230,21 @@ const createTicket = async (req, res) => {
         description,
       ]
     );
+
     res.status(201).json(result.rows[0]);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// UPDATE a ticket
-const updateTicket = async (req, res) => {
+/**
+ * UPDATE a ticket
+ */
+export const updateTicket = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const { id } = req.params;
-
   const {
     ticketTypeId,
     teamMemberId,
@@ -248,43 +278,56 @@ const updateTicket = async (req, res) => {
     );
 
     res.status(200).json(result.rows[0]);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// DELETE a ticket
-const deleteTicket = async (req, res) => {
+/**
+ * DELETE a ticket
+ */
+export const deleteTicket = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const { id } = req.params;
-
   console.log("Ticket: Request Delete, ticketId: ", id);
 
   try {
     await pool.query('DELETE FROM "Ticket" WHERE "ticketId" = $1', [id]);
     res.status(204).send();
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// UPLOAD Files
-const uploadFiles = async (req, res) => {
+/**
+ * UPLOAD files for a ticket
+ */
+export const uploadFiles = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const { id: ticketId } = req.params;
 
-  if (!req.files || req.files.length === 0) {
+  // If you want strict typing for `req.files`, use a custom interface.
+  // For simplicity, we cast `req` to `any` here.
+  const files = (req as any).files as Express.Multer.File[] | undefined;
+
+  if (!files || files.length === 0) {
     console.log(`No files provided for ticket ID: ${ticketId}`);
-    return res
+    res
       .status(200)
       .json({ message: "No files provided, so no further operation needed." });
+    return;
   }
 
   try {
     console.log(`Starting file upload for ticket ID: ${ticketId}`);
-    const fileNames = req.files.map((file) => file.originalname);
+    const fileNames = files.map((file) => file.originalname);
     console.log(`File names to be uploaded:`, fileNames);
 
-    for (const file of req.files) {
-      // filePath = file.originalname
+    for (const file of files) {
       await pool.query(
         'INSERT INTO "File" ("ticketId", "filePath", "file") VALUES ($1, $2, $3)',
         [ticketId, file.originalname, file.buffer]
@@ -292,17 +335,21 @@ const uploadFiles = async (req, res) => {
     }
 
     console.log(`File upload successful for ticket ID: ${ticketId}`);
-
     res.status(200).json({ message: "Files uploaded successfully." });
-  } catch (error) {
+  } catch (error: any) {
     console.error("File upload error:", error);
     res.status(500).json({ message: "Failed to upload files." });
   }
 };
 
-const getTicketFiles = async (req, res) => {
+/**
+ * GET files for a specific ticket
+ */
+export const getTicketFiles = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const { id: ticketId } = req.params;
-
   console.log(`Files: Request GET for ticketId: `, ticketId);
 
   try {
@@ -315,30 +362,20 @@ const getTicketFiles = async (req, res) => {
         "file" 
       FROM "File" 
       WHERE 
-        "ticketId" = $1`,
+        "ticketId" = $1
+      `,
       [ticketId]
     );
 
-    const files = result.rows.map((file) => ({
+    const files = result.rows.map((file: any) => ({
       fileId: file.fileId,
       filePath: file.filePath,
-      file: file.file.toString("base64"), // Convert binary data to base64 for frontend
+      file: file.file.toString("base64"), // Convert binary to base64 for frontend
     }));
 
     res.status(200).json(files);
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Failed to fetch files for ticket ID ${ticketId}:`, error);
     res.status(500).json({ message: "Failed to fetch files." });
   }
-};
-
-module.exports = {
-  getAllTickets,
-  getFilteredTickets,
-  getTicket,
-  createTicket,
-  updateTicket,
-  deleteTicket,
-  uploadFiles,
-  getTicketFiles,
 };
