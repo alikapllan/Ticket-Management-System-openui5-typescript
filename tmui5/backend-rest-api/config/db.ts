@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Create a new Pool instance
-const pool: Pool = new Pool({
+const pool: any = new Pool({
   user: process.env.DB_USER as string,
   host: process.env.DB_HOST as string,
   database: process.env.DB_DATABASE as string,
