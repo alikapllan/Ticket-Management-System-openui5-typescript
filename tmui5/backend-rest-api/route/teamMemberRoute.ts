@@ -3,7 +3,7 @@ import {
   getAllTeamMembers,
   createTeamMember,
   deleteTeamMember,
-} from "../controller/teamMemberController";
+} from "../controller/teamMemberController.js";
 
 const router: Router = Router();
 

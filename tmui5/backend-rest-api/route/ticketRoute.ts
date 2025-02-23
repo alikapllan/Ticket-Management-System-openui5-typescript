@@ -9,7 +9,7 @@ import {
   deleteTicket,
   uploadFiles,
   getTicketFiles,
-} from "../controller/ticketController";
+} from "../controller/ticketController.js";
 
 const router: Router = Router();
 

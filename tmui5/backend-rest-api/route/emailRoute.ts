@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { sendEmail } from "../controller/emailController";
+import { sendEmail } from "../controller/emailController.js";
 
 const router: Router = Router();
 
@@ -10,11 +10,9 @@ interface EmailPayload {
   html?: string;
 }
 
-// POST route for sending emails
 router.post("/", async (req: Request<{}, {}, EmailPayload>, res: Response) => {
-  const { to, subject, text, html } = req.body;
+  const { to, subject, text = "", html = "" } = req.body;
 
-  // Validate required fields
   if (!to || !subject || (!text && !html)) {
     return res.status(400).json({ message: "Missing required fields" });
   }
@@ -31,5 +29,4 @@ router.post("/", async (req: Request<{}, {}, EmailPayload>, res: Response) => {
   }
 });
 
-// Export the router
 export default router;

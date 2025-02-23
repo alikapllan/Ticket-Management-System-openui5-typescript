@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import pool from "../config/db";
+import pool from "../config/db.js";
 
 // GET all ticket types from db
 export const getAllTicketTypes = async (

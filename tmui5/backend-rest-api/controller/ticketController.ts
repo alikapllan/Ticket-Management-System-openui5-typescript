@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import pool from "../config/db";
+import pool from "../config/db.js";
 
 /**
  * Optional interface for handling `req.files` if you want strong typing for file uploads.
@@ -190,7 +190,7 @@ export const getTicket = async (req: Request, res: Response): Promise<void> => {
 export const createTicket = async (
   req: Request,
   res: Response
-): Promise<void> => {
+): Promise<any> => {
   const { ticketTypeId, teamMemberId, customerId, title, description } =
     req.body;
 

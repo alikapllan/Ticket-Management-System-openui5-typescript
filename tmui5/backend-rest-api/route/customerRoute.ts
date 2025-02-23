@@ -3,7 +3,7 @@ import {
   getAllCustomers,
   createCustomer,
   deleteCustomer,
-} from "../controller/customerController";
+} from "../controller/customerController.js";
 
 // router instance
 const router: Router = Router();

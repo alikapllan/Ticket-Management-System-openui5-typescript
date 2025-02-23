@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllTicketTypes } from "../controller/ticketTypeController";
+import { getAllTicketTypes } from "../controller/ticketTypeController.js";
 
 const router: Router = Router();
 

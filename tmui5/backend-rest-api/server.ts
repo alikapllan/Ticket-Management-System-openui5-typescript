@@ -2,16 +2,16 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import ticketTypeRoute from "./route/ticketTypeRoute";
-import ticketRoute from "./route/ticketRoute";
-import ticketCommentRoute from "./route/ticketCommentRoute";
-import customerRoute from "./route/customerRoute";
-import ticketStatusRoute from "./route/ticketStatusRoute";
-import roleRoute from "./route/roleRoute";
-import teamMemberRoute from "./route/teamMemberRoute";
-import emailRoute from "./route/emailRoute";
+import ticketTypeRoute from "./route/ticketTypeRoute.js";
+import ticketRoute from "./route/ticketRoute.js";
+import ticketCommentRoute from "./route/ticketCommentRoute.js";
+import customerRoute from "./route/customerRoute.js";
+import ticketStatusRoute from "./route/ticketStatusRoute.js";
+import roleRoute from "./route/roleRoute.js";
+import teamMemberRoute from "./route/teamMemberRoute.js";
+import emailRoute from "./route/emailRoute.js";
 
-import pool from "./config/db";
+import pool from "./config/db.js";
 
 dotenv.config();
 
@@ -42,7 +42,7 @@ app.listen(PORT, () => {
 
 // DB Connection check
 // "SELECT NOW()::timestamp" -> in pg : timestamp without timezone
-pool.query("SELECT NOW()::timestamp", (err, res) => {
+pool.query("SELECT NOW()::timestamp", (err: any, res: { rows: any[] }) => {
   if (err) {
     console.error("Database connection error:", err);
   } else {

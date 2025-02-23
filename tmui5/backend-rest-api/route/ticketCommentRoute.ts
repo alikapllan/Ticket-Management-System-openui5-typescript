@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   getAllTicketComments,
   createTicketComment,
-} from "../controller/ticketCommentController";
+} from "../controller/ticketCommentController.js";
 
 const router: Router = Router();
 

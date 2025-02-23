@@ -1,8 +1,11 @@
-import { Pool } from "pg";
+import pkg from "pg";
 import dotenv from "dotenv";
 
 // Load environment variables from .env file
 dotenv.config();
+
+// Extract Pool from the pg package
+const { Pool } = pkg;
 
 // Create a new Pool instance
 const pool: any = new Pool({
