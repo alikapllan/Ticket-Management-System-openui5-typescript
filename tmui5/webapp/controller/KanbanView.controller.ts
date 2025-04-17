@@ -187,6 +187,9 @@ export default class KanbanView extends BaseController {
         oPayload
       );
 
+      // update ticket model
+      await this.loadTickets();
+
       const sTicketStatusText = this._getTicketModel()
         .getData()
         .find(
@@ -199,9 +202,6 @@ export default class KanbanView extends BaseController {
           sTicketStatusText,
         ])
       );
-
-      // see changes reflecting on UI -> forces model to notify all bindings that data has changed
-      this._getTicketModel().refresh(true);
     } catch (err) {
       MessageBox.error(this.oBundle.getText("MBoxFailedToUpdateTicketStatus"));
       console.error(err);
