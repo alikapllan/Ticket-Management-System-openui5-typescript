@@ -7,6 +7,13 @@
     "fragment": ""
   },
   {
+    "title": "Kanban View",
+    "subtitle": "Ticket Statuses",
+    "icon": "sap-icon://crm-service-manager",
+    "route": "RouteKanbanView",
+    "fragment": ""
+  },
+  {
     "title": "Create Ticket",
     "subtitle": "Incident or CR",
     "icon": "sap-icon://request",

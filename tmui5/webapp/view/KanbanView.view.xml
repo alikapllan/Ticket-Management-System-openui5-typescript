@@ -1,0 +1,28 @@
+<mvc:View
+    controllerName="tmui5.controller.KanbanView"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+	xmlns:cssgrid="sap.ui.layout.cssgrid">
+
+    <Page id="kanbanView" class="sapUiResponsivePadding--content">
+
+        <customHeader>
+            <Bar>
+                <contentLeft>
+                    <Button icon="sap-icon://nav-back" press=".onNavBack" />
+                </contentLeft>
+                <contentMiddle>
+                    <core:Icon src="sap-icon://sap-ui5" color="#1e90ff" />
+                    <Title text="{i18n>KanbanView}" class="sapUiTinyMarginBegin" />
+                </contentMiddle>
+            </Bar>
+        </customHeader>
+
+        <cssgrid:CSSGrid id="cssGridContainer" gridTemplateColumns="repeat(auto-fit, minmax(100px, 1fr))" gridGap="1rem">
+            <!--Grid Lists are generated dynamically in controller -->
+            
+        </cssgrid:CSSGrid>
+    </Page>
+
+</mvc:View>

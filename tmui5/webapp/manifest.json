@@ -84,6 +84,11 @@
           "target": ["TargetTicketOverview"]
         },
         {
+          "name": "RouteKanbanView",
+          "pattern": "KanbanView",
+          "target": ["TargetKanbanView"]
+        },
+        {
           "name": "RouteEditTicket",
           "pattern": "EditTicket/{ticketId}",
           "target": ["TargetEditTicket"]
@@ -118,6 +123,13 @@
           "clearControlAggregation": false,
           "viewId": "TicketOverview",
           "viewName": "TicketOverview"
+        },
+        "TargetKanbanView": {
+          "viewType": "XML",
+          "transition": "Slide",
+          "clearControlAggregation": false,
+          "viewId": "KanbanView",
+          "viewName": "KanbanView"
         },
         "TargetEditTicket": {
           "viewType": "XML",
