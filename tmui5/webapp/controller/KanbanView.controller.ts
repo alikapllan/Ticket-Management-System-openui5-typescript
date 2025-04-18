@@ -124,7 +124,7 @@ export default class KanbanView extends BaseController {
                   textAlign: "Center",
                 }),
                 new Label({
-                  text: "{ticketModel>description}",
+                  text: "{ticketModel>title}",
                   wrapping: true,
                   textAlign: "Center",
                 }),
