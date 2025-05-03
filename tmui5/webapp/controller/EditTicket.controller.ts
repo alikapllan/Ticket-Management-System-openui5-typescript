@@ -40,16 +40,38 @@ export default class EditTicketController extends BaseController {
   private async _onRouteMatched(oEvent: any): Promise<void> {
     const sTicketId = oEvent.getParameter("arguments").ticketId;
     const iTicketId = parseInt(sTicketId);
+
     this._resetEditTicketForm();
+
+    // check navigated ticket really exists, if not land to NotFound Page
+    const aTicketExistenceCheck = await this._checkTicketExistence(iTicketId);
+
+    if (!aTicketExistenceCheck || aTicketExistenceCheck.length === 0) {
+      // no such ticket
+      this._displayNotFoundPage();
+      return;
+    }
+
     await this._loadAndBindTicketDetailToEdit(iTicketId);
-    await this._loadTicketComments(iTicketId);
-    await this._loadUploadedTicketFilesAndBindToView(iTicketId);
+    // Load comments & files in parallel
+    await Promise.all([
+      this._loadTicketComments(iTicketId),
+      this._loadUploadedTicketFilesAndBindToView(iTicketId),
+    ]);
   }
 
   private _resetEditTicketForm(): void {
     (this.byId("fileUploaderEditTicket") as FileUploader).setValue("");
     (this.byId("uploadedFilesSetEditTicket") as UploadSet).destroyItems();
     (this.byId("updateCommentEditInput") as Input).setValue("");
+  }
+
+  private async _checkTicketExistence(iTicketId: number): Promise<any> {
+    return await ticketService.fetchTicket(iTicketId);
+  }
+
+  private async _displayNotFoundPage(): Promise<void> {
+    this.getOwnerComponent().getTargets().display("TargetNotFound");
   }
 
   private async _loadAndBindTicketDetailToEdit(
