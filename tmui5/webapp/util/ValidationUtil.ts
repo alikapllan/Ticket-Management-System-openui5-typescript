@@ -1,6 +1,5 @@
 import TextArea from "sap/m/TextArea";
 import Event from "sap/ui/base/Event";
-import Constants from "tmui5/constants/Constants";
 
 /**
  * Validation utility to check the length of textarea input
@@ -10,7 +9,7 @@ import Constants from "tmui5/constants/Constants";
  */
 export const validateTextAreaLength = (
   oEvent: Event,
-  Constants: Constants
+  oControllerInstance: any
 ): void => {
   const oTextArea = oEvent.getSource() as TextArea;
   const iValueLength = oTextArea.getValue().length;
@@ -18,8 +17,8 @@ export const validateTextAreaLength = (
 
   const sState =
     iValueLength > iMaxLength
-      ? Constants.VALUE_STATES.ERROR
-      : Constants.VALUE_STATES.NONE;
+      ? oControllerInstance.ValueState.Error
+      : oControllerInstance.ValueState.None;
 
   oTextArea.setValueState(sState);
 };

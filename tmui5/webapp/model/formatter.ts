@@ -1,5 +1,5 @@
-import Constants from "tmui5/constants/Constants";
 import DateFormat from "sap/ui/core/format/DateFormat";
+import { ValueState } from "sap/ui/core/library";
 
 export default {
   /**
@@ -22,28 +22,38 @@ export default {
 
   /**
    * Maps the ticket status name to the corresponding UI5 value state
-   * @param this - The UI5 controller context for accessing the i18n model.
+   * @param this - The UI5 controller context for accessing the i18n model & ValueState from sap.ui.core.library
    * @param sTicketStatusName
    * @returns The corresponding value state for given statsu
    */
-  getStatusState: (sTicketStatusName: string) => {
+  // Don’t use an arrow function here—arrow syntax locks `this` to the module scope,
+  // so UI5 can’t bind the controller instance and `this.getOwnerComponent()` will fail.
+  getStatusState(sTicketStatusName: string): ValueState {
+    if (!sTicketStatusName) {
+      return this.ValueState.None; // Default state if status is missing
+    }
+
+    const oResourceBundle = this.getOwnerComponent()
+      .getModel("i18n")
+      .getResourceBundle();
+
     switch (sTicketStatusName) {
-      case "New":
-        return Constants.VALUE_STATES.INFORMATION;
-      case "In Planning":
-        return Constants.VALUE_STATES.WARNING;
-      case "In Progress":
-        return Constants.VALUE_STATES.SUCCESS;
-      case "Waiting For Customer Feedback":
-        return Constants.VALUE_STATES.WARNING;
-      case "On Hold":
-        return Constants.VALUE_STATES.NONE;
-      case "Canceled":
-        return Constants.VALUE_STATES.ERROR;
-      case "Done":
-        return Constants.VALUE_STATES.SUCCESS;
+      case oResourceBundle.getText("statusNew"):
+        return this.ValueState.Information;
+      case oResourceBundle.getText("statusInPlanning"):
+        return this.ValueState.Warning;
+      case oResourceBundle.getText("statusInProgress"):
+        return this.ValueState.Success;
+      case oResourceBundle.getText("statusWaitingForCustomerFeedback"):
+        return this.ValueState.Warning;
+      case oResourceBundle.getText("statusOnHold"):
+        return this.ValueState.None;
+      case oResourceBundle.getText("statusCanceled"):
+        return this.ValueState.Error;
+      case oResourceBundle.getText("statusDone"):
+        return this.ValueState.Success;
       default:
-        return Constants.VALUE_STATES.NONE;
+        return this.ValueState.None;
     }
   },
 };

@@ -18,6 +18,7 @@ import FragmentUtil from "tmui5/util/FragmentUtil";
 import FileUploaderUtil from "tmui5/util/FileUploaderUtil";
 import EmailUtil from "tmui5/util/EmailUtil";
 import ValidationUtil from "tmui5/util/ValidationUtil";
+import TextArea from "sap/m/TextArea";
 
 export default class EditTicketController extends BaseController {
   formatter = formatter;
@@ -38,6 +39,8 @@ export default class EditTicketController extends BaseController {
   }
 
   private async _onRouteMatched(oEvent: any): Promise<void> {
+    this._setTextAreaValueStateToNone();
+
     const sTicketId = oEvent.getParameter("arguments").ticketId;
     const iTicketId = parseInt(sTicketId);
 
@@ -58,6 +61,12 @@ export default class EditTicketController extends BaseController {
       this._loadTicketComments(iTicketId),
       this._loadUploadedTicketFilesAndBindToView(iTicketId),
     ]);
+  }
+
+  private _setTextAreaValueStateToNone(): void {
+    (this.byId("descriptionEditInput") as TextArea).setValueState(
+      this.ValueState.None
+    );
   }
 
   private _resetEditTicketForm(): void {
@@ -363,7 +372,7 @@ export default class EditTicketController extends BaseController {
   }
 
   public onDescriptionLiveChange(oEvent: any): void {
-    ValidationUtil.validateTextAreaLength(oEvent, this.Constants);
+    ValidationUtil.validateTextAreaLength(oEvent, this);
   }
 
   public onNavBack(): void {

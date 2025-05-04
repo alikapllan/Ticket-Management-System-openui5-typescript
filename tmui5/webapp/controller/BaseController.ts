@@ -7,10 +7,12 @@ import customerService from "tmui5/services/customerService";
 import teamMemberService from "tmui5/services/teamMemberService";
 import ticketService from "tmui5/services/ticketService";
 import Constants from "tmui5/constants/Constants";
+import coreLibrary from "sap/ui/core/library";
 
 export default class BaseController extends Controller {
   protected Constants: typeof Constants; // Explicit type
   protected oBundle: any;
+  protected ValueState: any;
 
   onInit(): void | undefined {
     this.Constants = Constants; // Explicitly assign Constants
@@ -19,6 +21,9 @@ export default class BaseController extends Controller {
     const oI18nModel = oOwnerComponent.getModel("i18n") as ResourceModel;
 
     this.oBundle = oI18nModel.getResourceBundle();
+
+    // https://sapui5.hana.ondemand.com/#/api/sap.ui.core.ValueState
+    this.ValueState = coreLibrary.ValueState;
   }
 
   private getRouter() {

@@ -35,7 +35,15 @@ export default class CreateTicket extends BaseController {
   }
 
   private _onRouteMatched(): void {
+    this._setTextAreaValueStateToNone();
+
     this._resetCreateTicketForm();
+  }
+
+  private _setTextAreaValueStateToNone(): void {
+    (this.byId("descriptionInput") as TextArea).setValueState(
+      this.ValueState.None
+    );
   }
 
   public async onValueHelpRequestAssignedTo(): Promise<void> {
@@ -247,11 +255,11 @@ export default class CreateTicket extends BaseController {
     // TextArea live change - reset value state
     const oTextArea = this.byId("descriptionInput") as TextArea;
     oTextArea.setValue("");
-    oTextArea.setValueState(this.Constants.VALUE_STATES.NONE);
+    oTextArea.setValueState(this.ValueState.None);
   }
 
   public onDescriptionLiveChange(oEvent: any): void {
-    ValidationUtil.validateTextAreaLength(oEvent, this.Constants);
+    ValidationUtil.validateTextAreaLength(oEvent, this);
   }
 
   public onNavBack(): void {
