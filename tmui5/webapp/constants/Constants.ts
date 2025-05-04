@@ -11,14 +11,6 @@ export default class Constants {
     TICKET_ID_VALUEHELP: "TicketIdValueHelp",
   };
 
-  static readonly VALUE_STATES = {
-    INFORMATION: "Information",
-    SUCCESS: "Success",
-    WARNING: "Warning",
-    ERROR: "Error",
-    NONE: "None",
-  };
-
   static readonly EMAIL_SENDING_TYPE = {
     CREATED: "created",
     UPDATED: "updated",
