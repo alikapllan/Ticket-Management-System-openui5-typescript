@@ -11,7 +11,7 @@ Rewritten version of the [Ticket Management System](https://github.com/alikaplla
 > **TypeScript** was created to bring **strong typing** to JavaScript.
 
 ### 🔍 Key Features Not Present in JavaScript:
-- `interfaces` – to define contracts for objects and classes.
+- `interfaces` – to define contracts for objects and classes. For usage examples you can check the controllers implementation in this project.
 - `decorators` – for annotating and configuring classes or members (experimental).
 
 ---
