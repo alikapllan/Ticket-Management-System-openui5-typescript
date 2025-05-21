@@ -8,7 +8,7 @@ Rewritten version of the [Ticket Management System](https://github.com/alikaplla
 
 # 🧠 Purpose of TypeScript
 
-> **TypeScript** was created to bring **strong typing** to JavaScript.
+> **TypeScript** was created to bring **strong typing** to JavaScript. [@sapui5/types - npm](https://www.npmjs.com/package/@sapui5/types)
 
 ### 🔍 Key Features Not Present in JavaScript:
 - `interfaces` – to define contracts for objects and classes. For usage examples you can check the controllers implementation in this project.
