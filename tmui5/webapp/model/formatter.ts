@@ -1,4 +1,5 @@
 import DateFormat from "sap/ui/core/format/DateFormat";
+import UI5Date from "sap/ui/core/date/UI5Date";
 import { ValueState } from "sap/ui/core/library";
 
 export default {
@@ -12,7 +13,8 @@ export default {
       return "";
     }
 
-    const oDate = new Date(sDate); // Convert ISO string to Date object
+    const oDate = UI5Date.getInstance(sDate); // UI5Date instead of JS Date obj.
+
     const oDateFormat = DateFormat.getDateTimeInstance({
       pattern: "dd/MM/yyyy HH:mm",
     });
