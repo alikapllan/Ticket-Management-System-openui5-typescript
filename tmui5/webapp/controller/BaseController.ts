@@ -8,6 +8,7 @@ import teamMemberService from "tmui5/services/teamMemberService";
 import ticketService from "tmui5/services/ticketService";
 import Constants from "tmui5/constants/Constants";
 import coreLibrary from "sap/ui/core/library";
+import Log from "sap/base/Log";
 
 export default class BaseController extends Controller {
   protected Constants: typeof Constants; // Explicit type
@@ -40,7 +41,11 @@ export default class BaseController extends Controller {
       const oTeamMemberModel = new JSONModel(teamMembers);
       this.getOwnerComponent().setModel(oTeamMemberModel, "teamMemberModel");
     } catch (error) {
-      console.error(error);
+      Log.error(
+        "Failed to fetch team members",
+        error,
+        "tmui5.controller.BaseController"
+      );
       MessageBox.error(this.oBundle.getText("MBoxGETReqFailedOnTeamMember"));
     }
   }
@@ -51,7 +56,11 @@ export default class BaseController extends Controller {
       const oCustomerModel = new JSONModel(customers);
       this.getOwnerComponent().setModel(oCustomerModel, "customerModel");
     } catch (error) {
-      console.error(error);
+      Log.error(
+        "Failed to fetch customers",
+        error,
+        "tmui5.controller.BaseController"
+      );
       MessageBox.error(this.oBundle.getText("MBoxGETReqFailedOnCustomer"));
     }
   }
@@ -62,7 +71,11 @@ export default class BaseController extends Controller {
       const oTicketModel = new JSONModel(tickets);
       this.getOwnerComponent().setModel(oTicketModel, "ticketModel");
     } catch (error) {
-      console.error(error);
+      Log.error(
+        "Failed to fetch tickets",
+        error,
+        "tmui5.controller.BaseController"
+      );
       MessageBox.error(this.oBundle.getText("MBoxGETReqFailedOnTicket"));
     }
   }

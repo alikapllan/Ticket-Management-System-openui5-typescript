@@ -3,6 +3,7 @@ import History from "sap/ui/core/routing/History";
 import MessageBox from "sap/m/MessageBox";
 import customerService from "tmui5/services/customerService";
 import Table from "sap/m/Table";
+import Log from "sap/base/Log";
 
 export default class DeleteCustomer extends BaseController {
   public async onInit(): Promise<void> {
@@ -44,7 +45,11 @@ export default class DeleteCustomer extends BaseController {
               this.oBundle.getText("MBoxSuccessOfDeletionCustomer")
             );
           } catch (error) {
-            console.error(error);
+            Log.error(
+              "Failed to delete customer(s)",
+              error,
+              "tmui5.controller.DeleteCustomer"
+            );
             MessageBox.error(this.oBundle.getText("MBoxErrorToDeleteCustomer"));
           }
         } else {

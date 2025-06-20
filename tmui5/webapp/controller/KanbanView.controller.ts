@@ -17,6 +17,7 @@ import CSSGrid from "sap/ui/layout/cssgrid/CSSGrid";
 
 import ticketStatusService from "tmui5/services/ticketStatusService";
 import ticketService from "tmui5/services/ticketService";
+import Log from "sap/base/Log";
 
 interface ITicketStatus {
   ticketStatusId: number;
@@ -68,7 +69,11 @@ export default class KanbanView extends BaseController {
         MessageBox.error(
           this.oBundle.getText("MBoxGETReqFailedOnTicketStatus")
         );
-        console.error(err);
+        Log.error(
+          "Failed to load ticket statuses",
+          err,
+          "tmui5.controller.KanbanView"
+        );
       }
     }
   }
@@ -204,7 +209,11 @@ export default class KanbanView extends BaseController {
       );
     } catch (err) {
       MessageBox.error(this.oBundle.getText("MBoxFailedToUpdateTicketStatus"));
-      console.error(err);
+      Log.error(
+        "Failed to update ticket status",
+        err,
+        "tmui5.controller.KanbanView"
+      );
     }
   }
 

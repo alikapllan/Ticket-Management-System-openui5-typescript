@@ -7,6 +7,7 @@ import teamMemberService from "tmui5/services/teamMemberService";
 import Input from "sap/m/Input";
 import Select from "sap/m/Select";
 import Dialog from "sap/m/Dialog";
+import Log from "sap/base/Log";
 
 export default class MainView extends BaseController {
   public onInit(): void {
@@ -39,7 +40,7 @@ export default class MainView extends BaseController {
       const oDialog = (await this.loadFragment({ name: sFragement })) as Dialog;
       oDialog.open();
     } catch (error) {
-      console.error(error);
+      Log.error("Failed to load fragment", error, "tmui5.controller.MainView");
       MessageToast.show(this.oBundle.getText("failedFragmentLoad"));
     }
   }
@@ -91,7 +92,11 @@ export default class MainView extends BaseController {
         }
       );
     } catch (error) {
-      console.error(error);
+      Log.error(
+        "Failed to create team member",
+        error,
+        "tmui5.controller.MainView"
+      );
       MessageBox.error(this.oBundle.getText("MBoxFailedToCreateTeamMember"));
     }
   }
@@ -130,7 +135,11 @@ export default class MainView extends BaseController {
         }
       );
     } catch (error) {
-      console.error(error);
+      Log.error(
+        "Failed to create customer",
+        error,
+        "tmui5.controller.MainView"
+      );
       MessageBox.error(this.oBundle.getText("MBoxFailedToCreateCustomer"));
     }
   }

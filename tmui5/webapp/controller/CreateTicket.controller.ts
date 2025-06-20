@@ -15,6 +15,7 @@ import FileUploaderUtil from "tmui5/util/FileUploaderUtil";
 import EmailUtil from "tmui5/util/EmailUtil";
 import ValidationUtil from "tmui5/util/ValidationUtil";
 import TextArea from "sap/m/TextArea";
+import Log from "sap/base/Log";
 
 export default class CreateTicket extends BaseController {
   public onInit(): void {
@@ -56,7 +57,11 @@ export default class CreateTicket extends BaseController {
       )) as Dialog;
       oDialog.open();
     } catch (error) {
-      console.error(error);
+      Log.error(
+        "Failed to load team members or fragment issue (too lazy to expand :P)",
+        error,
+        "tmui5.controller.CreateTicket"
+      );
       MessageBox.error(this.oBundle.getText("MBoxErrorLoadingAssignedTo"));
     }
   }
@@ -103,7 +108,11 @@ export default class CreateTicket extends BaseController {
       )) as Dialog;
       oDialog.open();
     } catch (error) {
-      console.error(error);
+      Log.error(
+        "Failed to load customers",
+        error,
+        "tmui5.controller.CreateTicket"
+      );
       MessageBox.error(this.oBundle.getText("MBoxErrorLoadingCustomer"));
     }
   }
@@ -207,7 +216,11 @@ export default class CreateTicket extends BaseController {
       );
     } catch (error) {
       BusyIndicator.hide();
-      console.error(error);
+      Log.error(
+        "Failed to create ticket",
+        error,
+        "tmui5.controller.CreateTicket"
+      );
       MessageBox.error(this.oBundle.getText("MBoxFailedToCreateTicket"));
     }
   }

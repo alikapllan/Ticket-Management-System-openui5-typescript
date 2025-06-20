@@ -3,6 +3,7 @@ import History from "sap/ui/core/routing/History";
 import MessageBox from "sap/m/MessageBox";
 import Table from "sap/m/Table";
 import teamMemberService from "tmui5/services/teamMemberService";
+import Log from "sap/base/Log";
 
 export default class DeleteTeamMember extends BaseController {
   public async onInit(): Promise<void> {
@@ -42,7 +43,11 @@ export default class DeleteTeamMember extends BaseController {
               this.oBundle.getText("MBoxSuccessOfDeletionTeamMember")
             );
           } catch (error) {
-            console.error(error);
+            Log.error(
+              "Failed to delete team member(s)",
+              error,
+              "tmui5.controller.DeleteTeamMember"
+            );
             MessageBox.error(
               this.oBundle.getText("MBoxErrorToDeleteTeamMember")
             );

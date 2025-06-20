@@ -19,6 +19,7 @@ import FileUploaderUtil from "tmui5/util/FileUploaderUtil";
 import EmailUtil from "tmui5/util/EmailUtil";
 import ValidationUtil from "tmui5/util/ValidationUtil";
 import TextArea from "sap/m/TextArea";
+import Log from "sap/base/Log";
 
 export default class EditTicketController extends BaseController {
   formatter = formatter;
@@ -110,7 +111,11 @@ export default class EditTicketController extends BaseController {
         oEditTicketModel.getData().customerId
       );
     } catch (error) {
-      console.error(error);
+      Log.error(
+        "Failed to load ticket details",
+        error,
+        "tmui5.controller.EditTicket"
+      );
       MessageBox.error(this.oBundle.getText("MBoxGETReqFailedOnTicketToEdit"));
     }
   }
@@ -123,7 +128,11 @@ export default class EditTicketController extends BaseController {
       const oTicketCommentModel = new JSONModel(ticketComments);
       this.getView().setModel(oTicketCommentModel, "ticketCommentModel");
     } catch (error) {
-      console.error(error);
+      Log.error(
+        "Failed to load ticket comments",
+        error,
+        "tmui5.controller.EditTicket"
+      );
       MessageBox.error(this.oBundle.getText("MBoxGETReqFailedOnTicketComment"));
     }
   }
@@ -178,7 +187,11 @@ export default class EditTicketController extends BaseController {
       );
       oDialog.open();
     } catch (error) {
-      console.error(error);
+      Log.error(
+        "Failed to load team members",
+        error,
+        "tmui5.controller.EditTicket"
+      );
       MessageBox.error(this.oBundle.getText("MBoxErrorLoadingAssignedTo"));
     }
   }
@@ -228,7 +241,11 @@ export default class EditTicketController extends BaseController {
       );
       oDialog.open();
     } catch (error) {
-      console.error(error);
+      Log.error(
+        "Failed to load customers or fragment issue :P",
+        error,
+        "tmui5.controller.EditTicket"
+      );
       MessageBox.error(this.oBundle.getText("MBoxErrorLoadingCustomer"));
     }
   }
@@ -346,7 +363,11 @@ export default class EditTicketController extends BaseController {
       setTimeout(() => this.navTo(this.Constants.ROUTES.TICKET_OVERVIEW), 1000);
     } catch (error) {
       BusyIndicator.hide();
-      console.error(error);
+      Log.error(
+        "Failed to update ticket. Email also might not be sent :P too lazy to implement an additional catch for it :P",
+        error,
+        "tmui5.controller.EditTicket"
+      );
       MessageBox.error(this.oBundle.getText("MBoxFailedToEditTicket"));
     }
   }
@@ -362,7 +383,11 @@ export default class EditTicketController extends BaseController {
       await ticketCommentService.createTicketComment(oPayload);
     } catch (error) {
       BusyIndicator.hide();
-      console.error(error);
+      Log.error(
+        "Failed to create a new ticket comment",
+        error,
+        "tmui5.controller.EditTicket"
+      );
       MessageBox.error(this.oBundle.getText("MBoxFailedToCreateTicketComment"));
     }
   }

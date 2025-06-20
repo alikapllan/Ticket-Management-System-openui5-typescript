@@ -14,6 +14,7 @@ import MultiInput from "sap/m/MultiInput";
 import Select from "sap/m/Select";
 import DatePicker from "sap/m/DatePicker";
 import Dialog from "sap/m/Dialog";
+import Log from "sap/base/Log";
 
 export default class TicketOverviewController extends BaseController {
   formatter = formatter;
@@ -86,7 +87,11 @@ export default class TicketOverviewController extends BaseController {
         "ticketModel"
       );
     } catch (error) {
-      console.error(error);
+      Log.error(
+        "Failed to fetch filtered tickets",
+        error,
+        "tmui5.controller.TicketOverview"
+      );
       MessageBox.error(
         this.oBundle.getText("MBoxGETReqFailedOnFilteredTickets")
       );

@@ -7,6 +7,7 @@ import ticketTypeService from "tmui5/services/ticketTypeService";
 import ticketStatusService from "tmui5/services/ticketStatusService";
 import type ResourceBundle from "sap/base/i18n/ResourceBundle";
 import ResourceModel from "sap/ui/model/resource/ResourceModel";
+import Log from "sap/base/Log";
 
 /**
  * @namespace tmui5
@@ -24,6 +25,10 @@ export default class Component extends UIComponent {
   public async init(): Promise<void> {
     // Call the base component's init function
     super.init();
+
+    // Set log level globally
+    // Log.setLevel(Log.Level.ALL); // Enables debug, info, warning, error logs
+    Log.setLevel(Log.Level.ERROR); // only log Errors
 
     // Enable routing
     this.getRouter().initialize();
@@ -44,7 +49,7 @@ export default class Component extends UIComponent {
       const oRoleModel = new JSONModel(roles);
       this.setModel(oRoleModel, "roleModel");
     } catch (error) {
-      console.error(error);
+      Log.error("Failed to fetch roles", error, "tmui5.webapp.Component");
       MessageBox.error(oBundle.getText("MBoxGETReqFailedOnRole"));
     }
 
@@ -54,7 +59,11 @@ export default class Component extends UIComponent {
       const oTicketTypeModel = new JSONModel(ticketTypes);
       this.setModel(oTicketTypeModel, "ticketTypeModel");
     } catch (error) {
-      console.error(error);
+      Log.error(
+        "Failed to fetch ticket types",
+        error,
+        "tmui5.webapp.Component"
+      );
       MessageBox.error(oBundle.getText("MBoxGETReqFailedOnTicketType"));
     }
 
@@ -64,7 +73,11 @@ export default class Component extends UIComponent {
       const oTicketStatusModel = new JSONModel(tickets);
       this.setModel(oTicketStatusModel, "ticketStatusModel");
     } catch (error) {
-      console.error(error);
+      Log.error(
+        "Failed to fetch ticket statuses",
+        error,
+        "tmui5.webapp.Component"
+      );
       MessageBox.error(oBundle.getText("MBoxGETReqFailedOnTicketStatus"));
     }
   }
