@@ -177,8 +177,9 @@ export default class TicketOverviewController extends BaseController {
     }
 
     const sTicketId = oBindingContext.getProperty("ticketId");
-    const oRouter = (this.getOwnerComponent() as AppComponent).getRouter();
-    oRouter.navTo(this.Constants.ROUTES.EDIT_TICKET, { ticketId: sTicketId });
+    this.navTo(this.Constants.ROUTES.EDIT_TICKET, {
+      ticketId: sTicketId,
+    });
   }
 
   public async onTicketIdValueHelp(): Promise<void> {

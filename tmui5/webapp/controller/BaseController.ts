@@ -1,6 +1,6 @@
 import Controller from "sap/ui/core/mvc/Controller";
 import ResourceModel from "sap/ui/model/resource/ResourceModel";
-import Component from "sap/ui/core/UIComponent";
+import UIComponent from "sap/ui/core/UIComponent";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import MessageBox from "sap/m/MessageBox";
 import customerService from "tmui5/services/customerService";
@@ -9,6 +9,10 @@ import ticketService from "tmui5/services/ticketService";
 import Constants from "tmui5/constants/Constants";
 import coreLibrary from "sap/ui/core/library";
 import Log from "sap/base/Log";
+
+interface NavParameters {
+  [key: string]: string | number | boolean; // key can be any string, value can be string, number, or boolean
+}
 
 export default class BaseController extends Controller {
   protected Constants: typeof Constants; // Explicit type
@@ -28,11 +32,12 @@ export default class BaseController extends Controller {
   }
 
   private getRouter() {
-    return (this.getOwnerComponent() as Component).getRouter();
+    return UIComponent.getRouterFor(this);
   }
 
-  public navTo(sRoute: string): void {
-    this.getRouter().navTo(sRoute, {}, true);
+  public navTo(sRoute: string, parameters: NavParameters = {}): void {
+    const replaceCurrentPage = true; // replace current page in history
+    this.getRouter().navTo(sRoute, parameters, replaceCurrentPage);
   }
 
   public async loadTeamMembers(): Promise<void> {
