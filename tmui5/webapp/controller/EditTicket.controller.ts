@@ -7,9 +7,13 @@ import FilterOperator from "sap/ui/model/FilterOperator";
 import MessageToast from "sap/m/MessageToast";
 import MessageBox from "sap/m/MessageBox";
 import Control from "sap/ui/core/Control";
+import Dialog from "sap/m/Dialog";
 import BusyIndicator from "sap/ui/core/BusyIndicator";
-import FileUploader from "sap/ui/unified/FileUploader";
+import FileUploader, {
+  FileUploader$TypeMissmatchEvent,
+} from "sap/ui/unified/FileUploader";
 import UploadSet from "sap/m/upload/UploadSet";
+import UploadSetItem from "sap/m/upload/UploadSetItem";
 import Input from "sap/m/Input";
 import ticketService from "tmui5/services/ticketService";
 import ticketCommentService from "tmui5/services/ticketCommentService";
@@ -18,7 +22,14 @@ import FragmentUtil from "tmui5/util/FragmentUtil";
 import FileUploaderUtil from "tmui5/util/FileUploaderUtil";
 import EmailUtil from "tmui5/util/EmailUtil";
 import ValidationUtil from "tmui5/util/ValidationUtil";
-import TextArea from "sap/m/TextArea";
+import TextArea, { TextArea$LiveChangeEvent } from "sap/m/TextArea";
+import {
+  SelectDialog$SearchEvent,
+  SelectDialog$ConfirmEvent,
+} from "sap/m/SelectDialog";
+import StandardListItem from "sap/m/StandardListItem";
+import ListBinding from "sap/ui/model/ListBinding";
+import { Route$PatternMatchedEvent } from "sap/ui/core/routing/Route";
 import Log from "sap/base/Log";
 
 export default class EditTicketController extends BaseController {
@@ -39,10 +50,12 @@ export default class EditTicketController extends BaseController {
       .attachPatternMatched(this._onRouteMatched.bind(this));
   }
 
-  private async _onRouteMatched(oEvent: any): Promise<void> {
+  private async _onRouteMatched(oEvent: Route$PatternMatchedEvent): Promise<void> {
     this._setTextAreaValueStateToNone();
 
-    const sTicketId = oEvent.getParameter("arguments").ticketId;
+    const sTicketId = (
+      oEvent.getParameter("arguments") as { ticketId: string }
+    ).ticketId;
     const iTicketId = parseInt(sTicketId);
 
     this._resetEditTicketForm();
@@ -81,7 +94,10 @@ export default class EditTicketController extends BaseController {
   }
 
   private async _displayNotFoundPage(): Promise<void> {
-    this.getOwnerComponent().getTargets().display("TargetNotFound");
+    (this.getOwnerComponent() as AppComponent)
+      .getRouter()
+      .getTargets()
+      .display("TargetNotFound");
   }
 
   private async _loadAndBindTicketDetailToEdit(
@@ -162,7 +178,7 @@ export default class EditTicketController extends BaseController {
       );
       return;
     }
-    aSelectedItems.forEach((oItem: any) => {
+    aSelectedItems.forEach((oItem: UploadSetItem) => {
       const sFileName = oItem.getFileName();
       const sUrl = oItem
         .getBindingContext("editTicketUploadedFilesModel")
@@ -180,11 +196,11 @@ export default class EditTicketController extends BaseController {
   public async onValueHelpRequestAssignedTo(): Promise<void> {
     try {
       await this.loadTeamMembers();
-      const oDialog = await FragmentUtil.loadValueHelpFragment(
+      const oDialog = (await FragmentUtil.loadValueHelpFragment(
         this,
         this.Constants.FRAGMENTS.ASSIGNED_TO_VALUEHELP,
         this.Constants.FRAGMENTS_ID.ASSIGNED_TO_VALUEHELP
-      );
+      )) as Dialog;
       oDialog.open();
     } catch (error) {
       Log.error(
@@ -196,16 +212,15 @@ export default class EditTicketController extends BaseController {
     }
   }
 
-  public onValueHelpSearchAssignedTo(oEvent: any): void {
+  public onValueHelpSearchAssignedTo(oEvent: SelectDialog$SearchEvent): void {
     const sValue = oEvent.getParameter("value");
-    oEvent
-      .getSource()
-      .getBinding("items")
-      .filter([new Filter("fullName", FilterOperator.Contains, sValue)]);
+    (oEvent.getSource().getBinding("items") as ListBinding).filter([
+      new Filter("fullName", FilterOperator.Contains, sValue),
+    ]);
   }
 
-  public onValueHelpCloseAssignedTo(oEvent: any): void {
-    const oSelectedItem = oEvent.getParameter("selectedItem");
+  public onValueHelpCloseAssignedTo(oEvent: SelectDialog$ConfirmEvent): void {
+    const oSelectedItem = oEvent.getParameter("selectedItem") as StandardListItem;
     if (!oSelectedItem) return;
 
     (this.byId("assignedToEditValueHelpInput") as Input).setValue(
@@ -214,7 +229,7 @@ export default class EditTicketController extends BaseController {
 
     const oSelectedTeamMember = oSelectedItem
       .getBindingContext("teamMemberModel")
-      .getObject();
+      .getObject() as Record<string, string>;
 
     (this.byId("assignedToEditEmailInput") as Input).setValue(
       oSelectedTeamMember.email
@@ -234,11 +249,11 @@ export default class EditTicketController extends BaseController {
   public async onValueHelpRequestCustomer(): Promise<void> {
     try {
       await this.loadCustomers();
-      const oDialog = await FragmentUtil.loadValueHelpFragment(
+      const oDialog = (await FragmentUtil.loadValueHelpFragment(
         this,
         this.Constants.FRAGMENTS.CUSTOMER_VALUEHELP,
         this.Constants.FRAGMENTS_ID.CUSTOMER_VALUEHELP
-      );
+      )) as Dialog;
       oDialog.open();
     } catch (error) {
       Log.error(
@@ -250,16 +265,15 @@ export default class EditTicketController extends BaseController {
     }
   }
 
-  public onValueHelpSearchCustomer(oEvent: any): void {
+  public onValueHelpSearchCustomer(oEvent: SelectDialog$SearchEvent): void {
     const sValue = oEvent.getParameter("value");
-    oEvent
-      .getSource()
-      .getBinding("items")
-      .filter([new Filter("name", FilterOperator.Contains, sValue)]);
+    (oEvent.getSource().getBinding("items") as ListBinding).filter([
+      new Filter("name", FilterOperator.Contains, sValue),
+    ]);
   }
 
-  public onValueHelpCloseCustomer(oEvent: any): void {
-    const oSelectedItem = oEvent.getParameter("selectedItem");
+  public onValueHelpCloseCustomer(oEvent: SelectDialog$ConfirmEvent): void {
+    const oSelectedItem = oEvent.getParameter("selectedItem") as StandardListItem;
     if (!oSelectedItem) return;
 
     (this.byId("customerEditValueHelpInput") as Input).setValue(
@@ -268,7 +282,7 @@ export default class EditTicketController extends BaseController {
 
     const oCustomer = oSelectedItem
       .getBindingContext("customerModel")
-      .getObject();
+      .getObject() as Record<string, string>;
     const oModel = this.getView().getModel("editTicketFormModel") as JSONModel;
     oModel.setProperty("/customerId", oCustomer.customerId);
 
@@ -282,7 +296,9 @@ export default class EditTicketController extends BaseController {
     FileUploaderUtil.handleFilenameLengthExceed(this.oBundle);
   }
 
-  public onFileUploaderTypeMissmatch(oEvent: any): void {
+  public onFileUploaderTypeMissmatch(
+    oEvent: FileUploader$TypeMissmatchEvent
+  ): void {
     FileUploaderUtil.handleTypeMissmatch(oEvent, this.oBundle);
   }
 
@@ -343,7 +359,7 @@ export default class EditTicketController extends BaseController {
         oPayload
       );
       const ticketId = updatedTicketResponse.ticketId;
-      const oFileUploader = this.byId("fileUploaderEditTicket") as UploadSet;
+      const oFileUploader = this.byId("fileUploaderEditTicket") as FileUploader;
       await FileUploaderUtil.uploadFiles(ticketId, oFileUploader);
       const emailPayload = {
         ticketId,
@@ -396,7 +412,7 @@ export default class EditTicketController extends BaseController {
     this.navTo(this.Constants.ROUTES.TICKET_OVERVIEW);
   }
 
-  public onDescriptionLiveChange(oEvent: any): void {
+  public onDescriptionLiveChange(oEvent: TextArea$LiveChangeEvent): void {
     ValidationUtil.validateTextAreaLength(oEvent, this);
   }
 

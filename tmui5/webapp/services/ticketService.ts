@@ -4,7 +4,7 @@ interface TicketPayload {
   ticketTypeId: number;
   teamMemberId: number;
   customerId: number;
-  ticketStatusId: number;
+  ticketStatusId?: number;
   title: string;
   description: string;
 }

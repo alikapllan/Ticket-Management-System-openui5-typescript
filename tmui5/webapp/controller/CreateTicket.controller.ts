@@ -7,14 +7,22 @@ import Dialog from "sap/m/Dialog";
 import Input from "sap/m/Input";
 import Select from "sap/m/Select";
 import AppComponent from "tmui5/Component";
-import FileUploader from "sap/ui/unified/FileUploader";
+import FileUploader, {
+  FileUploader$TypeMissmatchEvent,
+} from "sap/ui/unified/FileUploader";
 import BusyIndicator from "sap/ui/core/BusyIndicator";
 import ticketService from "tmui5/services/ticketService";
 import FragmentUtil from "tmui5/util/FragmentUtil";
 import FileUploaderUtil from "tmui5/util/FileUploaderUtil";
 import EmailUtil from "tmui5/util/EmailUtil";
 import ValidationUtil from "tmui5/util/ValidationUtil";
-import TextArea from "sap/m/TextArea";
+import TextArea, { TextArea$LiveChangeEvent } from "sap/m/TextArea";
+import {
+  SelectDialog$SearchEvent,
+  SelectDialog$ConfirmEvent,
+} from "sap/m/SelectDialog";
+import StandardListItem from "sap/m/StandardListItem";
+import ListBinding from "sap/ui/model/ListBinding";
 import Log from "sap/base/Log";
 
 export default class CreateTicket extends BaseController {
@@ -66,14 +74,14 @@ export default class CreateTicket extends BaseController {
     }
   }
 
-  public onValueHelpSearchAssignedTo(oEvent: any): void {
+  public onValueHelpSearchAssignedTo(oEvent: SelectDialog$SearchEvent): void {
     const sValue = oEvent.getParameter("value");
     const oFilter = new Filter("fullName", FilterOperator.Contains, sValue);
-    oEvent.getSource().getBinding("items").filter([oFilter]);
+    (oEvent.getSource().getBinding("items") as ListBinding).filter([oFilter]);
   }
 
-  public onValueHelpCloseAssignedTo(oEvent: any): void {
-    const oSelectedItem = oEvent.getParameter("selectedItem");
+  public onValueHelpCloseAssignedTo(oEvent: SelectDialog$ConfirmEvent): void {
+    const oSelectedItem = oEvent.getParameter("selectedItem") as StandardListItem;
     if (!oSelectedItem) return;
 
     (this.byId("assignedToInputValueHelp") as Input).setValue(
@@ -81,7 +89,7 @@ export default class CreateTicket extends BaseController {
     );
     const oSelectedTeamMember = oSelectedItem
       .getBindingContext("teamMemberModel")
-      .getObject();
+      .getObject() as Record<string, string>;
 
     (this.byId("emailInput") as Input).setValue(oSelectedTeamMember.email);
 
@@ -117,14 +125,14 @@ export default class CreateTicket extends BaseController {
     }
   }
 
-  public onValueHelpSearchCustomer(oEvent: any): void {
+  public onValueHelpSearchCustomer(oEvent: SelectDialog$SearchEvent): void {
     const sValue = oEvent.getParameter("value");
     const oFilter = new Filter("name", FilterOperator.Contains, sValue);
-    oEvent.getSource().getBinding("items").filter([oFilter]);
+    (oEvent.getSource().getBinding("items") as ListBinding).filter([oFilter]);
   }
 
-  public onValueHelpCloseCustomer(oEvent: any): void {
-    const oSelectedItem = oEvent.getParameter("selectedItem");
+  public onValueHelpCloseCustomer(oEvent: SelectDialog$ConfirmEvent): void {
+    const oSelectedItem = oEvent.getParameter("selectedItem") as StandardListItem;
     if (!oSelectedItem) return;
 
     (this.byId("customerInputValueHelp") as Input).setValue(
@@ -133,7 +141,7 @@ export default class CreateTicket extends BaseController {
 
     const oCustomer = oSelectedItem
       .getBindingContext("customerModel")
-      .getObject();
+      .getObject() as Record<string, string>;
 
     const oModel = this.getView().getModel(
       "createTicketFormModel"
@@ -229,7 +237,9 @@ export default class CreateTicket extends BaseController {
     FileUploaderUtil.handleFilenameLengthExceed(this.oBundle);
   }
 
-  public onFileUploaderTypeMissmatch(oEvent: any): void {
+  public onFileUploaderTypeMissmatch(
+    oEvent: FileUploader$TypeMissmatchEvent
+  ): void {
     FileUploaderUtil.handleTypeMissmatch(oEvent, this.oBundle);
   }
 
@@ -271,7 +281,7 @@ export default class CreateTicket extends BaseController {
     oTextArea.setValueState(this.ValueState.None);
   }
 
-  public onDescriptionLiveChange(oEvent: any): void {
+  public onDescriptionLiveChange(oEvent: TextArea$LiveChangeEvent): void {
     ValidationUtil.validateTextAreaLength(oEvent, this);
   }
 

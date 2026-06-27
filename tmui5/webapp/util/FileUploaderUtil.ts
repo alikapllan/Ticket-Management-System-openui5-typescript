@@ -2,12 +2,14 @@ import MessageBox from "sap/m/MessageBox";
 import ticketService from "tmui5/services/ticketService";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import ResourceBundle from "sap/base/i18n/ResourceBundle";
-import UploadSet from "sap/m/upload/UploadSet";
+import FileUploader, {
+  FileUploader$TypeMissmatchEvent,
+} from "sap/ui/unified/FileUploader";
 
 export default class FileUploaderUtil {
   public static async uploadFiles(
     ticketId: number,
-    oFileUploader: UploadSet
+    oFileUploader: FileUploader
   ): Promise<void> {
     const oDomRef = oFileUploader.getDomRef("fu") as HTMLInputElement;
     const aFiles = oDomRef?.files;
@@ -36,10 +38,10 @@ export default class FileUploaderUtil {
   }
 
   public static handleTypeMissmatch(
-    oEvent: any,
+    oEvent: FileUploader$TypeMissmatchEvent,
     oBundle: ResourceBundle
   ): void {
-    const aFileTypes = (oEvent.getSource() as UploadSet).getFileTypes();
+    const aFileTypes = (oEvent.getSource() as FileUploader).getFileType();
     const sSupportedTypes = aFileTypes.map((sType) => `*.${sType}`).join(", ");
 
     const sMessage = oBundle.getText("fileTypeNotSupported", [

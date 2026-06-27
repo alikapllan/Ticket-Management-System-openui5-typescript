@@ -63,7 +63,6 @@
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "async": true,
         "viewPath": "tmui5.view",
         "controlAggregation": "pages",
         "controlId": "app",
@@ -170,7 +169,6 @@
     "rootView": {
       "viewName": "tmui5.view.App",
       "type": "XML",
-      "async": true,
       "id": "App"
     }
   }

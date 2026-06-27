@@ -14,13 +14,20 @@ import MultiInput from "sap/m/MultiInput";
 import Select from "sap/m/Select";
 import DatePicker from "sap/m/DatePicker";
 import Dialog from "sap/m/Dialog";
+import {
+  SelectDialog$SearchEvent,
+  SelectDialog$ConfirmEvent,
+} from "sap/m/SelectDialog";
+import StandardListItem from "sap/m/StandardListItem";
+import ListBinding from "sap/ui/model/ListBinding";
+import { ListItemBase$PressEvent } from "sap/m/ListItemBase";
 import Log from "sap/base/Log";
 
 export default class TicketOverviewController extends BaseController {
   formatter = formatter;
 
   public async onInit(): Promise<void> {
-    BaseController.prototype.onInit.apply(this, arguments);
+    super.onInit();
     const oRouter = (this.getOwnerComponent() as AppComponent).getRouter();
     oRouter
       .getRoute(this.Constants.ROUTES.TICKET_OVERVIEW)
@@ -101,9 +108,11 @@ export default class TicketOverviewController extends BaseController {
   public onCreateTicket(): void {
     const oRouter = (this.getOwnerComponent() as AppComponent).getRouter();
     const oPreviousRoute = oRouter.getHashChanger().getHash();
-    (this.getOwnerComponent() as AppComponent)
-      .getModel("appState")
-      .setProperty("/previousRoute", oPreviousRoute);
+    (
+      (this.getOwnerComponent() as AppComponent).getModel(
+        "appState"
+      ) as JSONModel
+    ).setProperty("/previousRoute", oPreviousRoute);
     this.navTo(this.Constants.ROUTES.CREATE_TICKET);
   }
 
@@ -157,7 +166,9 @@ export default class TicketOverviewController extends BaseController {
     });
   }
 
-  public async onEditTicketNavigation(oEvent: any): Promise<void> {
+  public async onEditTicketNavigation(
+    oEvent: ListItemBase$PressEvent
+  ): Promise<void> {
     const oTable = this.byId("ticketsTable") as Table;
     const aSelectedItems = oTable.getSelectedContexts();
 
@@ -191,19 +202,19 @@ export default class TicketOverviewController extends BaseController {
     oDialog.open();
   }
 
-  public _onTicketIdValueHelpSearch(oEvent: any): void {
+  public _onTicketIdValueHelpSearch(oEvent: SelectDialog$SearchEvent): void {
     const sValue = oEvent.getParameter("value");
     const oFilter = new Filter("title", FilterOperator.Contains, sValue);
-    oEvent.getSource().getBinding("items").filter([oFilter]);
+    (oEvent.getSource().getBinding("items") as ListBinding).filter([oFilter]);
   }
 
-  public _onTicketIdValueHelpClose(oEvent: any): void {
-    const aSelectedItems = oEvent.getParameter("selectedItems");
+  public _onTicketIdValueHelpClose(oEvent: SelectDialog$ConfirmEvent): void {
+    const aSelectedItems = oEvent.getParameter("selectedItems") as StandardListItem[];
     const oMultiInput = this.byId("multiTicketIdInput") as MultiInput;
 
     if (aSelectedItems && aSelectedItems.length > 0) {
       oMultiInput.removeAllTokens();
-      aSelectedItems.forEach((oItem: any) => {
+      aSelectedItems.forEach((oItem: StandardListItem) => {
         oMultiInput.addToken(
           new Token({
             text: oItem.getTitle(),
