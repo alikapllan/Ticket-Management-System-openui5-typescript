@@ -51,7 +51,7 @@ export default class CreateTicket extends BaseController {
 
   private _setTextAreaValueStateToNone(): void {
     (this.byId("descriptionInput") as TextArea).setValueState(
-      this.ValueState.None
+      this.ValueState.None,
     );
   }
 
@@ -61,14 +61,14 @@ export default class CreateTicket extends BaseController {
       const oDialog = (await FragmentUtil.loadValueHelpFragment(
         this,
         this.Constants.FRAGMENTS.ASSIGNED_TO_VALUEHELP,
-        this.Constants.FRAGMENTS_ID.ASSIGNED_TO_VALUEHELP
+        this.Constants.FRAGMENTS_ID.ASSIGNED_TO_VALUEHELP,
       )) as Dialog;
       oDialog.open();
     } catch (error) {
       Log.error(
         "Failed to load team members or fragment issue (too lazy to expand :P)",
         error,
-        "tmui5.controller.CreateTicket"
+        "tmui5.controller.CreateTicket",
       );
       MessageBox.error(this.oBundle.getText("MBoxErrorLoadingAssignedTo"));
     }
@@ -81,11 +81,13 @@ export default class CreateTicket extends BaseController {
   }
 
   public onValueHelpCloseAssignedTo(oEvent: SelectDialog$ConfirmEvent): void {
-    const oSelectedItem = oEvent.getParameter("selectedItem") as StandardListItem;
+    const oSelectedItem = oEvent.getParameter(
+      "selectedItem",
+    ) as StandardListItem;
     if (!oSelectedItem) return;
 
     (this.byId("assignedToInputValueHelp") as Input).setValue(
-      oSelectedItem.getTitle()
+      oSelectedItem.getTitle(),
     );
     const oSelectedTeamMember = oSelectedItem
       .getBindingContext("teamMemberModel")
@@ -94,7 +96,7 @@ export default class CreateTicket extends BaseController {
     (this.byId("emailInput") as Input).setValue(oSelectedTeamMember.email);
 
     const oModel = this.getView().getModel(
-      "createTicketFormModel"
+      "createTicketFormModel",
     ) as JSONModel;
     oModel.setProperty("/teamMemberId", oSelectedTeamMember.teamMemberId);
     oModel.setProperty("/teamMemberEmail", oSelectedTeamMember.email);
@@ -102,7 +104,7 @@ export default class CreateTicket extends BaseController {
 
     FragmentUtil.destroyFragment(
       this,
-      this.Constants.FRAGMENTS_ID.ASSIGNED_TO_VALUEHELP
+      this.Constants.FRAGMENTS_ID.ASSIGNED_TO_VALUEHELP,
     );
   }
 
@@ -112,14 +114,14 @@ export default class CreateTicket extends BaseController {
       const oDialog = (await FragmentUtil.loadValueHelpFragment(
         this,
         this.Constants.FRAGMENTS.CUSTOMER_VALUEHELP,
-        this.Constants.FRAGMENTS_ID.CUSTOMER_VALUEHELP
+        this.Constants.FRAGMENTS_ID.CUSTOMER_VALUEHELP,
       )) as Dialog;
       oDialog.open();
     } catch (error) {
       Log.error(
         "Failed to load customers",
         error,
-        "tmui5.controller.CreateTicket"
+        "tmui5.controller.CreateTicket",
       );
       MessageBox.error(this.oBundle.getText("MBoxErrorLoadingCustomer"));
     }
@@ -132,11 +134,13 @@ export default class CreateTicket extends BaseController {
   }
 
   public onValueHelpCloseCustomer(oEvent: SelectDialog$ConfirmEvent): void {
-    const oSelectedItem = oEvent.getParameter("selectedItem") as StandardListItem;
+    const oSelectedItem = oEvent.getParameter(
+      "selectedItem",
+    ) as StandardListItem;
     if (!oSelectedItem) return;
 
     (this.byId("customerInputValueHelp") as Input).setValue(
-      oSelectedItem.getTitle()
+      oSelectedItem.getTitle(),
     );
 
     const oCustomer = oSelectedItem
@@ -144,13 +148,13 @@ export default class CreateTicket extends BaseController {
       .getObject() as Record<string, string>;
 
     const oModel = this.getView().getModel(
-      "createTicketFormModel"
+      "createTicketFormModel",
     ) as JSONModel;
     oModel.setProperty("/customerId", oCustomer.customerId);
 
     FragmentUtil.destroyFragment(
       this,
-      this.Constants.FRAGMENTS_ID.CUSTOMER_VALUEHELP
+      this.Constants.FRAGMENTS_ID.CUSTOMER_VALUEHELP,
     );
   }
 
@@ -199,7 +203,7 @@ export default class CreateTicket extends BaseController {
 
       await FileUploaderUtil.uploadFiles(
         ticketId,
-        this.byId("fileUploaderCreateTicket") as FileUploader
+        this.byId("fileUploaderCreateTicket") as FileUploader,
       );
 
       const emailPayload = {
@@ -212,7 +216,7 @@ export default class CreateTicket extends BaseController {
 
       await EmailUtil.sendEmail(
         this.Constants.EMAIL_SENDING_TYPE.CREATED,
-        emailPayload
+        emailPayload,
       );
 
       BusyIndicator.hide();
@@ -220,14 +224,14 @@ export default class CreateTicket extends BaseController {
         this.oBundle.getText("MBoxTicketCreatedSuccessfully"),
         {
           onClose: () => this._resetCreateTicketForm(),
-        }
+        },
       );
     } catch (error) {
       BusyIndicator.hide();
       Log.error(
         "Failed to create ticket",
         error,
-        "tmui5.controller.CreateTicket"
+        "tmui5.controller.CreateTicket",
       );
       MessageBox.error(this.oBundle.getText("MBoxFailedToCreateTicket"));
     }
@@ -238,7 +242,7 @@ export default class CreateTicket extends BaseController {
   }
 
   public onFileUploaderTypeMissmatch(
-    oEvent: FileUploader$TypeMissmatchEvent
+    oEvent: FileUploader$TypeMissmatchEvent,
   ): void {
     FileUploaderUtil.handleTypeMissmatch(oEvent, this.oBundle);
   }
@@ -264,7 +268,7 @@ export default class CreateTicket extends BaseController {
     (this.byId("fileUploaderCreateTicket") as FileUploader).setValue("");
 
     const oModel = this.getView().getModel(
-      "createTicketFormModel"
+      "createTicketFormModel",
     ) as JSONModel;
     oModel.setProperty("/teamMemberId", null);
     oModel.setProperty("/teamMemberEmail", null);
@@ -272,7 +276,9 @@ export default class CreateTicket extends BaseController {
     oModel.setProperty("/customerId", null);
     oModel.setProperty(
       "/defaultTicketTypeId",
-      this.getView().getModel("ticketTypeModel")?.getProperty("/0/ticketTypeId")
+      this.getView()
+        .getModel("ticketTypeModel")
+        ?.getProperty("/0/ticketTypeId"),
     );
 
     // TextArea live change - reset value state

@@ -49,7 +49,7 @@ export default class BaseController extends Controller {
       Log.error(
         "Failed to fetch team members",
         error,
-        "tmui5.controller.BaseController"
+        "tmui5.controller.BaseController",
       );
       MessageBox.error(this.oBundle.getText("MBoxGETReqFailedOnTeamMember"));
     }
@@ -64,7 +64,7 @@ export default class BaseController extends Controller {
       Log.error(
         "Failed to fetch customers",
         error,
-        "tmui5.controller.BaseController"
+        "tmui5.controller.BaseController",
       );
       MessageBox.error(this.oBundle.getText("MBoxGETReqFailedOnCustomer"));
     }
@@ -79,7 +79,7 @@ export default class BaseController extends Controller {
       Log.error(
         "Failed to fetch tickets",
         error,
-        "tmui5.controller.BaseController"
+        "tmui5.controller.BaseController",
       );
       MessageBox.error(this.oBundle.getText("MBoxGETReqFailedOnTicket"));
     }

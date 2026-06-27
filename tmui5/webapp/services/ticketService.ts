@@ -31,7 +31,7 @@ export default class TicketService {
       throw new Error(
         `Tickets Fetch Error: ${response.status} - ${
           errorBody.message || response.statusText
-        }`
+        }`,
       );
     }
 
@@ -43,7 +43,7 @@ export default class TicketService {
       `http://localhost:3000/api/tickets/${iTicketId}`,
       {
         method: "GET",
-      }
+      },
     );
 
     if (!response.ok) {
@@ -51,7 +51,7 @@ export default class TicketService {
       throw new Error(
         `Ticket Fetch Error: ${response.status} - ${
           errorBody.message || response.statusText
-        }`
+        }`,
       );
     }
 
@@ -59,13 +59,13 @@ export default class TicketService {
   }
 
   public static async fetchFilteredTickets(
-    queryString: string
+    queryString: string,
   ): Promise<Ticket[]> {
     const response = await fetch(
       `http://localhost:3000/api/tickets/filtered?${queryString}`,
       {
         method: "GET",
-      }
+      },
     );
 
     if (!response.ok) {
@@ -73,7 +73,7 @@ export default class TicketService {
       throw new Error(
         `Filtered Tickets Fetch Error: ${response.status} - ${
           errorBody.message || response.statusText
-        }`
+        }`,
       );
     }
 
@@ -94,7 +94,7 @@ export default class TicketService {
       throw new Error(
         `Ticket Creation Error: ${response.status} - ${
           errorBody.message || response.statusText
-        }`
+        }`,
       );
     }
 
@@ -103,14 +103,14 @@ export default class TicketService {
 
   public static async uploadFiles(
     iTicketId: number,
-    formData: FormData
+    formData: FormData,
   ): Promise<any> {
     const response = await fetch(
       `http://localhost:3000/api/tickets/${iTicketId}/files`,
       {
         method: "POST",
         body: formData,
-      }
+      },
     );
 
     if (!response.ok) {
@@ -118,7 +118,7 @@ export default class TicketService {
       throw new Error(
         `Files Upload Error: ${response.status} - ${
           errorBody.message || response.statusText
-        }`
+        }`,
       );
     }
 
@@ -130,7 +130,7 @@ export default class TicketService {
       `http://localhost:3000/api/tickets/${iTicketId}/files`,
       {
         method: "GET",
-      }
+      },
     );
 
     if (!response.ok) {
@@ -138,7 +138,7 @@ export default class TicketService {
       throw new Error(
         `Ticket Files Fetch Error: ${response.status} - ${
           errorBody.message || response.statusText
-        }`
+        }`,
       );
     }
 
@@ -150,7 +150,7 @@ export default class TicketService {
       `http://localhost:3000/api/tickets/${iTicketId}`,
       {
         method: "DELETE",
-      }
+      },
     );
 
     if (!response.ok) {
@@ -158,14 +158,14 @@ export default class TicketService {
       throw new Error(
         `Tickets Deletion Error: ${response.status} - ${
           errorBody.message || response.statusText
-        }`
+        }`,
       );
     }
   }
 
   public static async updateTickets(
     iTicketId: number,
-    oPayload: TicketPayload
+    oPayload: TicketPayload,
   ): Promise<Ticket> {
     const response = await fetch(
       `http://localhost:3000/api/tickets/${iTicketId}`,
@@ -175,7 +175,7 @@ export default class TicketService {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(oPayload),
-      }
+      },
     );
 
     if (!response.ok) {
@@ -183,7 +183,7 @@ export default class TicketService {
       throw new Error(
         `Tickets Update Error: ${response.status} - ${
           errorBody.message || response.statusText
-        }`
+        }`,
       );
     }
 

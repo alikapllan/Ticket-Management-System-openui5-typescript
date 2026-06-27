@@ -9,7 +9,7 @@ import FileUploader, {
 export default class FileUploaderUtil {
   public static async uploadFiles(
     ticketId: number,
-    oFileUploader: FileUploader
+    oFileUploader: FileUploader,
   ): Promise<void> {
     const oDomRef = oFileUploader.getDomRef("fu") as HTMLInputElement;
     const aFiles = oDomRef?.files;
@@ -27,7 +27,7 @@ export default class FileUploaderUtil {
       } catch (error) {
         console.error(
           `Failed to upload files for ticketID ${ticketId}:`,
-          error
+          error,
         );
       }
     }
@@ -39,7 +39,7 @@ export default class FileUploaderUtil {
 
   public static handleTypeMissmatch(
     oEvent: FileUploader$TypeMissmatchEvent,
-    oBundle: ResourceBundle
+    oBundle: ResourceBundle,
   ): void {
     const aFileTypes = (oEvent.getSource() as FileUploader).getFileType();
     const sSupportedTypes = aFileTypes.map((sType) => `*.${sType}`).join(", ");
@@ -54,7 +54,7 @@ export default class FileUploaderUtil {
 
   public static async loadTicketFiles(
     iTicketId: number,
-    oBundle: ResourceBundle
+    oBundle: ResourceBundle,
   ): Promise<JSONModel | undefined> {
     try {
       const ticketFiles = await ticketService.fetchTicketFiles(iTicketId);

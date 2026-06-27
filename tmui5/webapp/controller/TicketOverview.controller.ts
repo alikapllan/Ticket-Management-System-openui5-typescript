@@ -72,7 +72,7 @@ export default class TicketOverviewController extends BaseController {
       !sCreatedAt
     ) {
       MessageBox.information(
-        this.oBundle.getText("MBoxProvideAtLeastOneFilter")
+        this.oBundle.getText("MBoxProvideAtLeastOneFilter"),
       );
       return;
     }
@@ -86,21 +86,20 @@ export default class TicketOverviewController extends BaseController {
     const queryString = new URLSearchParams(oFilters).toString();
 
     try {
-      const filteredTickets = await ticketService.fetchFilteredTickets(
-        queryString
-      );
+      const filteredTickets =
+        await ticketService.fetchFilteredTickets(queryString);
       this.getOwnerComponent().setModel(
         new JSONModel(filteredTickets),
-        "ticketModel"
+        "ticketModel",
       );
     } catch (error) {
       Log.error(
         "Failed to fetch filtered tickets",
         error,
-        "tmui5.controller.TicketOverview"
+        "tmui5.controller.TicketOverview",
       );
       MessageBox.error(
-        this.oBundle.getText("MBoxGETReqFailedOnFilteredTickets")
+        this.oBundle.getText("MBoxGETReqFailedOnFilteredTickets"),
       );
     }
   }
@@ -110,7 +109,7 @@ export default class TicketOverviewController extends BaseController {
     const oPreviousRoute = oRouter.getHashChanger().getHash();
     (
       (this.getOwnerComponent() as AppComponent).getModel(
-        "appState"
+        "appState",
       ) as JSONModel
     ).setProperty("/previousRoute", oPreviousRoute);
     this.navTo(this.Constants.ROUTES.CREATE_TICKET);
@@ -122,7 +121,7 @@ export default class TicketOverviewController extends BaseController {
 
     if (aSelectedItems.length !== 1) {
       MessageBox.error(
-        this.oBundle.getText("MBoxErrorSelectOnlyOneTicketToEdit")
+        this.oBundle.getText("MBoxErrorSelectOnlyOneTicketToEdit"),
       );
       return;
     }
@@ -157,7 +156,7 @@ export default class TicketOverviewController extends BaseController {
           }
           await this.loadTickets();
           MessageBox.success(
-            this.oBundle.getText("MBoxSuccessOfDeletionTicket")
+            this.oBundle.getText("MBoxSuccessOfDeletionTicket"),
           );
         } else {
           oTable.removeSelections(true);
@@ -167,14 +166,14 @@ export default class TicketOverviewController extends BaseController {
   }
 
   public async onEditTicketNavigation(
-    oEvent: ListItemBase$PressEvent
+    oEvent: ListItemBase$PressEvent,
   ): Promise<void> {
     const oTable = this.byId("ticketsTable") as Table;
     const aSelectedItems = oTable.getSelectedContexts();
 
     if (aSelectedItems.length > 0) {
       MessageBox.warning(
-        this.oBundle.getText("MBoxNavigationDisabledDueToSelection")
+        this.oBundle.getText("MBoxNavigationDisabledDueToSelection"),
       );
       return;
     }
@@ -197,7 +196,7 @@ export default class TicketOverviewController extends BaseController {
     const oDialog = (await FragmentUtil.loadValueHelpFragment(
       this,
       this.Constants.FRAGMENTS.TICKET_ID_VALUEHELP,
-      this.Constants.FRAGMENTS_ID.TICKET_ID_VALUEHELP
+      this.Constants.FRAGMENTS_ID.TICKET_ID_VALUEHELP,
     )) as Dialog;
     oDialog.open();
   }
@@ -209,7 +208,9 @@ export default class TicketOverviewController extends BaseController {
   }
 
   public _onTicketIdValueHelpClose(oEvent: SelectDialog$ConfirmEvent): void {
-    const aSelectedItems = oEvent.getParameter("selectedItems") as StandardListItem[];
+    const aSelectedItems = oEvent.getParameter(
+      "selectedItems",
+    ) as StandardListItem[];
     const oMultiInput = this.byId("multiTicketIdInput") as MultiInput;
 
     if (aSelectedItems && aSelectedItems.length > 0) {
@@ -219,14 +220,14 @@ export default class TicketOverviewController extends BaseController {
           new Token({
             text: oItem.getTitle(),
             key: oItem.getBindingContext("ticketModel").getProperty("ticketId"),
-          })
+          }),
         );
       });
     }
 
     FragmentUtil.destroyFragment(
       this,
-      this.Constants.FRAGMENTS_ID.TICKET_ID_VALUEHELP
+      this.Constants.FRAGMENTS_ID.TICKET_ID_VALUEHELP,
     );
   }
 

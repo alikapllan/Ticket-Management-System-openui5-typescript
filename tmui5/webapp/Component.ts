@@ -15,7 +15,7 @@ import Log from "sap/base/Log";
 export default class Component extends UIComponent {
   public static metadata = {
     manifest: "json",
-    interfaces: ["sap.ui.core.IAsyncContentCreation"]
+    interfaces: ["sap.ui.core.IAsyncContentCreation"],
   };
 
   /**
@@ -63,7 +63,7 @@ export default class Component extends UIComponent {
       Log.error(
         "Failed to fetch ticket types",
         error,
-        "tmui5.webapp.Component"
+        "tmui5.webapp.Component",
       );
       MessageBox.error(oBundle.getText("MBoxGETReqFailedOnTicketType"));
     }
@@ -77,7 +77,7 @@ export default class Component extends UIComponent {
       Log.error(
         "Failed to fetch ticket statuses",
         error,
-        "tmui5.webapp.Component"
+        "tmui5.webapp.Component",
       );
       MessageBox.error(oBundle.getText("MBoxGETReqFailedOnTicketStatus"));
     }

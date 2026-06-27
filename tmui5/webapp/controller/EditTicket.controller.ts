@@ -50,12 +50,13 @@ export default class EditTicketController extends BaseController {
       .attachPatternMatched(this._onRouteMatched.bind(this));
   }
 
-  private async _onRouteMatched(oEvent: Route$PatternMatchedEvent): Promise<void> {
+  private async _onRouteMatched(
+    oEvent: Route$PatternMatchedEvent,
+  ): Promise<void> {
     this._setTextAreaValueStateToNone();
 
-    const sTicketId = (
-      oEvent.getParameter("arguments") as { ticketId: string }
-    ).ticketId;
+    const sTicketId = (oEvent.getParameter("arguments") as { ticketId: string })
+      .ticketId;
     const iTicketId = parseInt(sTicketId);
 
     this._resetEditTicketForm();
@@ -79,7 +80,7 @@ export default class EditTicketController extends BaseController {
 
   private _setTextAreaValueStateToNone(): void {
     (this.byId("descriptionEditInput") as TextArea).setValueState(
-      this.ValueState.None
+      this.ValueState.None,
     );
   }
 
@@ -101,36 +102,36 @@ export default class EditTicketController extends BaseController {
   }
 
   private async _loadAndBindTicketDetailToEdit(
-    iTicketId: number
+    iTicketId: number,
   ): Promise<void> {
     try {
       const ticketToEdit = await ticketService.fetchTicket(iTicketId);
       const oEditTicketModel = new JSONModel(ticketToEdit[0]);
       this.getView().setModel(oEditTicketModel, "editTicketModel");
       const oEditTicketFormModel = this.getView().getModel(
-        "editTicketFormModel"
+        "editTicketFormModel",
       ) as JSONModel;
       oEditTicketFormModel.setProperty(
         "/teamMemberId",
-        oEditTicketModel.getData().teamMemberId
+        oEditTicketModel.getData().teamMemberId,
       );
       oEditTicketFormModel.setProperty(
         "/teamMemberEmail",
-        oEditTicketModel.getData().teamMemberEmail
+        oEditTicketModel.getData().teamMemberEmail,
       );
       oEditTicketFormModel.setProperty(
         "/teamMemberFullName",
-        oEditTicketModel.getData().teamMemberFullName
+        oEditTicketModel.getData().teamMemberFullName,
       );
       oEditTicketFormModel.setProperty(
         "/customerId",
-        oEditTicketModel.getData().customerId
+        oEditTicketModel.getData().customerId,
       );
     } catch (error) {
       Log.error(
         "Failed to load ticket details",
         error,
-        "tmui5.controller.EditTicket"
+        "tmui5.controller.EditTicket",
       );
       MessageBox.error(this.oBundle.getText("MBoxGETReqFailedOnTicketToEdit"));
     }
@@ -138,29 +139,28 @@ export default class EditTicketController extends BaseController {
 
   private async _loadTicketComments(iTicketId: number): Promise<void> {
     try {
-      const ticketComments = await ticketCommentService.fetchTicketComments(
-        iTicketId
-      );
+      const ticketComments =
+        await ticketCommentService.fetchTicketComments(iTicketId);
       const oTicketCommentModel = new JSONModel(ticketComments);
       this.getView().setModel(oTicketCommentModel, "ticketCommentModel");
     } catch (error) {
       Log.error(
         "Failed to load ticket comments",
         error,
-        "tmui5.controller.EditTicket"
+        "tmui5.controller.EditTicket",
       );
       MessageBox.error(this.oBundle.getText("MBoxGETReqFailedOnTicketComment"));
     }
   }
 
   private async _loadUploadedTicketFilesAndBindToView(
-    iTicketId: number
+    iTicketId: number,
   ): Promise<void> {
     (this.byId("uploadedFilesLabelEditTicket") as Control).setVisible(false);
     (this.byId("uploadedFilesSetEditTicket") as Control).setVisible(false);
     const oFilesModel = await FileUploaderUtil.loadTicketFiles(
       iTicketId,
-      this.oBundle
+      this.oBundle,
     );
     if (oFilesModel && oFilesModel.getData().length > 0) {
       this.getView().setModel(oFilesModel, "editTicketUploadedFilesModel");
@@ -174,7 +174,7 @@ export default class EditTicketController extends BaseController {
     const aSelectedItems = oUploadSet.getSelectedItems();
     if (!aSelectedItems.length) {
       MessageBox.warning(
-        this.oBundle.getText("MBoxSelectAtLeastOneFileToDownload")
+        this.oBundle.getText("MBoxSelectAtLeastOneFileToDownload"),
       );
       return;
     }
@@ -199,14 +199,14 @@ export default class EditTicketController extends BaseController {
       const oDialog = (await FragmentUtil.loadValueHelpFragment(
         this,
         this.Constants.FRAGMENTS.ASSIGNED_TO_VALUEHELP,
-        this.Constants.FRAGMENTS_ID.ASSIGNED_TO_VALUEHELP
+        this.Constants.FRAGMENTS_ID.ASSIGNED_TO_VALUEHELP,
       )) as Dialog;
       oDialog.open();
     } catch (error) {
       Log.error(
         "Failed to load team members",
         error,
-        "tmui5.controller.EditTicket"
+        "tmui5.controller.EditTicket",
       );
       MessageBox.error(this.oBundle.getText("MBoxErrorLoadingAssignedTo"));
     }
@@ -220,11 +220,13 @@ export default class EditTicketController extends BaseController {
   }
 
   public onValueHelpCloseAssignedTo(oEvent: SelectDialog$ConfirmEvent): void {
-    const oSelectedItem = oEvent.getParameter("selectedItem") as StandardListItem;
+    const oSelectedItem = oEvent.getParameter(
+      "selectedItem",
+    ) as StandardListItem;
     if (!oSelectedItem) return;
 
     (this.byId("assignedToEditValueHelpInput") as Input).setValue(
-      oSelectedItem.getTitle()
+      oSelectedItem.getTitle(),
     );
 
     const oSelectedTeamMember = oSelectedItem
@@ -232,7 +234,7 @@ export default class EditTicketController extends BaseController {
       .getObject() as Record<string, string>;
 
     (this.byId("assignedToEditEmailInput") as Input).setValue(
-      oSelectedTeamMember.email
+      oSelectedTeamMember.email,
     );
 
     const oModel = this.getView().getModel("editTicketFormModel") as JSONModel;
@@ -242,7 +244,7 @@ export default class EditTicketController extends BaseController {
 
     FragmentUtil.destroyFragment(
       this,
-      this.Constants.FRAGMENTS_ID.ASSIGNED_TO_VALUEHELP
+      this.Constants.FRAGMENTS_ID.ASSIGNED_TO_VALUEHELP,
     );
   }
 
@@ -252,14 +254,14 @@ export default class EditTicketController extends BaseController {
       const oDialog = (await FragmentUtil.loadValueHelpFragment(
         this,
         this.Constants.FRAGMENTS.CUSTOMER_VALUEHELP,
-        this.Constants.FRAGMENTS_ID.CUSTOMER_VALUEHELP
+        this.Constants.FRAGMENTS_ID.CUSTOMER_VALUEHELP,
       )) as Dialog;
       oDialog.open();
     } catch (error) {
       Log.error(
         "Failed to load customers or fragment issue :P",
         error,
-        "tmui5.controller.EditTicket"
+        "tmui5.controller.EditTicket",
       );
       MessageBox.error(this.oBundle.getText("MBoxErrorLoadingCustomer"));
     }
@@ -273,11 +275,13 @@ export default class EditTicketController extends BaseController {
   }
 
   public onValueHelpCloseCustomer(oEvent: SelectDialog$ConfirmEvent): void {
-    const oSelectedItem = oEvent.getParameter("selectedItem") as StandardListItem;
+    const oSelectedItem = oEvent.getParameter(
+      "selectedItem",
+    ) as StandardListItem;
     if (!oSelectedItem) return;
 
     (this.byId("customerEditValueHelpInput") as Input).setValue(
-      oSelectedItem.getTitle()
+      oSelectedItem.getTitle(),
     );
 
     const oCustomer = oSelectedItem
@@ -288,7 +292,7 @@ export default class EditTicketController extends BaseController {
 
     FragmentUtil.destroyFragment(
       this,
-      this.Constants.FRAGMENTS_ID.CUSTOMER_VALUEHELP
+      this.Constants.FRAGMENTS_ID.CUSTOMER_VALUEHELP,
     );
   }
 
@@ -297,7 +301,7 @@ export default class EditTicketController extends BaseController {
   }
 
   public onFileUploaderTypeMissmatch(
-    oEvent: FileUploader$TypeMissmatchEvent
+    oEvent: FileUploader$TypeMissmatchEvent,
   ): void {
     FileUploaderUtil.handleTypeMissmatch(oEvent, this.oBundle);
   }
@@ -356,7 +360,7 @@ export default class EditTicketController extends BaseController {
     try {
       const updatedTicketResponse = await ticketService.updateTickets(
         parseInt(sTicketId),
-        oPayload
+        oPayload,
       );
       const ticketId = updatedTicketResponse.ticketId;
       const oFileUploader = this.byId("fileUploaderEditTicket") as FileUploader;
@@ -365,14 +369,14 @@ export default class EditTicketController extends BaseController {
         ticketId,
         teamMemberEmail: oEditTicketFormModel.getProperty("/teamMemberEmail"),
         teamMemberFullName: oEditTicketFormModel.getProperty(
-          "/teamMemberFullName"
+          "/teamMemberFullName",
         ),
         title: sTitle,
         description: sDescription,
       };
       await EmailUtil.sendEmail(
         this.Constants.EMAIL_SENDING_TYPE.UPDATED,
-        emailPayload
+        emailPayload,
       );
       MessageToast.show(this.oBundle.getText("MToastTicketEditedSuccessfully"));
       BusyIndicator.hide();
@@ -382,7 +386,7 @@ export default class EditTicketController extends BaseController {
       Log.error(
         "Failed to update ticket. Email also might not be sent :P too lazy to implement an additional catch for it :P",
         error,
-        "tmui5.controller.EditTicket"
+        "tmui5.controller.EditTicket",
       );
       MessageBox.error(this.oBundle.getText("MBoxFailedToEditTicket"));
     }
@@ -402,7 +406,7 @@ export default class EditTicketController extends BaseController {
       Log.error(
         "Failed to create a new ticket comment",
         error,
-        "tmui5.controller.EditTicket"
+        "tmui5.controller.EditTicket",
       );
       MessageBox.error(this.oBundle.getText("MBoxFailedToCreateTicketComment"));
     }
